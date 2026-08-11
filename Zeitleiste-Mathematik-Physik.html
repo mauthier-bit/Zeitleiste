@@ -44,6 +44,45 @@
   .spurchip .punkt{width:10px;height:10px;border-radius:3px;flex:0 0 auto;border:1px solid rgba(0,0,0,.15)}
   .spurchip.aus{opacity:.4;background:var(--bg2);text-decoration:line-through}
 
+  .suchbox{position:relative}
+  #suche{font:inherit;font-size:12.5px;padding:7px 28px 7px 12px;border:1px solid var(--line);
+    border-radius:999px;background:#fff;color:var(--ink);width:230px;outline:none;-webkit-appearance:none}
+  #suche:focus{border-color:var(--akzent);box-shadow:0 0 0 2px rgba(138,75,42,.14)}
+  #suchleeren{position:absolute;right:4px;top:50%;transform:translateY(-50%);border:none;background:none;
+    padding:4px 7px;font-size:14px;color:var(--ink2);display:none}
+  .suchbox.gefuellt #suchleeren{display:block}
+  #suchliste{position:absolute;top:calc(100% + 5px);left:0;width:330px;max-width:88vw;max-height:52vh;
+    overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    box-shadow:var(--schatten);z-index:60;display:none;padding:5px}
+  #suchliste.offen{display:block}
+  .suchtreffer{display:flex;width:100%;text-align:left;align-items:flex-start;gap:7px;
+    border:none;background:none;border-radius:8px;padding:7px 8px;font-size:12.5px;line-height:1.3}
+  .suchtreffer:hover,.suchtreffer.markiert{background:var(--bg2)}
+  .suchtreffer .punkt{width:9px;height:9px;border-radius:3px;margin-top:3px;flex:0 0 auto}
+  .suchtreffer i{font-style:normal;color:var(--ink2);font-size:11.5px;display:block;margin-top:1px}
+  .suchleer{padding:9px 10px;font-size:12.5px;color:var(--ink2)}
+
+  #pi{position:absolute;inset:0;background:rgba(36,31,24,.55);z-index:50;display:none;
+    align-items:center;justify-content:center;padding:14px}
+  #pi.offen{display:flex}
+  .pibox{background:var(--panel);border-radius:16px;max-width:720px;width:100%;max-height:92%;
+    overflow:auto;padding:18px 20px 24px;box-shadow:var(--schatten);position:relative}
+  .pibox h2{margin:0 0 4px;font-size:20px}
+  .pibox .pinote{font-size:13px;line-height:1.5;color:var(--ink2);margin:0 0 12px}
+  #pichart{display:block;width:100%;height:170px;border:1px solid var(--line);border-radius:10px;background:#fffefb}
+  .pichartunter{font-size:11px;color:var(--ink2);margin:5px 0 14px;text-align:center}
+  .pizeile{display:grid;grid-template-columns:82px 1fr;gap:10px;padding:9px 6px;border-top:1px solid var(--line);
+    text-align:left;width:100%;background:none;border-left:none;border-right:none;border-bottom:none;border-radius:0}
+  .pizeile:hover{background:var(--bg2)}
+  .pizeile.klickbar{cursor:pointer}
+  .pijahr{font-variant-numeric:tabular-nums;font-weight:600;font-size:12.5px;color:var(--akzent);padding-top:1px}
+  .piwer{font-size:13.5px;font-weight:600}
+  .piwas{font-size:13px;color:#3a3228;margin-top:1px}
+  .pim{font-size:12.5px;color:var(--ink2);line-height:1.45;margin-top:3px}
+  .pistellen{display:inline-block;font-size:10.5px;background:var(--bg2);border:1px solid var(--line);
+    border-radius:999px;padding:2px 7px;margin-top:4px;color:var(--ink2)}
+  #pizu{position:absolute;top:12px;right:14px;border-radius:50%;width:30px;height:30px;padding:0;justify-content:center;font-size:16px}
+
   #buehne{flex:1 1 auto;position:relative;overflow:hidden}
   #cv{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
   #cv.zieht{cursor:grabbing}
@@ -99,6 +138,15 @@
   <div class="leisten" id="spurleiste"></div>
   <div class="leisten">
     <div class="gruppe">
+      <div class="suchbox">
+        <input id="suche" type="search" placeholder="Suchen: Begriff, Person, Ereignis …" autocomplete="off" spellcheck="false">
+        <button id="suchleeren" title="Suche leeren">✕</button>
+        <div id="suchliste"></div>
+      </div>
+    </div>
+    <div class="trenner"></div>
+    <div class="gruppe">
+      <button id="btnPi">π-Chronik</button>
       <button id="btnEinfluss"><span class="icon">⇄</span>Einflüsse</button>
       <button id="btnKern">Nur Hauptstränge</button>
       <button id="btnReset"><span class="icon">⟲</span>Gesamtansicht</button>
@@ -126,10 +174,23 @@
         <li><b>Details:</b> auf einen Balken oder Punkt tippen – die Erklärung öffnet sich seitlich.</li>
         <li><b>Spuren:</b> oben einzeln zuschaltbar; der fette Knopf schaltet eine ganze Gruppe.</li>
         <li><b>Wechselwirkungen:</b> <span class="schluessel">⇄ Einflüsse</span> zeigt alle Pfeile. Ein ausgewähltes Element zeigt seine eigenen immer, mit Beschriftung.</li>
+        <li><b>Suchen:</b> Das Suchfeld durchsucht Titel und Beschreibungstexte. Treffer werden auf der Zeitleiste gelb umrandet; ein Klick springt hin.</li>
+        <li><b>Zeitachse:</b> Beim Zoomen verfeinert sich das Raster automatisch bis auf einzelne Jahre. Mit der Maus zeigt eine Hilfslinie das Jahr unter dem Zeiger.</li>
+        <li><b>π-Chronik:</b> eigene Zeittafel zur Kreiszahl – auch über den Balken „Die Kreiszahl π“ in der Spur <i>Zahlen</i> erreichbar.</li>
       </ul>
       <h3>Die Idee</h3>
       <p>Hauptstränge sind <b>Mathematik</b> (Zahlen, Geometrie, Algebra, Analysis, Stochastik, Logik) und <b>Physik</b> (Mechanik, Wärmelehre, Elektrodynamik, Relativität, Quantenphysik) sowie die eigenständige <b>Astronomie</b>. Die Kontextspuren – Kulturräume, Weltbild, Instrumente, Gesellschaft – erklären, <i>warum</i> etwas gerade dort und dann entdeckt wurde.</p>
       <p>Besonders lohnend sind die Pfeile zwischen den Strängen: Kegelschnitte (−200) → Keplerbahnen (1609). Riemanns Geometrie (1854) → Allgemeine Relativitätstheorie (1915). Matrizenrechnung (1858) → Heisenberg (1925). Und umgekehrt: Wärmeleitung → Fourierreihen, Ceres-Bahn → Methode der kleinsten Quadrate.</p>
+    </div>
+  </div>
+  <div id="pi">
+    <div class="pibox">
+      <button id="pizu" title="Schließen">✕</button>
+      <h2>π – Chronik einer Zahl</h2>
+      <p class="pinote">Keine andere Zahl verbindet so viele Kulturen und Jahrtausende. An der Jagd nach π lässt sich die jeweils verfügbare Mathematik ablesen: erst Vielecke, dann unendliche Reihen, schließlich Rechenmaschinen. Zeilen mit farbigem Jahr führen zur passenden Stelle auf der Zeitleiste.</p>
+      <canvas id="pichart"></canvas>
+      <div class="pichartunter">Gesicherte Nachkommastellen (logarithmisch) – Meilensteine in zeitlicher Reihenfolge, nicht maßstäblich</div>
+      <div id="piliste"></div>
     </div>
   </div>
 </div>
@@ -171,6 +232,7 @@ const GRUPPEN = ['Mathematik','Physik','Astronomie','Kontext'];
 const ITEMS = [
 
 /* ============ ZAHLEN, ZIFFERN & RECHNEN ============ */
+{i:'z_pi',s:'ma_zahl',t:'Die Kreiszahl π – 4000 Jahre Annäherung',a:-1900,b:2025,r:1,d:'Kein anderes mathematisches Objekt zieht sich so durch alle Kulturen und Epochen. An π lassen sich Rechenverfahren, Beweisideen und sogar Rechenmaschinen der jeweiligen Zeit ablesen – von babylonischen Tontafeln über Archimedes’ Vielecke und unendliche Reihen bis zu Rekorden im Billionenbereich. Öffne die eigene π-Chronik für den vollständigen Verlauf.'},
 {i:'z_token',s:'ma_zahl',t:'Zählsteine & erste Zahlzeichen',a:-3300,r:1,d:'In Uruk werden Warenmengen zuerst mit Tonmarken, dann mit eingedrückten Zahlzeichen festgehalten. Zahl und Schrift entstehen gemeinsam – aus dem Bedarf der Verwaltung.'},
 {i:'z_sexa',s:'ma_zahl',t:'Babylonisches Sexagesimalsystem',a:-2000,b:-300,r:1,d:'Ein Stellenwertsystem zur Basis 60 – mit demselben Zeichen für 1, 60 und 3600. Es erlaubt bequemes Bruchrechnen (1/2, 1/3, 1/4, 1/5, 1/6 sind alle „glatt“) und lebt bis heute in Minuten, Sekunden und 360° fort.'},
 {i:'z_aegbruch',s:'ma_zahl',t:'Ägyptische Stammbruchrechnung',a:-1850,b:-1550,r:2,d:'Der Papyrus Rhind zeigt: Ägypter schreiben jeden Bruch als Summe von Stammbrüchen (1/n). Umständlich, aber ein vollständiges, geschlossenes Rechenverfahren – die älteste erhaltene Mathematik-„Aufgabensammlung“.'},
@@ -493,6 +555,11 @@ const LINKS = [
 {a:'g_euklid',b:'l_beweis',t:'Axiomatischer Aufbau als Vorbild'},
 {a:'l_beweis',b:'p_archimedes',t:'Statik wird nach Euklids Muster bewiesen'},
 {a:'g_archim',b:'an_archim',t:'Ausschöpfung als Vorstufe der Integration'},
+{a:'g_archim',b:'z_pi',t:'Erste Methode mit Fehlerschranke: das 96-Eck'},
+{a:'z_pi',b:'z_transz',t:'Die π-Jagd endet im Transzendenzbeweis'},
+{a:'z_pi',b:'s_montecarlo',t:'Buffons Nadelproblem: π aus dem Zufall'},
+{a:'in_computer',b:'z_pi',t:'π wird zum Testfall für jede neue Rechnergeneration'},
+{a:'an_infinitesimal',b:'z_pi',t:'Unendliche Reihen lösen die Vielecke ab'},
 {a:'p_aristo',b:'p_impetus',t:'Kritik am Erklärungsproblem des geworfenen Steins'},
 {a:'ku_grie',b:'as_kugel',t:'Beobachtung und Argument statt Mythos'},
 {a:'as_kugel',b:'as_aristarch',t:'Kugelgestalt als Voraussetzung des Modells'},
@@ -688,6 +755,39 @@ const LINKS = [
 ];
 
 /* ============================================================
+   π-CHRONIK
+   st = Anzahl gesicherter Nachkommastellen (0 = theoretisches Ergebnis)
+   ============================================================ */
+const PI_CHRONIK = [
+{j:-1900,wer:'Babylon',was:'3 1/8 = 3,125',st:1,m:'Tontafel von Susa: Der Umfang des einbeschriebenen Sechsecks wird zum Kreisumfang ins Verhältnis gesetzt.',ziel:'z_sexa'},
+{j:-1650,wer:'Ägypten, Papyrus Rhind',was:'(16/9)² ≈ 3,1605',st:1,m:'Aufgabe 50: Die Kreisfläche wird durch ein Quadrat mit 8/9 des Durchmessers ersetzt – ein Rezept ohne Begründung.',ziel:'z_aegbruch'},
+{j:-550,wer:'Altes Testament (1 Kön 7,23)',was:'3',st:0,m:'Das „eherne Meer“ hat 10 Ellen Durchmesser und 30 Ellen Umfang. Ein Rundwert – und bis heute Stoff für Streitgespräche.'},
+{j:-250,wer:'Archimedes',was:'223/71 < π < 22/7',st:2,m:'Der Durchbruch: ein- und umbeschriebene 96-Ecke liefern erstmals eine Ober- UND Untergrenze. π wird nicht geschätzt, sondern eingeschachtelt.',ziel:'g_archim'},
+{j:150,wer:'Ptolemäus',was:'377/120 = 3,14166…',st:3,m:'Nebenprodukt der Sehnentafeln im Almagest – Astronomie treibt die Genauigkeit.',ziel:'as_ptolem'},
+{j:263,wer:'Liu Hui, China',was:'3,1416',st:4,m:'3072-Eck, dazu ein Verfahren, das die Konvergenz beschleunigt – rechnerisch eleganter als Archimedes.',ziel:'g_liuhui'},
+{j:480,wer:'Zu Chongzhi, China',was:'355/113 = 3,1415929…',st:7,m:'Weltrekord für rund 900 Jahre. Der Bruch 355/113 ist bis heute die beste einfache Näherung überhaupt.',ziel:'g_liuhui'},
+{j:499,wer:'Aryabhata, Indien',was:'62832/20000 = 3,1416',st:4,m:'Er fügt hinzu, der Wert sei nur „annähernd“ – ein früher Verdacht, dass π kein Bruch sein könnte.',ziel:'as_aryabh'},
+{j:1424,wer:'al-Kaschi, Samarkand',was:'3,14159265358979325',st:16,m:'Ein 3·2²⁸-Eck, gerechnet am Observatorium Ulug Begs. Er begründet die Genauigkeit damit, dass sie genügt, um den Umfang des Universums auf Haaresbreite zu bestimmen.',ziel:'as_observ'},
+{j:1593,wer:'Viète',was:'unendliches Produkt',st:9,m:'Die erste Formel, die π exakt als unendlichen Ausdruck darstellt. Das Zeitalter der Vielecke geht zu Ende.',ziel:'a_viete'},
+{j:1610,wer:'Ludolph van Ceulen',was:'35 Stellen',st:35,m:'Jahrzehnte Handrechnung mit einem 2⁶²-Eck. Die Zahl steht auf seinem Grabstein; im Deutschen heißt π deshalb „Ludolphsche Zahl“.'},
+{j:1674,wer:'Gregory & Leibniz',was:'π/4 = 1 − 1/3 + 1/5 − 1/7 + …',st:2,m:'Von bestechender Schönheit, aber unbrauchbar langsam: Für 10 sichere Stellen bräuchte man Milliarden Glieder.',ziel:'an_infinitesimal'},
+{j:1706,wer:'Machin',was:'100 Stellen',st:100,m:'Geschickt kombinierte Arkustangens-Reihen machen die Rechnung praktikabel. Im selben Jahr führt William Jones das Zeichen π ein.'},
+{j:1748,wer:'Euler',was:'π wird Standardsymbol',st:0,m:'Erst weil Euler das Zeichen in seiner „Introductio“ verwendet, setzt es sich weltweit durch.',ziel:'an_euler'},
+{j:1761,wer:'Lambert',was:'π ist irrational',st:0,m:'Kein Bruch kann π je exakt treffen. Die 3000-jährige Suche nach dem „richtigen“ Verhältnis ist damit beendet.',ziel:'z_irrat'},
+{j:1777,wer:'Buffon',was:'Nadelproblem',st:1,m:'Wirft man eine Nadel auf ein liniertes Blatt, lässt sich aus der Trefferquote π bestimmen – die erste Monte-Carlo-Methode der Geschichte.',ziel:'s_montecarlo'},
+{j:1873,wer:'William Shanks',was:'707 Stellen, davon 527 richtig',st:527,m:'15 Jahre Handrechnung. Der Fehler ab Stelle 528 fällt erst 1945 auf – da war die falsche Zahl bereits in einen Pariser Museumssaal eingelassen.'},
+{j:1882,wer:'Lindemann',was:'π ist transzendent',st:0,m:'π ist Lösung keiner algebraischen Gleichung. Damit ist die Quadratur des Kreises mit Zirkel und Lineal endgültig unmöglich – nach 2300 Jahren.',ziel:'z_transz'},
+{j:1914,wer:'Ramanujan',was:'hochschnelle Reihen',st:0,m:'Formeln, die pro Rechenschritt acht Stellen liefern. Ihre Herkunft blieb jahrzehntelang rätselhaft, ihr Nutzen ist bis heute ungebrochen.'},
+{j:1949,wer:'ENIAC',was:'2037 Stellen',st:2037,m:'70 Stunden Rechenzeit. Seither ist π der Testfall, an dem sich jede neue Rechnergeneration misst.',ziel:'in_computer'},
+{j:1973,wer:'Guilloud & Bouyer',was:'1 Million Stellen',st:1000000,m:'Großrechner CDC 7600. Der Sprung um drei Zehnerpotenzen in 24 Jahren zeigt, wie schnell Rechenleistung wächst.'},
+{j:1989,wer:'Brüder Chudnovsky',was:'1 Milliarde Stellen',st:1000000000,m:'Gerechnet auf einem selbstgebauten Rechner in einer New Yorker Wohnung. Ihre Reihenformel ist bis heute der Standard für Rekorde.'},
+{j:1995,wer:'BBP-Formel',was:'n-te Stelle einzeln',st:0,m:'Man kann die millionste Hexadezimalstelle berechnen, ohne eine einzige davor zu kennen. Fast niemand hatte das für möglich gehalten.'},
+{j:2002,wer:'Kanada, Tokio',was:'1,24 Billionen Stellen',st:1240000000000,m:'64 Stunden auf einem Supercomputer.'},
+{j:2021,wer:'FH Graubünden',was:'62,8 Billionen Stellen',st:62800000000000,m:'108 Tage auf einem einzelnen, gut ausgestatteten Serverrechner – Rekorde sind keine Frage von Großforschung mehr.'},
+{j:2024,wer:'Rechenzentren',was:'über 100 Billionen Stellen',st:100000000000000,m:'Die Rekorde wechseln inzwischen fast jährlich. Zum Vergleich: Für jede physikalische Anwendung, auch für Bahnberechnungen im Sonnensystem, genügen rund 40 Stellen.'}
+];
+
+/* ============================================================
    ZUSTAND & HILFSFUNKTIONEN
    ============================================================ */
 const MIN_JAHR = -3500, MAX_JAHR = 2060;
@@ -715,13 +815,15 @@ const state = {
   aktiv: new Set(SPUREN.map(s => s.id)),
   einfluesse: false,
   auswahl: null,
-  hover: null
+  hover: null,
+  mausX: null,
+  suchTreffer: null
 };
 
 function labelBreite(){ return cv.clientWidth < 620 ? 98 : 140; }
 function plotBreite(){ return Math.max(60, cv.clientWidth - labelBreite()); }
 function zMin(){ return plotBreite() / (MAX_JAHR - MIN_JAHR); }
-const Z_MAX = 6;
+const Z_MAX = 45;   // bis hinunter auf einzelne Jahre
 
 function xVon(j){ return labelBreite() + (j - state.x0) * state.z; }
 function jahrVon(x){ return state.x0 + (x - labelBreite()) / state.z; }
@@ -811,10 +913,17 @@ function maxOffsetY(){
 let treffer = [];   // {o,x,y,w,h}
 let ankerVon = {};  // id -> {x,y,w,h}
 
-function schritt(){
-  const kand = [2000,1000,500,200,100,50,20,10,5,2,1];
-  for (const s of kand){ if (s * state.z >= 78) return s; }
-  return 1;
+const UNTERTEILUNG = {2000:500, 1000:200, 500:100, 200:50, 100:20, 50:10, 20:5, 10:2, 5:1, 2:1, 1:0};
+
+function schrittPaar(){
+  const kand = [1,2,5,10,20,50,100,200,500,1000,2000];
+  ctx.font = '12px -apple-system,Segoe UI,Roboto,sans-serif';
+  const bedarf = Math.max(
+      ctx.measureText(fmtJahr(state.x0)).width,
+      ctx.measureText(fmtJahr(state.x0 + spanJahre())).width) + 26;
+  let haupt = 2000;
+  for (const k of kand){ if (k * state.z >= bedarf){ haupt = k; break; } }
+  return { haupt, unter: UNTERTEILUNG[haupt] || 0 };
 }
 
 function render(){
@@ -848,10 +957,20 @@ function render(){
   }
 
   /* --- Gitterlinien --- */
-  const st = schritt();
+  const SP = schrittPaar();
+  const st = SP.haupt;
   const j0 = Math.ceil(state.x0 / st) * st;
   const j1 = state.x0 + spanJahre();
   ctx.save(); ctx.beginPath(); ctx.rect(LB, AXIS_H, W-LB, H-AXIS_H); ctx.clip();
+  if (SP.unter && SP.unter * state.z >= 13){
+    ctx.strokeStyle = 'rgba(190,175,150,.20)'; ctx.lineWidth = 1;
+    const u0 = Math.ceil(state.x0 / SP.unter) * SP.unter;
+    for (let j = u0; j <= j1; j += SP.unter){
+      if (Math.abs(j / st - Math.round(j / st)) < 1e-9) continue;
+      const x = Math.round(xVon(j)) + .5;
+      ctx.beginPath(); ctx.moveTo(x, AXIS_H); ctx.lineTo(x, H); ctx.stroke();
+    }
+  }
   for (let j = j0; j <= j1; j += st){
     const x = Math.round(xVon(j)) + .5;
     ctx.strokeStyle = (j === 0) ? 'rgba(138,75,42,.55)' : 'rgba(190,175,150,.42)';
@@ -869,7 +988,8 @@ function render(){
       const y = g.y0 + oy + g.zeile[o.i] * ROW_H + (ROW_H - BAND_H)/2;
       if (x + w < LB - 200 || x > W + 200 || y > H || y + BAND_H < AXIS_H) continue;
       const gew = state.auswahl === o.i;
-      zeichneBand(x, y, w, BAND_H, farbe, o.t, gew, LB, W);
+      const mark = !!(state.suchTreffer && state.suchTreffer.has(o.i));
+      zeichneBand(x, y, w, BAND_H, farbe, o.t, gew, LB, W, mark);
       treffer.push({o, x:Math.max(x,LB), y, w:Math.min(x+w,W)-Math.max(x,LB), h:BAND_H});
       ankerVon[o.i] = {x:clamp(x+w/2, LB+8, W-8), y, w, h:BAND_H};
     }
@@ -896,6 +1016,10 @@ function render(){
         if (frei){ ebene = e; belegt[e].push([x-4, x+tw+12]); break; }
       }
       const py = zoneY + 8;
+      if (state.suchTreffer && state.suchTreffer.has(o.i)){
+        ctx.strokeStyle = 'rgba(214,158,20,.95)'; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.arc(x, py, 8.5, 0, Math.PI*2); ctx.stroke();
+      }
       ctx.fillStyle = g.sp.farbe;
       ctx.strokeStyle = gew ? '#241f18' : 'rgba(255,255,255,.9)';
       ctx.lineWidth = gew ? 2 : 1.2;
@@ -929,18 +1053,31 @@ function render(){
   ctx.strokeStyle = '#d6cab3'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(0,AXIS_H+.5); ctx.lineTo(W,AXIS_H+.5); ctx.stroke();
   ctx.save(); ctx.beginPath(); ctx.rect(LB,0,W-LB,AXIS_H); ctx.clip();
+  if (SP.unter && SP.unter * state.z >= 5){
+    ctx.strokeStyle = '#cabda1'; ctx.lineWidth = 1;
+    const u0 = Math.ceil(state.x0 / SP.unter) * SP.unter;
+    for (let j = u0; j <= j1; j += SP.unter){
+      if (Math.abs(j / st - Math.round(j / st)) < 1e-9) continue;
+      const x = Math.round(xVon(j)) + .5;
+      ctx.beginPath(); ctx.moveTo(x, AXIS_H-4); ctx.lineTo(x, AXIS_H); ctx.stroke();
+    }
+  }
   ctx.font = '12px -apple-system,Segoe UI,Roboto,sans-serif';
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   for (let j = j0; j <= j1; j += st){
     const x = xVon(j);
-    ctx.strokeStyle = '#b6a88c';
-    ctx.beginPath(); ctx.moveTo(x, AXIS_H-7); ctx.lineTo(x, AXIS_H); ctx.stroke();
-    ctx.fillStyle = (j===0) ? '#8a4b2a' : '#5b5145';
-    ctx.fillText(fmtJahr(j), x, AXIS_H/2 - 1);
+    ctx.strokeStyle = '#a3937a'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(Math.round(x)+.5, AXIS_H-9); ctx.lineTo(Math.round(x)+.5, AXIS_H); ctx.stroke();
+    ctx.fillStyle = (j===0) ? '#8a4b2a' : '#4a4136';
+    ctx.fillText(fmtJahr(j), x, AXIS_H/2 - 2);
   }
   ctx.restore();
-  ctx.fillStyle = '#8a4b2a'; ctx.textAlign = 'left'; ctx.font = '11px -apple-system,sans-serif';
-  ctx.fillText('Jahre', 8, AXIS_H/2 - 1);
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#8a4b2a'; ctx.font = '600 10px -apple-system,Segoe UI,Roboto,sans-serif';
+  ctx.fillText('RASTER', 8, AXIS_H/2 - 8);
+  ctx.fillStyle = '#5b5145'; ctx.font = '11px -apple-system,Segoe UI,Roboto,sans-serif';
+  ctx.fillText(st === 1 ? '1 Jahr' : st + ' Jahre', 8, AXIS_H/2 + 5);
+  zeichneHilfslinie(LB, W, H, SP);
 
   /* --- Spurenbeschriftung --- */
   ctx.save();
@@ -968,6 +1105,29 @@ function render(){
   zeichneMinikarte();
 }
 
+function zeichneHilfslinie(LB, W, H, SP){
+  const mx = state.mausX;
+  if (mx === null || mx < LB || mx > W) return;
+  const jahr = Math.round(jahrVon(mx));
+  const x = Math.round(mx) + .5;
+  ctx.save();
+  ctx.setLineDash([4,4]);
+  ctx.strokeStyle = 'rgba(138,75,42,.45)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x, AXIS_H); ctx.lineTo(x, H); ctx.stroke();
+  ctx.setLineDash([]);
+  const t = fmtJahr(jahr);
+  ctx.font = '600 11px -apple-system,Segoe UI,Roboto,sans-serif';
+  const tw = ctx.measureText(t).width;
+  const bx = clamp(mx - tw/2 - 6, LB + 1, W - tw - 13);
+  ctx.fillStyle = '#8a4b2a';
+  ctx.beginPath();
+  ctx.rect(bx, AXIS_H - 17, tw + 12, 17);
+  ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText(t, bx + 6, AXIS_H - 8);
+  ctx.restore();
+}
+
 function umbrich(text, maxW, x, y, lh){
   const worte = text.split(' ');
   let zeile = '', yy = y;
@@ -979,8 +1139,13 @@ function umbrich(text, maxW, x, y, lh){
   if (zeile) ctx.fillText(zeile, x, yy);
 }
 
-function zeichneBand(x, y, w, h, farbe, titel, gewaehlt, LB, W){
+function zeichneBand(x, y, w, h, farbe, titel, gewaehlt, LB, W, markiert){
   const r = 4;
+  if (markiert){
+    ctx.beginPath();
+    ctx.rect(x - 3, y - 3, w + 6, h + 6);
+    ctx.strokeStyle = 'rgba(214,158,20,.95)'; ctx.lineWidth = 2.5; ctx.stroke();
+  }
   ctx.beginPath();
   const xa = x, xb = x + w;
   ctx.moveTo(xa + r, y);
@@ -1144,6 +1309,10 @@ cv.addEventListener('pointerdown', e => {
   }
 });
 cv.addEventListener('pointermove', e => {
+  if (e.pointerType === 'mouse'){
+    const r0 = cv.getBoundingClientRect();
+    state.mausX = e.clientX - r0.left;
+  }
   const alt = zeiger.get(e.pointerId);
   if (!alt){ hoverPruefen(e); return; }
   const dx = e.clientX - alt.x, dy = e.clientY - alt.y;
@@ -1221,8 +1390,12 @@ function hoverPruefen(e){
     tipp.classList.remove('an');
     cv.style.cursor = zieht ? 'grabbing' : 'grab';
   }
+  render();
 }
-cv.addEventListener('pointerleave', () => tipp.classList.remove('an'));
+cv.addEventListener('pointerleave', () => {
+  tipp.classList.remove('an');
+  state.mausX = null; render();
+});
 
 /* --- Minikarte bedienen --- */
 let mkZieht = false;
@@ -1264,8 +1437,14 @@ function waehle(id){
   if (!rein.length && !raus.length){
     h += '<h3>Einordnung</h3><p class="text" style="color:#5b5145">Für dieses Element sind keine direkten Verbindungspfeile hinterlegt – betrachte die Nachbarspuren im selben Zeitraum.</p>';
   }
+  if (id === 'z_pi'){
+    h += '<h3>Eigene Zeittafel</h3><button class="verweis" id="panelPi" style="border-left:4px solid ' +
+         sp.farbe + '">π <b>Vollständige π-Chronik öffnen</b><i>26 Meilensteine von Babylon bis zu den Rechenzentren</i></button>';
+  }
   panelinhalt.innerHTML = h;
   panel.classList.add('offen');
+  const pk = document.getElementById('panelPi');
+  if (pk) pk.addEventListener('click', oeffnePi);
   panelinhalt.querySelectorAll('.verweis').forEach(b => {
     b.addEventListener('click', () => springeZu(b.dataset.ziel));
   });
@@ -1375,17 +1554,200 @@ window.addEventListener('keydown', e => {
   else if (e.key === 'ArrowLeft'){ state.x0 -= spanJahre()*0.12; begrenze(); render(); }
   else if (e.key === 'ArrowDown'){ state.offsetY = clamp(state.offsetY + 40, 0, maxOffsetY()); render(); }
   else if (e.key === 'ArrowUp'){ state.offsetY = clamp(state.offsetY - 40, 0, maxOffsetY()); render(); }
-  else if (e.key === 'Escape'){ waehle(null); document.getElementById('hilfe').classList.remove('offen'); }
+  else if (e.key === 'Escape'){ waehle(null); schliessePi();
+    document.getElementById('hilfe').classList.remove('offen'); sucheAus(); }
 });
 
-window.addEventListener('resize', () => { layoutKey = ''; begrenze(); render(); });
+window.addEventListener('resize', () => { layoutKey = ''; begrenze(); render();
+  if (piOverlay.classList.contains('offen')) zeichnePiChart(); });
+
+/* ============================================================
+   SUCHE
+   ============================================================ */
+const sucheFeld = document.getElementById('suche');
+const suchliste = document.getElementById('suchliste');
+const suchbox = sucheFeld.parentElement;
+let suchIndex = -1, suchListeIds = [];
+
+function normal(s){
+  return String(s).toLowerCase()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+const SUCHINDEX = ITEMS.map(o => ({
+  o, tt: normal(o.t), dd: normal(o.t + ' ' + (o.d||'') + ' ' + SPUR_VON_ID[o.s].name)
+}));
+
+function sucheAus(){
+  suchliste.classList.remove('offen');
+  suchliste.innerHTML = '';
+  suchIndex = -1; suchListeIds = [];
+}
+function suchen(){
+  const roh = sucheFeld.value.trim();
+  suchbox.classList.toggle('gefuellt', roh.length > 0);
+  const q = normal(roh);
+  if (q.length < 2){
+    state.suchTreffer = null; sucheAus(); render(); return;
+  }
+  const tr = SUCHINDEX.filter(e => e.dd.indexOf(q) >= 0);
+  tr.sort((a,b) => {
+    const at = a.tt.indexOf(q) >= 0 ? 0 : 1, bt = b.tt.indexOf(q) >= 0 ? 0 : 1;
+    if (at !== bt) return at - bt;
+    return a.o.a - b.o.a;
+  });
+  state.suchTreffer = new Set(tr.map(e => e.o.i));
+  suchliste.innerHTML = '';
+  suchListeIds = [];
+  if (!tr.length){
+    suchliste.innerHTML = '<div class="suchleer">Kein Treffer für „' + esc(roh) + '“.</div>';
+  } else {
+    const kopf = document.createElement('div');
+    kopf.className = 'suchleer';
+    kopf.textContent = tr.length + (tr.length === 1 ? ' Treffer' : ' Treffer') +
+      (tr.length > 12 ? ' – die ersten 12:' : '');
+    suchliste.appendChild(kopf);
+    tr.slice(0, 12).forEach(e => {
+      const sp = SPUR_VON_ID[e.o.s];
+      const b = document.createElement('button');
+      b.className = 'suchtreffer';
+      b.dataset.ziel = e.o.i;
+      b.innerHTML = '<span class="punkt" style="background:' + sp.farbe + '"></span><span><b>' +
+        esc(e.o.t) + '</b><i>' + esc(fmtZeitraum(e.o)) + ' · ' + esc(sp.name) + '</i></span>';
+      b.addEventListener('click', () => { springeZu(e.o.i); sucheAus(); sucheFeld.blur(); });
+      suchliste.appendChild(b);
+      suchListeIds.push(e.o.i);
+    });
+  }
+  suchIndex = -1;
+  suchliste.classList.add('offen');
+  render();
+}
+function markiereEintrag(){
+  [...suchliste.querySelectorAll('.suchtreffer')].forEach((b, k) =>
+    b.classList.toggle('markiert', k === suchIndex));
+}
+sucheFeld.addEventListener('input', suchen);
+sucheFeld.addEventListener('focus', () => { if (suchListeIds.length) suchliste.classList.add('offen'); });
+sucheFeld.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+    e.preventDefault();
+    if (!suchListeIds.length) return;
+    suchIndex = (suchIndex + (e.key === 'ArrowDown' ? 1 : -1) + suchListeIds.length) % suchListeIds.length;
+    markiereEintrag();
+  } else if (e.key === 'Enter'){
+    e.preventDefault();
+    const ziel = suchListeIds[suchIndex >= 0 ? suchIndex : 0];
+    if (ziel){ springeZu(ziel); sucheAus(); sucheFeld.blur(); }
+  } else if (e.key === 'Escape'){
+    sucheFeld.value = ''; suchen(); sucheFeld.blur();
+  }
+  e.stopPropagation();
+});
+document.getElementById('suchleeren').addEventListener('click', () => {
+  sucheFeld.value = ''; suchen(); sucheFeld.focus();
+});
+document.addEventListener('pointerdown', e => {
+  if (!suchbox.contains(e.target)) suchliste.classList.remove('offen');
+});
+
+/* ============================================================
+   π-CHRONIK
+   ============================================================ */
+const piOverlay = document.getElementById('pi');
+const piliste = document.getElementById('piliste');
+const piChart = document.getElementById('pichart');
+const pctx = piChart.getContext('2d');
+let piGebaut = false;
+
+function fmtStellen(n){
+  if (n >= 1e12) return (n/1e12).toLocaleString('de-DE',{maximumFractionDigits:1}) + ' Billionen Stellen';
+  if (n >= 1e9)  return (n/1e9 ).toLocaleString('de-DE',{maximumFractionDigits:1}) + ' Milliarden Stellen';
+  if (n >= 1e6)  return (n/1e6 ).toLocaleString('de-DE',{maximumFractionDigits:1}) + ' Millionen Stellen';
+  return n.toLocaleString('de-DE') + (n === 1 ? ' gesicherte Stelle' : ' gesicherte Stellen');
+}
+function bauePi(){
+  if (piGebaut) return;
+  piGebaut = true;
+  piliste.innerHTML = '';
+  for (const e of PI_CHRONIK){
+    const b = document.createElement('button');
+    b.className = 'pizeile' + (e.ziel ? ' klickbar' : '');
+    b.innerHTML = '<span class="pijahr"' + (e.ziel ? '' : ' style="color:#5b5145"') + '>' + esc(fmtJahr(e.j)) + '</span>' +
+      '<span><span class="piwer">' + esc(e.wer) + '</span>' +
+      '<span class="piwas">' + esc(e.was) + '</span>' +
+      '<span class="pim">' + esc(e.m) + '</span>' +
+      (e.st > 0 ? '<span class="pistellen">' + esc(fmtStellen(e.st)) + '</span>' :
+                  '<span class="pistellen">theoretisches Ergebnis</span>') + '</span>';
+    if (e.ziel) b.addEventListener('click', () => { schliessePi(); springeZu(e.ziel); });
+    piliste.appendChild(b);
+  }
+}
+function zeichnePiChart(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  const W = piChart.clientWidth, H = piChart.clientHeight;
+  if (!W) return;
+  piChart.width = Math.round(W*dpr); piChart.height = Math.round(H*dpr);
+  pctx.setTransform(dpr,0,0,dpr,0,0);
+  pctx.clearRect(0,0,W,H);
+  const daten = PI_CHRONIK.filter(e => e.st > 0);
+  const li = 34, re = 10, ob = 12, un = 22;
+  const maxL = Math.log10(daten[daten.length-1].st) ;
+  const px = k => li + (W - li - re) * (k / (daten.length - 1));
+  const py = v => H - un - (H - un - ob) * (Math.log10(v) / maxL);
+  // Gitter
+  pctx.font = '9.5px -apple-system,Segoe UI,Roboto,sans-serif';
+  pctx.textAlign = 'right'; pctx.textBaseline = 'middle';
+  for (let p = 0; p <= Math.ceil(maxL); p += 2){
+    const y = py(Math.pow(10, p));
+    pctx.strokeStyle = 'rgba(190,175,150,.45)'; pctx.lineWidth = 1;
+    pctx.beginPath(); pctx.moveTo(li, y+.5); pctx.lineTo(W-re, y+.5); pctx.stroke();
+    pctx.fillStyle = '#7a6f5f';
+    pctx.fillText(p === 0 ? '1' : '10^' + p, li - 5, y);
+  }
+  // Linie
+  pctx.beginPath();
+  daten.forEach((e,k) => { const x = px(k), y = py(e.st); k ? pctx.lineTo(x,y) : pctx.moveTo(x,y); });
+  pctx.strokeStyle = '#16607f'; pctx.lineWidth = 2; pctx.stroke();
+  // Punkte + ausgewählte Beschriftungen
+  pctx.textAlign = 'center'; pctx.textBaseline = 'bottom';
+  daten.forEach((e,k) => {
+    const x = px(k), y = py(e.st);
+    pctx.beginPath(); pctx.arc(x, y, 3.2, 0, Math.PI*2);
+    pctx.fillStyle = '#16607f'; pctx.fill();
+    pctx.strokeStyle = '#fff'; pctx.lineWidth = 1.2; pctx.stroke();
+  });
+  pctx.font = '9.5px -apple-system,Segoe UI,Roboto,sans-serif';
+  pctx.fillStyle = '#5b5145';
+  const zeigen = [0, 3, 8, 12, daten.length-4, daten.length-1];
+  zeigen.forEach(k => {
+    if (k < 0 || k >= daten.length) return;
+    const x = clamp(px(k), li + 14, W - re - 14), y = py(daten[k].st);
+    pctx.fillText(fmtJahr(daten[k].j), x, y - 7);
+  });
+  pctx.textAlign = 'left'; pctx.textBaseline = 'bottom';
+  pctx.fillStyle = '#7a6f5f';
+  pctx.fillText('Babylon', li, H - 6);
+  pctx.textAlign = 'right';
+  pctx.fillText('heute', W - re, H - 6);
+}
+function oeffnePi(){
+  bauePi();
+  piOverlay.classList.add('offen');
+  requestAnimationFrame(zeichnePiChart);
+}
+function schliessePi(){ piOverlay.classList.remove('offen'); }
+document.getElementById('btnPi').addEventListener('click', oeffnePi);
+document.getElementById('pizu').addEventListener('click', schliessePi);
+piOverlay.addEventListener('click', e => { if (e.target.id === 'pi') schliessePi(); });
 
 /* Start */
 state.z = zMin();
 state.x0 = MIN_JAHR;
 begrenze();
 render();
-window.__zl = {state, ITEMS, LINKS, SPUREN, GRUPPEN, render, waehle, geheZu, ITEM_VON_ID};
+window.__zl = {state, ITEMS, LINKS, SPUREN, GRUPPEN, PI_CHRONIK, render, waehle, geheZu,
+  ITEM_VON_ID, suchen, oeffnePi, schliessePi, schrittPaar, normal};
 </script>
 </body>
 </html>
