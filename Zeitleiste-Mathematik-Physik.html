@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Zeitleiste der Mathematik und Physik – mit Astronomie und ihren Wechselwirkungen</title>
+<style>
+  :root{
+    --bg:#f6f2e9; --bg2:#efe9dc; --ink:#241f18; --ink2:#5b5145;
+    --line:#d6cab3; --akzent:#8a4b2a; --panel:#fffdf8;
+    --schatten:0 6px 24px rgba(60,45,25,.18);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;margin:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--bg); color:var(--ink);
+    display:flex; flex-direction:column; overflow:hidden; -webkit-text-size-adjust:100%;
+  }
+  header{flex:0 0 auto;background:linear-gradient(180deg,#fffdf8,#f2ece0);
+         border-bottom:1px solid var(--line);padding:7px 12px 6px}
+  .kopfzeile{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  h1{font-size:16px;margin:0;letter-spacing:.2px}
+  h1 span{color:var(--akzent)}
+  .untertitel{font-size:11.5px;color:var(--ink2)}
+  .leisten{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;align-items:center}
+  .gruppe{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+  .trenner{width:1px;height:22px;background:var(--line);margin:0 3px}
+
+  button,.chip{font:inherit;font-size:12px;line-height:1;border:1px solid var(--line);
+    background:#fff;color:var(--ink);padding:6px 9px;border-radius:999px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:5px;user-select:none;
+    transition:background .12s,border-color .12s,transform .06s}
+  button:active{transform:scale(.96)}
+  button.aktiv{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .icon{font-size:13px;line-height:1}
+
+  .gruppenbox{display:flex;gap:4px;align-items:center;background:#fffdf8;
+    border:1px solid var(--line);border-radius:999px;padding:3px 4px 3px 3px}
+  .gruppenknopf{font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+    padding:6px 9px;background:var(--bg2)}
+  .gruppenknopf.aktiv{background:var(--akzent);color:#fff;border-color:var(--akzent)}
+  .spurchip{padding-left:7px;font-size:11.5px}
+  .spurchip .punkt{width:10px;height:10px;border-radius:3px;flex:0 0 auto;border:1px solid rgba(0,0,0,.15)}
+  .spurchip.aus{opacity:.4;background:var(--bg2);text-decoration:line-through}
+
+  #buehne{flex:1 1 auto;position:relative;overflow:hidden}
+  #cv{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+  #cv.zieht{cursor:grabbing}
+  #minikarte{flex:0 0 auto;height:44px;border-top:1px solid var(--line);background:var(--bg2);position:relative}
+  #mk{display:block;width:100%;height:100%;touch-action:none;cursor:pointer}
+
+  #panel{position:absolute;right:0;top:0;height:100%;width:min(380px,88vw);
+    background:var(--panel);border-left:1px solid var(--line);box-shadow:var(--schatten);
+    transform:translateX(102%);transition:transform .22s ease;overflow-y:auto;
+    padding:14px 16px 30px;z-index:20;-webkit-overflow-scrolling:touch}
+  #panel.offen{transform:translateX(0)}
+  #panel h2{margin:2px 0 2px;font-size:19px;line-height:1.2}
+  .badge{display:inline-block;font-size:11px;padding:3px 8px;border-radius:999px;color:#fff;margin-bottom:6px}
+  .zeitraum{font-size:13px;color:var(--ink2);margin:0 0 10px;font-variant-numeric:tabular-nums}
+  #panel p.text{font-size:14px;line-height:1.52;margin:0 0 14px}
+  #panel h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink2);
+    margin:14px 0 6px;border-top:1px solid var(--line);padding-top:10px}
+  .verweis{display:block;width:100%;text-align:left;margin:0 0 5px;border-radius:9px;
+    padding:8px 10px;font-size:13px;line-height:1.3}
+  .verweis b{font-weight:600}
+  .verweis i{font-style:normal;color:var(--ink2);font-size:12px;display:block;margin-top:2px}
+  #zu{position:absolute;top:8px;right:10px;border-radius:50%;width:30px;height:30px;padding:0;justify-content:center;font-size:16px}
+
+  #hilfe{position:absolute;inset:0;background:rgba(36,31,24,.55);z-index:40;display:none;
+    align-items:center;justify-content:center;padding:16px}
+  #hilfe.offen{display:flex}
+  .hilfebox{background:var(--panel);border-radius:16px;max-width:560px;max-height:88%;
+    overflow:auto;padding:20px 22px;box-shadow:var(--schatten)}
+  .hilfebox h2{margin:0 0 10px;font-size:18px}
+  .hilfebox h3{font-size:13px;margin:14px 0 4px;color:var(--akzent)}
+  .hilfebox ul{margin:0 0 10px;padding-left:20px;font-size:13.5px;line-height:1.55}
+  .hilfebox p{font-size:13.5px;line-height:1.5}
+  .schluessel{background:var(--bg2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12.5px}
+
+  #tipp{position:absolute;pointer-events:none;z-index:15;background:rgba(36,31,24,.93);color:#fff;
+    padding:6px 9px;border-radius:8px;font-size:12.5px;max-width:270px;line-height:1.35;
+    opacity:0;transition:opacity .1s}
+  #tipp.an{opacity:1}
+  @media (max-width:640px){
+    h1{font-size:14px} .untertitel{display:none}
+    #panel{width:100%;top:auto;bottom:0;height:66%;border-left:none;border-top:1px solid var(--line);
+           border-radius:16px 16px 0 0;transform:translateY(104%)}
+    #panel.offen{transform:translateY(0)}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="kopfzeile">
+    <h1>Mathematik &amp; Physik – <span>Zeitleiste der Erkenntnisse</span></h1>
+    <div class="untertitel">Zahlen · Geometrie · Algebra · Analysis · Stochastik · Logik | Mechanik · Wärmelehre · Elektrodynamik · Relativität · Quantenphysik | Astronomie</div>
+  </div>
+  <div class="leisten" id="spurleiste"></div>
+  <div class="leisten">
+    <div class="gruppe">
+      <button id="btnEinfluss"><span class="icon">⇄</span>Einflüsse</button>
+      <button id="btnKern">Nur Hauptstränge</button>
+      <button id="btnReset"><span class="icon">⟲</span>Gesamtansicht</button>
+      <button id="btnHilfe"><span class="icon">?</span>Hilfe</button>
+    </div>
+    <div class="trenner"></div>
+    <div class="gruppe" id="sprungleiste"></div>
+  </div>
+</header>
+
+<div id="buehne">
+  <canvas id="cv"></canvas>
+  <div id="tipp"></div>
+  <aside id="panel">
+    <button id="zu" title="Schließen">✕</button>
+    <div id="panelinhalt"></div>
+  </aside>
+  <div id="hilfe">
+    <div class="hilfebox">
+      <h2>Zeitleiste der Mathematik und Physik</h2>
+      <h3>Bedienung</h3>
+      <ul>
+        <li><b>Verschieben:</b> mit dem Finger ziehen (waagrecht = Zeit, senkrecht = Spuren).</li>
+        <li><b>Zoomen:</b> zwei Finger auseinanderziehen oder Mausrad. Je tiefer der Zoom, desto mehr Details erscheinen.</li>
+        <li><b>Details:</b> auf einen Balken oder Punkt tippen – die Erklärung öffnet sich seitlich.</li>
+        <li><b>Spuren:</b> oben einzeln zuschaltbar; der fette Knopf schaltet eine ganze Gruppe.</li>
+        <li><b>Wechselwirkungen:</b> <span class="schluessel">⇄ Einflüsse</span> zeigt alle Pfeile. Ein ausgewähltes Element zeigt seine eigenen immer, mit Beschriftung.</li>
+      </ul>
+      <h3>Die Idee</h3>
+      <p>Hauptstränge sind <b>Mathematik</b> (Zahlen, Geometrie, Algebra, Analysis, Stochastik, Logik) und <b>Physik</b> (Mechanik, Wärmelehre, Elektrodynamik, Relativität, Quantenphysik) sowie die eigenständige <b>Astronomie</b>. Die Kontextspuren – Kulturräume, Weltbild, Instrumente, Gesellschaft – erklären, <i>warum</i> etwas gerade dort und dann entdeckt wurde.</p>
+      <p>Besonders lohnend sind die Pfeile zwischen den Strängen: Kegelschnitte (−200) → Keplerbahnen (1609). Riemanns Geometrie (1854) → Allgemeine Relativitätstheorie (1915). Matrizenrechnung (1858) → Heisenberg (1925). Und umgekehrt: Wärmeleitung → Fourierreihen, Ceres-Bahn → Methode der kleinsten Quadrate.</p>
+    </div>
+  </div>
+</div>
+<div id="minikarte"><canvas id="mk"></canvas></div>
+
+<script>
+"use strict";
+/* ============================================================
+   DATEN – Schwerpunkt Mathematik & Physik/Astronomie
+   s = Spur, t = Titel, a = Beginn, b = Ende (fehlt = Zeitpunkt)
+   r = Rang (1 = immer sichtbar, 2 = mittlerer Zoom, 3 = Detail)
+   ============================================================ */
+
+const SPUREN = [
+  {id:'ma_zahl',  g:'Mathematik', name:'Zahlen, Ziffern & Rechnen',   kurz:'Zahlen',        farbe:'#16607f'},
+  {id:'ma_geo',   g:'Mathematik', name:'Geometrie',                   kurz:'Geometrie',     farbe:'#1f8296'},
+  {id:'ma_alg',   g:'Mathematik', name:'Algebra & Gleichungen',       kurz:'Algebra',       farbe:'#2f6fb0'},
+  {id:'ma_ana',   g:'Mathematik', name:'Analysis',                    kurz:'Analysis',      farbe:'#4a5fa8'},
+  {id:'ma_sto',   g:'Mathematik', name:'Wahrscheinlichkeit & Statistik',kurz:'Stochastik',  farbe:'#7a72c4'},
+  {id:'ma_log',   g:'Mathematik', name:'Struktur, Logik & Beweis',    kurz:'Logik',         farbe:'#2b8a8a'},
+
+  {id:'ph_mech',  g:'Physik',     name:'Mechanik',                    kurz:'Mechanik',      farbe:'#b8482f'},
+  {id:'ph_waerme',g:'Physik',     name:'Wärme & Energie',             kurz:'Wärmelehre',    farbe:'#cf7a12'},
+  {id:'ph_em',    g:'Physik',     name:'Optik, Elektrizität & Magnetismus',kurz:'Elektrodynamik',farbe:'#b8306a'},
+  {id:'ph_rel',   g:'Physik',     name:'Relativitätstheorie',         kurz:'Relativität',   farbe:'#8f3a8f'},
+  {id:'ph_qm',    g:'Physik',     name:'Quanten-, Atom- & Kernphysik',kurz:'Quantenphysik', farbe:'#6f3fa0'},
+
+  {id:'as_astro', g:'Astronomie', name:'Astronomie & Kosmologie',     kurz:'Astronomie',    farbe:'#2b3a7a'},
+
+  {id:'k_epoche', g:'Kontext',    name:'Epochen',                     kurz:'Epochen',       farbe:'#8a6f45'},
+  {id:'k_kultur', g:'Kontext',    name:'Kulturräume & Reiche',        kurz:'Kulturräume',   farbe:'#a05a3a'},
+  {id:'k_glaube', g:'Kontext',    name:'Glaube & Weltbild',           kurz:'Weltbild',      farbe:'#7a6a8a'},
+  {id:'k_technik',g:'Kontext',    name:'Instrumente & Technik',       kurz:'Instrumente',   farbe:'#5f7a55'},
+  {id:'k_gesell', g:'Kontext',    name:'Kunst, Musik & Gesellschaft', kurz:'Gesellschaft',  farbe:'#94794f'}
+];
+
+const GRUPPEN = ['Mathematik','Physik','Astronomie','Kontext'];
+
+const ITEMS = [
+
+/* ============ ZAHLEN, ZIFFERN & RECHNEN ============ */
+{i:'z_token',s:'ma_zahl',t:'Zählsteine & erste Zahlzeichen',a:-3300,r:1,d:'In Uruk werden Warenmengen zuerst mit Tonmarken, dann mit eingedrückten Zahlzeichen festgehalten. Zahl und Schrift entstehen gemeinsam – aus dem Bedarf der Verwaltung.'},
+{i:'z_sexa',s:'ma_zahl',t:'Babylonisches Sexagesimalsystem',a:-2000,b:-300,r:1,d:'Ein Stellenwertsystem zur Basis 60 – mit demselben Zeichen für 1, 60 und 3600. Es erlaubt bequemes Bruchrechnen (1/2, 1/3, 1/4, 1/5, 1/6 sind alle „glatt“) und lebt bis heute in Minuten, Sekunden und 360° fort.'},
+{i:'z_aegbruch',s:'ma_zahl',t:'Ägyptische Stammbruchrechnung',a:-1850,b:-1550,r:2,d:'Der Papyrus Rhind zeigt: Ägypter schreiben jeden Bruch als Summe von Stammbrüchen (1/n). Umständlich, aber ein vollständiges, geschlossenes Rechenverfahren – die älteste erhaltene Mathematik-„Aufgabensammlung“.'},
+{i:'z_chinastab',s:'ma_zahl',t:'Chinesische Stäbchenzahlen (dezimal, Stellenwert)',a:-400,b:1400,r:2,d:'Gelegte Rechenstäbchen mit abwechselnder Ausrichtung ergeben ein dezimales Stellenwertsystem – inklusive Leerstelle und negativer Zahlen (rote/schwarze Stäbchen).'},
+{i:'z_irrat',s:'ma_zahl',t:'Entdeckung der irrationalen Zahlen',a:-450,r:1,d:'Die Diagonale des Quadrats lässt sich nicht als Bruch schreiben. Für die Pythagoreer, deren Weltbild auf „alles ist Zahl (= Verhältnis)“ ruhte, war das eine Grundlagenkrise – und der erste große Unmöglichkeitsbeweis.'},
+{i:'z_maya',s:'ma_zahl',t:'Maya-Zahlen mit Nullzeichen',a:100,b:900,r:2,d:'Ein Zwanzigersystem mit Stellenwert und eigenem Zeichen für Null – unabhängig von der Alten Welt entwickelt, vor allem für Kalender- und Astronomierechnungen.'},
+{i:'z_negativ',s:'ma_zahl',t:'Negative Zahlen in China',a:100,r:2,d:'Die „Neun Bücher arithmetischer Technik“ rechnen selbstverständlich mit Schulden und Guthaben. In Europa gelten negative Zahlen noch 1500 Jahre später als „falsche“ Zahlen.'},
+{i:'z_null',s:'ma_zahl',t:'Indische Ziffern & die Null als Zahl',a:500,b:700,r:1,d:'In Indien wird die Null vom bloßen Platzhalter zur vollwertigen Zahl: Brahmagupta (628) formuliert Rechenregeln für Null und negative Zahlen. Eine der folgenreichsten Ideen der Mathematikgeschichte.'},
+{i:'z_alkh_ziffer',s:'ma_zahl',t:'Al-Chwarizmi verbreitet die indischen Ziffern',a:825,r:1,d:'Sein Rechenbuch bringt das dezimale Stellenwertsystem in die islamische Welt. Aus der lateinischen Übersetzung („Algorismi dixit“) wird unser Wort Algorithmus.'},
+{i:'z_fibo',s:'ma_zahl',t:'Fibonacci: „Liber Abaci“',a:1202,r:1,d:'Ein Kaufmannssohn aus Pisa lernt in Nordafrika das Rechnen mit arabischen Ziffern und schreibt das Lehrbuch, das Europa vom Rechenbrett zum schriftlichen Rechnen führt.'},
+{i:'z_dezbruch',s:'ma_zahl',t:'Dezimalbrüche',a:1427,b:1585,r:2,d:'Al-Kaschi in Samarkand und später Simon Stevin machen die Kommaschreibweise populär – Voraussetzung für alle späteren Messwerttabellen der Naturwissenschaft.'},
+{i:'z_log',s:'ma_zahl',t:'Logarithmen (Napier, Bürgi)',a:1614,b:1620,r:1,d:'Multiplikation wird zur Addition. Für Astronomen halbiert das die Rechenzeit – Kepler nannte es eine Verlängerung des Astronomenlebens. Der Rechenschieber lebt davon bis 1975.'},
+{i:'z_komplex',s:'ma_zahl',t:'Komplexe Zahlen',a:1545,b:1806,r:1,d:'Cardano stolpert beim Lösen kubischer Gleichungen über Wurzeln aus negativen Zahlen; Euler, Gauß und Argand geben ihnen mit der Zahlenebene eine anschauliche Bedeutung. Ohne sie gäbe es keine Wechselstromtechnik und keine Quantenmechanik.'},
+{i:'z_binaer',s:'ma_zahl',t:'Leibniz: Dualsystem',a:1703,r:2,d:'Nur 0 und 1 – für Leibniz zugleich eine philosophisch-theologische Idee. 240 Jahre später wird daraus die Sprache jedes Computers.'},
+{i:'z_reell',s:'ma_zahl',t:'Konstruktion der reellen Zahlen',a:1872,r:2,d:'Dedekind (Schnitte) und Cantor (Fundamentalfolgen) definieren endlich exakt, was eine reelle Zahl ist – 2300 Jahre nach der Entdeckung der Irrationalität.'},
+{i:'z_transz',s:'ma_zahl',t:'e und π sind transzendent',a:1873,b:1882,r:2,d:'Hermite und Lindemann beweisen: π ist keine Lösung irgendeiner algebraischen Gleichung. Damit ist die Quadratur des Kreises endgültig unmöglich.'},
+{i:'z_cantor',s:'ma_zahl',t:'Cantor: verschiedene Unendlichkeiten',a:1874,r:1,d:'Das Diagonalargument zeigt: Es gibt mehr reelle als natürliche Zahlen. Unendlich ist nicht gleich unendlich – ein Schock, den viele Zeitgenossen ablehnten.'},
+{i:'z_rsa',s:'ma_zahl',t:'Primzahlen & Kryptographie (RSA)',a:1977,r:2,d:'Die „nutzloseste“ Disziplin, die Zahlentheorie, sichert plötzlich jede Banküberweisung: Multiplizieren ist leicht, Faktorisieren schwer.'},
+
+/* ============ GEOMETRIE ============ */
+{i:'g_aegverm',s:'ma_geo',t:'Ägyptische Feldvermessung',a:-2700,b:-300,r:1,d:'Nach jeder Nilflut müssen Felder neu abgesteckt werden. Die „Seilspanner“ arbeiten mit rechten Winkeln und Flächenformeln – Geometrie heißt wörtlich „Erdmessung“.'},
+{i:'g_plimpton',s:'ma_geo',t:'Babylonische Tripel (Plimpton 322)',a:-1800,r:2,d:'Eine Tontafel listet systematisch rechtwinklige Dreiecke mit ganzzahligen Seiten – über tausend Jahre vor Pythagoras, allerdings ohne allgemeinen Beweis.'},
+{i:'g_thales',s:'ma_geo',t:'Thales: der erste Beweis',a:-600,r:2,d:'Thales begründet Aussagen nicht mehr durch Nachmessen, sondern durch Argumentation. Aus Rezeptmathematik wird beweisende Mathematik.'},
+{i:'g_pyth',s:'ma_geo',t:'Satz des Pythagoras (Beweis)',a:-530,r:1,d:'Die Beziehung war in Babylon, Ägypten, Indien und China bekannt; die Pythagoreer liefern den allgemeinen Beweis. Der Übergang von „gilt in diesen Fällen“ zu „gilt immer“ ist die Geburt der Mathematik als Wissenschaft.'},
+{i:'g_probleme',s:'ma_geo',t:'Die drei klassischen Probleme',a:-430,r:3,d:'Würfelverdopplung, Winkeldreiteilung, Quadratur des Kreises – mit Zirkel und Lineal unlösbar, was erst im 19. Jh. bewiesen wird. Zwei Jahrtausende produktiver Irrtum.'},
+{i:'g_eudoxos',s:'ma_geo',t:'Eudoxos: Proportionen & Exhaustion',a:-370,r:2,d:'Ein Umgang mit inkommensurablen Größen und eine Ausschöpfungsmethode für krumme Flächen – der antike Vorläufer des Grenzwerts.'},
+{i:'g_euklid',s:'ma_geo',t:'Euklid: „Die Elemente“',a:-300,r:1,d:'Alles folgt aus fünf Postulaten und wenigen Axiomen. Das Buch ist über 2000 Jahre Schulbuch und wird zum Vorbild jeder strengen Wissenschaft – Newton und Spinoza schreiben nach seinem Muster.'},
+{i:'g_archim',s:'ma_geo',t:'Archimedes: Kreiszahl, Kugel & Zylinder',a:-250,r:1,d:'Er schachtelt π zwischen 3+10/71 und 3+1/7 ein und bestimmt Kugelvolumen und -oberfläche. Seine Methode der Ausschöpfung kommt der Integralrechnung sehr nahe.'},
+{i:'g_apollon',s:'ma_geo',t:'Apollonios: Kegelschnitte',a:-200,r:1,d:'Ellipse, Parabel, Hyperbel werden systematisch untersucht – reine Geometrie ohne jeden Nutzen. 1800 Jahre später sind es genau die Bahnen der Planeten und Wurfgeschosse.'},
+{i:'g_liuhui',s:'ma_geo',t:'Liu Hui & Zu Chongzhi: π',a:263,b:480,r:2,d:'Mit einem 3072-Eck erreicht Liu Hui fünf, Zu Chongzhi schließlich sieben korrekte Stellen von π – ein Rekord, den Europa erst 1000 Jahre später einholt.'},
+{i:'g_aryabhata',s:'ma_geo',t:'Aryabhata: Sinustafeln',a:499,r:2,d:'Indische Astronomen ersetzen die griechischen Sehnentafeln durch Halbsehnen – daraus wird über das Arabische unser Wort „Sinus“.'},
+{i:'g_trigo',s:'ma_geo',t:'Trigonometrie in der islamischen Welt',a:850,b:1050,r:2,d:'Al-Battani und Abu l-Wafa entwickeln die sechs Winkelfunktionen und sphärische Trigonometrie – gebraucht für Gebetsrichtung, Kalender und Astronomie.'},
+{i:'g_perspektive',s:'ma_geo',t:'Zentralperspektive',a:1420,b:1525,r:1,d:'Brunelleschi, Alberti und Dürer entwickeln die geometrische Konstruktion des Sehens. Kunst wird angewandte Mathematik – und aus dieser Praxis wächst die projektive Geometrie.'},
+{i:'g_descartes',s:'ma_geo',t:'Descartes: Analytische Geometrie',a:1637,r:1,d:'Punkte werden Zahlenpaare, Kurven werden Gleichungen. Geometrie und Algebra verschmelzen – die Voraussetzung dafür, dass Physik überhaupt in Formeln geschrieben werden kann.'},
+{i:'g_desargues',s:'ma_geo',t:'Desargues: Projektive Geometrie',a:1639,r:3,d:'Geometrie, in der Parallelen sich im Unendlichen schneiden – aus der Perspektivkunst der Maler wird eine eigene Theorie.'},
+{i:'g_euler_top',s:'ma_geo',t:'Euler: Polyedersatz & Königsberger Brücken',a:1736,b:1752,r:2,d:'e − k + f = 2 und das Brückenproblem: Es entsteht eine Geometrie, in der nicht Längen, sondern Zusammenhänge zählen – der Beginn von Topologie und Graphentheorie.'},
+{i:'g_nichteukl',s:'ma_geo',t:'Nichteuklidische Geometrie',a:1830,r:1,d:'Gauß, Bolyai und Lobatschewski zeigen: Man kann das Parallelenpostulat streichen und erhält eine widerspruchsfreie Geometrie. Mathematik beschreibt damit nicht mehr „den“ Raum, sondern mögliche Räume.'},
+{i:'g_riemann',s:'ma_geo',t:'Riemann: gekrümmte Räume beliebiger Dimension',a:1854,r:1,d:'Ein Habilitationsvortrag legt die Sprache bereit, die Einstein 60 Jahre später für die Allgemeine Relativitätstheorie genau so braucht – Mathematik auf Vorrat.'},
+{i:'g_hilbert_geo',s:'ma_geo',t:'Hilbert: Grundlagen der Geometrie',a:1899,r:2,d:'Euklids Lücken werden geschlossen: „Man muss statt Punkt, Gerade, Ebene jederzeit Tische, Stühle, Bierseidel sagen können.“ Bedeutung entsteht allein aus den Axiomen.'},
+{i:'g_fraktal',s:'ma_geo',t:'Fraktale Geometrie (Mandelbrot)',a:1975,r:2,d:'Küstenlinien, Wolken und Farne haben gebrochene Dimension. Mit dem Computer wird eine Geometrie sichtbar, die zur Natur besser passt als Kugel und Kegel.'},
+
+/* ============ ALGEBRA & GLEICHUNGEN ============ */
+{i:'a_babquad',s:'ma_alg',t:'Babylonische quadratische Gleichungen',a:-1800,r:1,d:'Tontafeln enthalten Rezepte, die exakt unserer Lösungsformel entsprechen – formuliert als Wortalgorithmus ohne Symbole und ohne negative Lösungen.'},
+{i:'a_neunbuecher',s:'ma_alg',t:'„Neun Bücher arithmetischer Technik“ (China)',a:100,r:1,d:'246 Aufgaben mit Verfahren für lineare Gleichungssysteme – im Kern das Gauß-Verfahren, 1700 Jahre vor Gauß.'},
+{i:'a_diophant',s:'ma_alg',t:'Diophant: „Arithmetica“',a:250,r:2,d:'Erste Abkürzungen statt reiner Wortsprache und die Suche nach ganzzahligen Lösungen. An seinem Rand notiert Fermat 1637 seine berühmte Vermutung.'},
+{i:'a_brahma',s:'ma_alg',t:'Brahmagupta: Regeln für Null & Negatives',a:628,r:2,d:'Er löst quadratische Gleichungen allgemein und akzeptiert negative Lösungen als „Schulden“ – ein Schritt, den Europa erst im 17. Jh. nachvollzieht.'},
+{i:'a_alkhwarizmi',s:'ma_alg',t:'Al-Chwarizmi: „al-dschabr“',a:820,r:1,d:'Das Buch über das Ergänzen und Ausgleichen behandelt Gleichungen systematisch als eigenständiges Thema. Aus dem Titel wird das Wort Algebra.'},
+{i:'a_chayyam',s:'ma_alg',t:'Omar Chayyam: kubische Gleichungen',a:1070,r:3,d:'Der Dichter und Mathematiker löst Gleichungen dritten Grades geometrisch über Schnitte von Kegelschnitten.'},
+{i:'a_cardano',s:'ma_alg',t:'Cardano & Tartaglia: Gleichungen 3. und 4. Grades',a:1545,r:1,d:'Der berühmteste Prioritätsstreit der Mathematikgeschichte liefert die Lösungsformeln – und erzwingt nebenbei das Rechnen mit Wurzeln aus negativen Zahlen.'},
+{i:'a_viete',s:'ma_alg',t:'Viète: Buchstabenrechnung',a:1591,r:1,d:'Bekannte und unbekannte Größen bekommen Buchstaben. Erst dadurch kann man allgemeine Formeln aufschreiben statt Einzelfälle – die Formelsprache der Physik wird möglich.'},
+{i:'a_fundamental',s:'ma_alg',t:'Gauß: Fundamentalsatz der Algebra',a:1799,r:1,d:'Jede Polynomgleichung n-ten Grades hat genau n komplexe Lösungen. Die komplexen Zahlen erweisen sich als der „richtige“ Zahlbereich der Algebra.'},
+{i:'a_galois',s:'ma_alg',t:'Abel & Galois: Unlösbarkeit & Gruppen',a:1824,b:1832,r:1,d:'Ab Grad fünf gibt es keine allgemeine Lösungsformel mehr. Der 20-jährig im Duell getötete Galois beantwortet das Warum mit einem völlig neuen Werkzeug: der Gruppentheorie.'},
+{i:'a_hamilton_q',s:'ma_alg',t:'Hamilton: Quaternionen',a:1843,r:3,d:'Eine Zahlbereichserweiterung, in der a·b ≠ b·a gilt. Heute rechnet jede 3D-Grafik damit.'},
+{i:'a_matrizen',s:'ma_alg',t:'Matrizen & lineare Algebra',a:1858,b:1900,r:2,d:'Cayley und Sylvester machen aus Zahlenschemata rechenbare Objekte – die Sprache, in der später Quantenmechanik und jede Computergrafik formuliert werden.'},
+{i:'a_lie',s:'ma_alg',t:'Lie: kontinuierliche Symmetriegruppen',a:1873,b:1890,r:2,d:'Symmetrie wird selbst zum mathematischen Objekt. Im 20. Jh. wird sie zum Bauprinzip der gesamten Teilchenphysik.'},
+{i:'a_noether',s:'ma_alg',t:'Emmy Noether: Symmetrie ⇔ Erhaltungssatz',a:1918,r:1,d:'Zu jeder kontinuierlichen Symmetrie gehört eine Erhaltungsgröße: Zeitverschiebung → Energie, Ortsverschiebung → Impuls, Drehung → Drehimpuls. Der tiefste Brückenschlag zwischen Mathematik und Physik.'},
+{i:'a_abstrakt',s:'ma_alg',t:'Abstrakte Algebra',a:1920,b:1935,r:2,d:'Noether und van der Waerden ordnen die Mathematik nach Strukturen (Gruppe, Ring, Körper) statt nach Rechenobjekten – der moderne Stil der Mathematik entsteht.'},
+
+/* ============ ANALYSIS ============ */
+{i:'an_archim',s:'ma_ana',t:'Antike Vorformen der Integration',a:-250,r:2,d:'Archimedes berechnet Flächen und Volumina durch Ausschöpfung mit immer feineren Figuren. Es fehlt nur der Grenzwertbegriff – und die Algebra, um es allgemein zu formulieren.'},
+{i:'an_oresme',s:'ma_ana',t:'Oresme: Bewegung als Fläche im Diagramm',a:1360,r:2,d:'Er trägt Geschwindigkeit über der Zeit auf und erkennt: Die Fläche darunter ist der zurückgelegte Weg. Die Merton-Regel für gleichmäßig beschleunigte Bewegung ist damit bewiesen – 270 Jahre vor Galilei.'},
+{i:'an_kerala',s:'ma_ana',t:'Kerala-Schule: unendliche Reihen',a:1350,b:1500,r:2,d:'Madhava entwickelt in Südindien Potenzreihen für Sinus, Kosinus und Arkustangens – Ergebnisse, die in Europa erst Newton und Leibniz wiederfinden.'},
+{i:'an_cavalieri',s:'ma_ana',t:'Kepler & Cavalieri: Indivisiblen',a:1615,b:1635,r:3,d:'Fassvolumen und Flächen werden aus „unendlich dünnen Scheiben“ zusammengesetzt – bequem, aber logisch anrüchig.'},
+{i:'an_fermat',s:'ma_ana',t:'Fermat: Extremwerte & Tangenten',a:1636,r:2,d:'Sein Verfahren für Maxima und Minima ist im Kern schon die Ableitung – Newton nennt es später als eine seiner Quellen.'},
+{i:'an_infinitesimal',s:'ma_ana',t:'Newton & Leibniz: Infinitesimalrechnung',a:1665,b:1684,r:1,d:'Unabhängig voneinander entsteht der Kalkül aus Ableitung und Integral, verbunden durch den Hauptsatz. Newton braucht ihn für die Planetenbewegung, Leibniz schafft die überlegene Schreibweise dy/dx und ∫ – wir schreiben bis heute Leibniz.'},
+{i:'an_streit',s:'ma_ana',t:'Prioritätsstreit Newton–Leibniz',a:1700,b:1720,r:3,d:'Der Streit spaltet die europäische Mathematik: England bleibt an Newtons unhandlicher Notation hängen und verliert für ein Jahrhundert den Anschluss an den Kontinent.'},
+{i:'an_bernoulli',s:'ma_ana',t:'Bernoullis & Variationsrechnung',a:1696,b:1750,r:3,d:'Das Problem der schnellsten Fallkurve (Brachistochrone) begründet eine Methode, mit der man Naturgesetze als Extremalprinzipien schreiben kann.'},
+{i:'an_euler',s:'ma_ana',t:'Euler: Funktionsbegriff & e^(iπ)+1=0',a:1740,b:1770,r:1,d:'Der produktivste Mathematiker der Geschichte macht die Analysis zur Theorie der Funktionen und verbindet in einer Formel e, i, π, 1 und 0. Von ihm stammen f(x), Σ, i und e.'},
+{i:'an_lagrange',s:'ma_ana',t:'Differentialgleichungen als Sprache der Natur',a:1750,b:1900,r:2,d:'Von der schwingenden Saite über die Wärmeleitung bis zum Elektromagnetismus: Naturgesetze werden als Differentialgleichungen formuliert – das bleibt bis heute so.'},
+{i:'an_fourier',s:'ma_ana',t:'Fourier: Reihen aus Sinus und Kosinus',a:1822,r:1,d:'Beim Studium der Wärmeleitung zerlegt Fourier beliebige Vorgänge in Schwingungen. Heute steckt das in jeder Tonanalyse, jedem MP3, jedem Bildformat und jedem Spektrum.'},
+{i:'an_cauchy',s:'ma_ana',t:'Cauchy & Weierstraß: Strenge Grenzwerte',a:1821,b:1872,r:1,d:'Die ε-δ-Definition ersetzt die anschaulichen „unendlich kleinen Größen“. Erst jetzt steht die Analysis auf sicherem Boden – 150 Jahre nach ihrer Erfindung.'},
+{i:'an_lebesgue',s:'ma_ana',t:'Lebesgue: neuer Integralbegriff',a:1902,r:3,d:'Ein Integral, das auch mit sehr unregelmäßigen Funktionen umgehen kann – Grundlage der modernen Wahrscheinlichkeitstheorie.'},
+{i:'an_hilbertraum',s:'ma_ana',t:'Funktionalanalysis & Hilbertraum',a:1906,b:1932,r:2,d:'Funktionen werden als Vektoren in unendlichdimensionalen Räumen behandelt. Von Neumann zeigt 1932, dass genau dies der mathematische Rahmen der Quantenmechanik ist.'},
+{i:'an_chaos',s:'ma_ana',t:'Nichtlineare Dynamik & Chaos',a:1890,b:1975,r:1,d:'Poincaré entdeckt beim Dreikörperproblem, dass deterministische Gleichungen unvorhersagbar sein können; Lorenz findet 1963 dasselbe im Wettermodell. Determinismus und Vorhersagbarkeit fallen auseinander.'},
+{i:'an_numerik',s:'ma_ana',t:'Numerik & Computersimulation',a:1950,b:2025,r:2,d:'Wo Formeln versagen, rechnet der Computer: Wetter, Strömungen, Sterne, Moleküle. Die Simulation tritt als dritte Säule neben Experiment und Theorie.'},
+
+/* ============ WAHRSCHEINLICHKEIT & STATISTIK ============ */
+{i:'s_cardano',s:'ma_sto',t:'Cardano: Buch über Glücksspiele',a:1564,r:2,d:'Der erste systematische Versuch, Chancen beim Würfeln zu berechnen – geschrieben von einem Spieler für Spieler und erst 100 Jahre später gedruckt.'},
+{i:'s_pascalfermat',s:'ma_sto',t:'Pascal & Fermat: das Teilungsproblem',a:1654,r:1,d:'Wie teilt man den Einsatz eines abgebrochenen Spiels gerecht? Der Briefwechsel begründet die Wahrscheinlichkeitsrechnung – aus einer Frage nach Gerechtigkeit, nicht nach Natur.'},
+{i:'s_huygens',s:'ma_sto',t:'Huygens: Erwartungswert',a:1657,r:3,d:'Die erste gedruckte Abhandlung zur Wahrscheinlichkeit führt den Erwartungswert als zentralen Begriff ein.'},
+{i:'s_bernoulli',s:'ma_sto',t:'Jakob Bernoulli: Gesetz der großen Zahlen',a:1713,r:1,d:'Die relative Häufigkeit nähert sich bei vielen Versuchen der Wahrscheinlichkeit. Erst dieser Satz rechtfertigt, aus Statistik überhaupt Schlüsse zu ziehen.'},
+{i:'s_moivre',s:'ma_sto',t:'de Moivre: die Glockenkurve',a:1733,r:2,d:'Die Normalverteilung taucht zunächst als Näherung für Binomialverteilungen auf – lange bevor jemand ahnt, wie universell sie ist.'},
+{i:'s_bayes',s:'ma_sto',t:'Bayes: Schluss von Daten auf Ursachen',a:1763,r:1,d:'Wie ändert eine Beobachtung meine Einschätzung? Nach 200 Jahren Randdasein ist die Formel heute Grundlage von Medizin-Diagnostik, Spamfiltern und maschinellem Lernen.'},
+{i:'s_gauss',s:'ma_sto',t:'Gauß: kleinste Quadrate & Fehlerkurve',a:1809,r:1,d:'Entwickelt, um aus wenigen Beobachtungen die Bahn des verlorenen Planetoiden Ceres zu berechnen. Messfehler werden erstmals mathematisch beherrschbar – bis heute die Grundlage jeder Ausgleichsrechnung.'},
+{i:'s_laplace',s:'ma_sto',t:'Laplace: Théorie analytique des probabilités',a:1812,r:1,d:'Er systematisiert die gesamte Wahrscheinlichkeitsrechnung und wendet sie auf Astronomie, Bevölkerung und Rechtsprechung an – zugleich Vertreter eines streng deterministischen Weltbilds.'},
+{i:'s_quetelet',s:'ma_sto',t:'Quetelet: Statistik über Menschen',a:1835,r:3,d:'Der „mittlere Mensch“: Körpergrößen und Verbrechensraten folgen Verteilungen. Statistik wird zum Werkzeug der Gesellschaftswissenschaft.'},
+{i:'s_maxwellboltz',s:'ma_sto',t:'Maxwell & Boltzmann: statistische Physik',a:1860,b:1877,r:1,d:'Statt jedes Teilchen zu verfolgen, beschreibt man Verteilungen. Erstmals wird ein Naturgesetz – der zweite Hauptsatz – als Wahrscheinlichkeitsaussage verstanden.'},
+{i:'s_fisher',s:'ma_sto',t:'Fisher: moderne Testtheorie',a:1925,r:2,d:'Versuchsplanung, Signifikanz, Varianzanalyse – entstanden in der Agrarforschung, heute Standard in Medizin, Psychologie und Qualitätskontrolle.'},
+{i:'s_kolmogorow',s:'ma_sto',t:'Kolmogorow: Axiome der Wahrscheinlichkeit',a:1933,r:1,d:'Wahrscheinlichkeit wird als Maß definiert. Erst damit ist die Stochastik ein vollwertiges Teilgebiet der Mathematik – 280 Jahre nach Pascal und Fermat.'},
+{i:'s_montecarlo',s:'ma_sto',t:'Monte-Carlo-Methoden',a:1946,r:2,d:'Am Kernforschungslabor Los Alamos wird der Zufall zum Rechenwerkzeug: Was analytisch unlösbar ist, wird durchgewürfelt – heute Standard von Teilchenphysik bis Finanzmathematik.'},
+{i:'s_ml',s:'ma_sto',t:'Statistisches Lernen & KI',a:1990,b:2025,r:2,d:'Neuronale Netze sind im Kern Statistik auf riesigen Datenmengen. Wahrscheinlichkeitsrechnung wird zur Basistechnologie der Gegenwart.'},
+
+/* ============ STRUKTUR, LOGIK & BEWEIS ============ */
+{i:'l_aristo',s:'ma_log',t:'Aristoteles: Syllogistik',a:-350,r:1,d:'Die erste formale Logik: Aus der Form eines Schlusses folgt seine Gültigkeit, unabhängig vom Inhalt. Bis ins 19. Jh. bleibt sie fast unverändert.'},
+{i:'l_beweis',s:'ma_log',t:'Deduktives Beweisen als Methode',a:-300,r:1,d:'Mit Euklid setzt sich durch: Wahrheit entsteht durch lückenlose Ableitung aus Axiomen, nicht durch Autorität oder Messung. Dieses Ideal prägt Naturwissenschaft und Philosophie bis heute.'},
+{i:'l_leibniz',s:'ma_log',t:'Leibniz: Traum der Rechensprache',a:1680,r:2,d:'„Calculemus!“ – Streit soll durch Rechnen entschieden werden. Die Idee einer formalen Universalsprache kehrt 200 Jahre später zurück.'},
+{i:'l_boole',s:'ma_log',t:'Boole: Algebra der Logik',a:1847,r:1,d:'Wahr und falsch werden zu 1 und 0, Und/Oder/Nicht zu Rechenoperationen. 90 Jahre später wird daraus die Schaltalgebra jedes digitalen Geräts.'},
+{i:'l_frege',s:'ma_log',t:'Frege: Begriffsschrift',a:1879,r:2,d:'Quantoren („für alle“, „es gibt“) machen mathematische Aussagen vollständig formalisierbar – die Geburt der modernen Logik.'},
+{i:'l_mengen',s:'ma_log',t:'Mengenlehre als Fundament',a:1874,b:1908,r:1,d:'Cantors Mengen werden zur gemeinsamen Sprache aller mathematischen Gebiete; Zermelo und Fraenkel bringen sie in axiomatische Form.'},
+{i:'l_russell',s:'ma_log',t:'Russells Antinomie',a:1901,r:2,d:'Die Menge aller Mengen, die sich nicht selbst enthalten – ein Widerspruch im Fundament. Die „Grundlagenkrise“ der Mathematik beginnt.'},
+{i:'l_hilbert',s:'ma_log',t:'Hilbert: 23 Probleme & Programm',a:1900,r:1,d:'„Wir müssen wissen, wir werden wissen.“ Hilbert setzt die Agenda des Jahrhunderts und fordert einen Beweis, dass die Mathematik widerspruchsfrei ist.'},
+{i:'l_goedel',s:'ma_log',t:'Gödel: Unvollständigkeitssätze',a:1931,r:1,d:'In jedem hinreichend starken System gibt es wahre, aber unbeweisbare Sätze – und die Widerspruchsfreiheit ist nicht von innen beweisbar. Hilberts Programm scheitert; die Grenzen des Beweisens sind selbst bewiesen.'},
+{i:'l_turing',s:'ma_log',t:'Turing: Berechenbarkeit & Maschine',a:1936,r:1,d:'Um zu klären, was „durch ein Verfahren entscheidbar“ heißt, erfindet Turing ein abstraktes Rechenmodell. Aus einem logischen Grundlagenproblem entsteht die Informatik.'},
+{i:'l_bourbaki',s:'ma_log',t:'Bourbaki: Mathematik aus Strukturen',a:1935,b:1980,r:3,d:'Eine französische Autorengruppe schreibt die Mathematik streng strukturell neu – und prägt damit auch die „Neue Mathematik“ der Schulreformen.'},
+{i:'l_vierfarben',s:'ma_log',t:'Vierfarbensatz: erster Computerbeweis',a:1976,r:2,d:'Der Beweis prüft 1936 Fälle maschinell. Erstmals stellt sich die Frage: Ist ein Beweis noch ein Beweis, wenn ihn kein Mensch ganz nachvollziehen kann?'},
+{i:'l_wiles',s:'ma_log',t:'Wiles beweist Fermats letzten Satz',a:1994,r:2,d:'Eine 350 Jahre alte Randnotiz wird eingelöst – mit Methoden aus Gebieten, die es zu Fermats Zeit gar nicht gab.'},
+
+/* ============ MECHANIK ============ */
+{i:'p_aristo',s:'ph_mech',t:'Aristotelische Bewegungslehre',a:-350,b:1600,r:1,d:'Schwere Körper streben nach unten, Bewegung braucht dauernd eine Ursache, im Himmel gelten andere Gesetze als auf der Erde. Ein stimmiges, alltagsnahes System – und für 2000 Jahre das Hindernis, das es zu überwinden gilt.'},
+{i:'p_archimedes',s:'ph_mech',t:'Archimedes: Hebel, Schwerpunkt, Auftrieb',a:-250,r:1,d:'Die erste mathematisierte Physik: Aus wenigen Grundsätzen werden Gleichgewichtsgesetze streng bewiesen – Statik nach Euklids Vorbild.'},
+{i:'p_heron',s:'ph_mech',t:'Heron: Maschinen & Dampfkugel',a:60,r:3,d:'Automaten, Hebel, Winden und ein rotierender Dampfball – Technik als Spielerei, ohne wirtschaftlichen Druck zur Nutzung.'},
+{i:'p_impetus',s:'ph_mech',t:'Impetustheorie (Philoponos, Buridan)',a:530,b:1360,r:2,d:'Ein geworfener Stein trägt eine „eingeprägte Kraft“ in sich. Falsch, aber der entscheidende Zwischenschritt vom aristotelischen zum Trägheitsdenken.'},
+{i:'p_merton',s:'ph_mech',t:'Merton-Regel & Oresmes Diagramme',a:1350,r:2,d:'Gleichmäßig beschleunigte Bewegung wird korrekt beschrieben – graphisch bewiesen an der Universität Oxford und in Paris, lange vor jedem Experiment.'},
+{i:'p_stevin',s:'ph_mech',t:'Stevin: Kräfteparallelogramm',a:1586,r:3,d:'Kräfte werden als gerichtete Größen addiert – und ein Fallversuch zeigt schon vor Galilei, dass unterschiedlich schwere Kugeln gleich schnell fallen.'},
+{i:'p_galilei',s:'ph_mech',t:'Galilei: Fallgesetz, Trägheit, Wurfparabel',a:1590,b:1638,r:1,d:'Er misst statt zu spekulieren (schiefe Ebene, Wasseruhr), findet s ~ t², das Trägheitsprinzip und die Unabhängigkeit von waagrechter und senkrechter Bewegung. Das Buch der Natur, sagt er, sei in mathematischen Zeichen geschrieben.'},
+{i:'p_huygens',s:'ph_mech',t:'Huygens: Pendel, Zentripetalkraft, Stoßgesetze',a:1656,b:1673,r:1,d:'Die Pendeluhr macht Zeitmessung auf Sekunden genau – und liefert damit dem Experiment das entscheidende Werkzeug. Dazu Kreisbewegung und elastischer Stoß mathematisch exakt.'},
+{i:'p_newton',s:'ph_mech',t:'Newton: „Principia“ – Axiome & Gravitation',a:1687,r:1,d:'Drei Axiome und ein Gravitationsgesetz erklären Fall, Wurf, Pendel, Gezeiten und Planetenbahnen mit denselben Formeln. Himmel und Erde gehorchen erstmals einer einzigen Physik.'},
+{i:'p_analytmech',s:'ph_mech',t:'Euler, Lagrange, Hamilton: analytische Mechanik',a:1750,b:1834,r:1,d:'Die Mechanik wird aus einem Extremalprinzip hergeleitet und in Energien statt Kräften formuliert. Genau diese Formulierung übernimmt später die Quantenmechanik.'},
+{i:'p_hydro',s:'ph_mech',t:'Hydrodynamik & Kontinuumsmechanik',a:1738,b:1845,r:2,d:'Bernoulli, Navier und Stokes beschreiben strömende Flüssigkeiten und Gase – Gleichungen, die bis heute nur numerisch lösbar sind.'},
+{i:'p_foucault',s:'ph_mech',t:'Foucaultsches Pendel',a:1851,r:2,d:'Ein Pendel im Pariser Panthéon macht die Erddrehung im Hörsaal sichtbar – 300 Jahre nach Kopernikus der erste direkte irdische Nachweis.'},
+{i:'p_mach',s:'ph_mech',t:'Mach: Kritik am absoluten Raum',a:1883,r:2,d:'Trägheit hat vielleicht ihre Ursache in allen Massen des Universums. Diese Frage wird für den jungen Einstein zum Ausgangspunkt.'},
+
+/* ============ WÄRME & ENERGIE ============ */
+{i:'w_element',s:'ph_waerme',t:'Wärme als Element / Stoff',a:-400,b:1798,r:3,d:'Von den vier Elementen bis zum „Caloricum“: Wärme gilt als unsichtbarer Stoff, der von warm nach kalt fließt – erstaunlich brauchbar für die frühe Wärmelehre.'},
+{i:'w_thermo',s:'ph_waerme',t:'Thermometer & Temperaturskalen',a:1600,b:1742,r:2,d:'Von Galileis Thermoskop zu Fahrenheit und Celsius. Erst eine reproduzierbare Skala macht Wärme messbar – und damit zum Gegenstand der Physik.'},
+{i:'w_black',s:'ph_waerme',t:'Black: Wärmekapazität & latente Wärme',a:1761,r:2,d:'Temperatur und Wärmemenge sind zweierlei: Beim Schmelzen fließt Wärme, ohne dass die Temperatur steigt. Eine Unterscheidung, die auch heute im Unterricht Mühe macht.'},
+{i:'w_watt',s:'ph_waerme',t:'Watt: effiziente Dampfmaschine',a:1769,r:1,d:'Separater Kondensator und Fliehkraftregler machen die Maschine wirtschaftlich. Hier treibt ausnahmsweise die Technik die Theorie – die Thermodynamik entsteht als Nachdenken über eine bereits laufende Maschine.'},
+{i:'w_rumford',s:'ph_waerme',t:'Rumford: Wärme durch Reibung',a:1798,r:2,d:'Beim Bohren von Kanonenrohren entsteht scheinbar unbegrenzt Wärme. Wärme kann kein erhaltener Stoff sein, sondern muss mit Bewegung zu tun haben.'},
+{i:'w_carnot',s:'ph_waerme',t:'Carnot: Kreisprozess & Wirkungsgrad',a:1824,r:1,d:'Es gibt eine prinzipielle Obergrenze für den Wirkungsgrad, die nur von den Temperaturen abhängt – unabhängig von Bauart und Arbeitsstoff. Das erste echte Verbot der Physik.'},
+{i:'w_energie',s:'ph_waerme',t:'Energieerhaltung (Mayer, Joule, Helmholtz)',a:1842,b:1847,r:1,d:'Wärme, Bewegung, Elektrizität und chemische Umsetzung sind ineinander umwandelbar; die Summe bleibt konstant. Der Schiffsarzt Mayer kommt über Blutfarbe in den Tropen darauf, Joule über Präzisionsmessungen – ein Musterfall gleichzeitiger Entdeckung.'},
+{i:'w_entropie',s:'ph_waerme',t:'Clausius & Kelvin: Zweiter Hauptsatz, Entropie',a:1850,b:1865,r:1,d:'Energie bleibt erhalten, aber ihre Nutzbarkeit nimmt ab. Mit der Entropie bekommt die Physik erstmals eine Größe, die eine Richtung der Zeit auszeichnet.'},
+{i:'w_boltzmann',s:'ph_waerme',t:'Boltzmann: S = k·log W',a:1877,r:1,d:'Entropie ist ein Maß für die Zahl der Mikrozustände. Der zweite Hauptsatz gilt nicht absolut, sondern mit überwältigender Wahrscheinlichkeit – Physik wird statistisch.'},
+{i:'w_gibbs',s:'ph_waerme',t:'Gibbs: chemische Thermodynamik',a:1876,r:3,d:'Phasen, Gleichgewichte, freie Energie – die Sprache, in der Chemie und Materialwissenschaft bis heute rechnen.'},
+{i:'w_strahlung',s:'ph_waerme',t:'Wärmestrahlung: Kirchhoff, Stefan, Wien',a:1859,b:1896,r:2,d:'Der „schwarze Körper“ wird zum Präzisionsproblem der Physik – und genau an ihm bricht 1900 die klassische Physik zusammen.'},
+{i:'w_nernst',s:'ph_waerme',t:'Nernst: Dritter Hauptsatz',a:1906,r:3,d:'Der absolute Nullpunkt ist unerreichbar – die Thermodynamik erhält ihren Abschluss.'},
+{i:'w_tieftemp',s:'ph_waerme',t:'Tieftemperaturphysik & Supraleitung',a:1908,b:1911,r:2,d:'Kamerlingh Onnes verflüssigt Helium und findet, dass Quecksilber bei 4 K seinen Widerstand vollständig verliert – ein Quanteneffekt im Großen.'},
+{i:'w_klima',s:'ph_waerme',t:'Treibhauseffekt & Klimaphysik',a:1824,b:2025,r:2,d:'Fourier beschreibt ihn, Tyndall misst ihn, Arrhenius rechnet 1896 die Erwärmung durch CO₂ aus. Aus Grundlagenphysik wird die politisch brisanteste Rechnung der Gegenwart.'},
+
+/* ============ OPTIK, ELEKTRIZITÄT & MAGNETISMUS ============ */
+{i:'e_bernstein',s:'ph_em',t:'Bernstein & Magneteisenstein',a:-600,r:3,d:'Thales beobachtet Anziehung durch geriebenen Bernstein (griech. elektron) und durch Magnetit aus Magnesia – beide Wortwurzeln stammen von hier.'},
+{i:'e_antikoptik',s:'ph_em',t:'Antike Optik (Euklid, Ptolemäus)',a:-300,b:150,r:3,d:'Geradlinige Ausbreitung, Reflexionsgesetz und Brechungstabellen – Optik ist das erste geometrisch behandelte Naturphänomen.'},
+{i:'e_alhazen',s:'ph_em',t:'Ibn al-Haitham: „Buch der Optik“',a:1020,r:1,d:'Nicht das Auge sendet Strahlen aus, sondern Licht fällt ins Auge. Mit Camera obscura und systematischen Versuchen entsteht ein früher Prototyp naturwissenschaftlicher Methodik.'},
+{i:'e_gilbert',s:'ph_em',t:'Gilbert: „De Magnete“ – die Erde als Magnet',a:1600,r:2,d:'Erste umfassende Experimentalstudie zum Magnetismus. Sie liefert zugleich ein physikalisches Argument dafür, dass die Erde ein Himmelskörper wie andere ist.'},
+{i:'e_snellius',s:'ph_em',t:'Brechungsgesetz (Snellius, Descartes)',a:1621,r:2,d:'Der quantitative Zusammenhang zwischen Einfalls- und Brechungswinkel macht Linsenberechnung möglich – Fernrohr und Mikroskop werden konstruierbar statt zufällig.'},
+{i:'e_newtonoptik',s:'ph_em',t:'Newton: Zerlegung des weißen Lichts',a:1672,r:1,d:'Das Prisma erzeugt keine Farben, es trennt sie. Newtons Teilchenmodell des Lichts dominiert wegen seiner Autorität über 100 Jahre.'},
+{i:'e_huygenswelle',s:'ph_em',t:'Huygens: Wellentheorie des Lichts',a:1678,r:1,d:'Jeder Punkt einer Wellenfront ist Ausgangspunkt neuer Elementarwellen. Damit lassen sich Reflexion und Brechung erklären – die Konkurrenz zu Newton bleibt 130 Jahre unentschieden.'},
+{i:'e_roemer',s:'ph_em',t:'Rømer: Lichtgeschwindigkeit ist endlich',a:1676,r:2,d:'Verspätungen der Jupitermondfinsternisse verraten die Laufzeit des Lichts. Eine astronomische Beobachtung entscheidet eine physikalische Grundsatzfrage.'},
+{i:'e_coulomb',s:'ph_em',t:'Coulomb: Kraftgesetz der Ladungen',a:1785,r:2,d:'Mit der Drehwaage gemessen: Auch die elektrische Kraft folgt einem 1/r²-Gesetz – auffällig parallel zur Gravitation.'},
+{i:'e_volta',s:'ph_em',t:'Galvani & Volta: die Batterie',a:1791,b:1800,r:1,d:'Aus dem Streit um „tierische Elektrizität“ entsteht die Voltasche Säule – die erste Quelle für dauerhaften Strom. Erst jetzt kann Elektrizität systematisch erforscht werden.'},
+{i:'e_young',s:'ph_em',t:'Young: Doppelspaltversuch',a:1801,r:1,d:'Interferenzstreifen beweisen: Licht ist eine Welle. Derselbe Versuch wird 100 Jahre später zum Kronzeugen der Quantenphysik.'},
+{i:'e_oersted',s:'ph_em',t:'Oersted: Strom lenkt Kompassnadel ab',a:1820,r:1,d:'Eine Zufallsbeobachtung im Hörsaal verbindet zwei bis dahin getrennte Gebiete. Innerhalb weniger Wochen entsteht daraus in ganz Europa die Elektrodynamik.'},
+{i:'e_ampere',s:'ph_em',t:'Ampère: Elektrodynamik der Ströme',a:1820,r:2,d:'Kraft zwischen stromdurchflossenen Leitern, Spule als Magnet – Magnetismus wird auf bewegte Ladung zurückgeführt.'},
+{i:'e_ohm',s:'ph_em',t:'Ohm: U = R·I',a:1827,r:2,d:'Ein Gymnasiallehrer formuliert das Grundgesetz des Stromkreises – zunächst von der Fachwelt ignoriert.'},
+{i:'e_faraday',s:'ph_em',t:'Faraday: Induktion & Feldbegriff',a:1831,r:1,d:'Bewegung erzeugt Spannung – Generator und Transformator werden möglich. Faraday, ohne mathematische Ausbildung, denkt in Kraftlinien und führt damit den Feldbegriff in die Physik ein.'},
+{i:'e_maxwell',s:'ph_em',t:'Maxwell: Gleichungen & Licht als EM-Welle',a:1865,r:1,d:'Vier Gleichungen fassen alle elektrischen und magnetischen Erscheinungen zusammen. Aus ihnen folgt eine Wellengeschwindigkeit, die genau der Lichtgeschwindigkeit entspricht – Optik wird ein Teilgebiet der Elektrodynamik.'},
+{i:'e_hertz',s:'ph_em',t:'Hertz: Nachweis der Radiowellen',a:1887,r:1,d:'Im Karlsruher Hörsaal springt ein Funke über – Maxwells Vorhersage ist bestätigt. Hertz selbst hält es für praktisch nutzlos; zehn Jahre später funkt Marconi über den Atlantik.'},
+{i:'e_michelson',s:'ph_em',t:'Michelson-Morley: kein Ätherwind',a:1887,r:1,d:'Das genaueste Experiment seiner Zeit findet keinen Unterschied der Lichtgeschwindigkeit in Bewegungsrichtung. Ein Nullresultat, das die klassische Physik ins Wanken bringt.'},
+{i:'e_elektron',s:'ph_em',t:'Thomson: das Elektron',a:1897,r:1,d:'Kathodenstrahlen bestehen aus Teilchen, 2000-mal leichter als das leichteste Atom. Das Atom ist doch teilbar.'},
+{i:'e_halbleiter',s:'ph_em',t:'Halbleiter, Transistor & Mikroelektronik',a:1947,b:2000,r:2,d:'Quantenmechanik der Festkörper wird zur Technik: Der Transistor ersetzt die Elektronenröhre und ermöglicht Computer, Handy und Solarzelle.'},
+{i:'e_laser',s:'ph_em',t:'Laser',a:1960,r:2,d:'Einsteins Idee der stimulierten Emission von 1917 wird Gerät. Kohärentes Licht revolutioniert Messtechnik, Medizin, Datenübertragung und Astronomie.'},
+
+/* ============ RELATIVITÄTSTHEORIE ============ */
+{i:'r_galrel',s:'ph_rel',t:'Galileisches Relativitätsprinzip',a:1632,r:2,d:'Unter Deck eines gleichmäßig fahrenden Schiffs lässt sich durch kein Experiment feststellen, dass man fährt. Genau dieses Prinzip verteidigt Galilei gegen den Einwand, die Erde könne sich nicht bewegen.'},
+{i:'r_absolut',s:'ph_rel',t:'Newtons absoluter Raum & absolute Zeit',a:1687,r:2,d:'Zeit fließt für alle gleich, Raum ist die feste Bühne. Diese Annahme ist so selbstverständlich, dass sie 200 Jahre lang niemand ernsthaft prüft.'},
+{i:'r_lorentz',s:'ph_rel',t:'Lorentz & Poincaré: Transformationen',a:1892,b:1905,r:2,d:'Die richtigen Formeln existieren schon – gedeutet als Effekt eines Äthers auf bewegte Materie. Es fehlt der Mut, Raum und Zeit selbst neu zu denken.'},
+{i:'r_srt',s:'ph_rel',t:'Spezielle Relativitätstheorie',a:1905,r:1,d:'Zwei Annahmen genügen: Die Naturgesetze gelten in allen gleichförmig bewegten Systemen, und die Lichtgeschwindigkeit ist für alle gleich. Folge: Gleichzeitigkeit ist relativ, bewegte Uhren gehen langsamer, Längen verkürzen sich.'},
+{i:'r_emc2',s:'ph_rel',t:'E = mc²',a:1905,r:1,d:'Masse und Energie sind dasselbe. Damit wird verständlich, woher die Sonne ihre Energie nimmt – und 40 Jahre später, was in einem Kernreaktor geschieht.'},
+{i:'r_minkowski',s:'ph_rel',t:'Minkowski: die Raumzeit',a:1908,r:2,d:'„Von Stund an sollen Raum und Zeit zu Schatten herabsinken.“ Erst Minkowskis vierdimensionale Geometrie macht Einsteins Theorie anschaulich handhabbar.'},
+{i:'r_art',s:'ph_rel',t:'Allgemeine Relativitätstheorie',a:1915,r:1,d:'Gravitation ist keine Kraft, sondern Krümmung der Raumzeit durch Masse und Energie. Nach zehn Jahren Ringen findet Einstein in Riemanns Geometrie die passende Sprache.'},
+{i:'r_schwarzschild',s:'ph_rel',t:'Schwarzschild-Lösung: Schwarze Löcher',a:1916,r:2,d:'An der Ostfront gerechnet: die erste exakte Lösung der Feldgleichungen. Ihr Horizont wird jahrzehntelang für ein Rechenartefakt gehalten.'},
+{i:'r_eddington',s:'ph_rel',t:'Sonnenfinsternis-Expedition',a:1919,r:1,d:'Die gemessene Lichtablenkung am Sonnenrand bestätigt Einstein. Über Nacht wird ein Physiker zum Weltstar – Wissenschaft wird erstmals zum Medienereignis.'},
+{i:'r_gps',s:'ph_rel',t:'Relativität im Alltag: GPS',a:1978,b:2025,r:2,d:'Ohne Korrektur beider relativistischer Effekte wäre die Satellitennavigation nach einem Tag um mehrere Kilometer daneben – die abstrakteste Theorie steckt in jedem Handy.'},
+{i:'r_gravwellen',s:'ph_rel',t:'Nachweis von Gravitationswellen',a:2015,r:1,d:'LIGO misst die Kollision zweier Schwarzer Löcher als Längenänderung von 1/10000 Protondurchmesser – 100 Jahre nach der Vorhersage.'},
+{i:'r_bild',s:'ph_rel',t:'Erstes Bild eines Schwarzen Lochs',a:2019,r:2,d:'Ein weltweiter Verbund von Radioteleskopen bildet den Schatten des Horizonts in M87 ab.'},
+
+/* ============ QUANTEN-, ATOM- & KERNPHYSIK ============ */
+{i:'q_demokrit',s:'ph_qm',t:'Demokrit: die Atomidee',a:-420,r:2,d:'Alles besteht aus unteilbaren Teilchen im leeren Raum. Eine philosophische Vermutung ohne jeden Beleg – und doch die erstaunlichste Vorwegnahme der Wissenschaftsgeschichte.'},
+{i:'q_dalton',s:'ph_qm',t:'Dalton: chemische Atomtheorie',a:1808,r:2,d:'Konstante Massenverhältnisse in Verbindungen lassen sich am einfachsten mit Atomen erklären – erstmals ein empirisches Argument.'},
+{i:'q_planck',s:'ph_qm',t:'Planck: das Wirkungsquantum',a:1900,r:1,d:'Um die Strahlung des schwarzen Körpers zu erklären, muss Energie in Portionen E = h·f abgegeben werden. Planck hält es selbst jahrelang für einen Rechentrick – es ist der Beginn der Quantenphysik.'},
+{i:'q_photoeffekt',s:'ph_qm',t:'Einstein: Lichtquanten & Photoeffekt',a:1905,r:1,d:'Licht verhält sich beim Herauslösen von Elektronen wie ein Strom von Teilchen. Für genau diese Arbeit – nicht für die Relativitätstheorie – erhält Einstein den Nobelpreis.'},
+{i:'q_rutherford',s:'ph_qm',t:'Rutherford: der Atomkern',a:1911,r:1,d:'Alphateilchen prallen an Goldfolie zurück – „so unwahrscheinlich, als hätte man eine Granate auf Seidenpapier geschossen“. Das Atom ist fast leer, seine Masse steckt im winzigen Kern.'},
+{i:'q_bohr',s:'ph_qm',t:'Bohr: Atommodell mit Quantenbahnen',a:1913,r:1,d:'Erlaubte Bahnen und Quantensprünge erklären erstmals die Spektrallinien des Wasserstoffs quantitativ. Ein widersprüchliches Zwischenmodell, das trotzdem funktioniert.'},
+{i:'q_debroglie',s:'ph_qm',t:'de Broglie: Materiewellen',a:1924,r:1,d:'Wenn Licht Teilchen sein kann, warum sollen Teilchen nicht Wellen sein? Drei Jahre später zeigen Elektronenbeugungsversuche, dass es stimmt.'},
+{i:'q_heisenberg',s:'ph_qm',t:'Heisenberg: Matrizenmechanik & Unschärfe',a:1925,b:1927,r:1,d:'Nur Messbares gehört in die Theorie. Ort und Impuls sind prinzipiell nicht gleichzeitig scharf – keine Frage der Messtechnik, sondern der Natur selbst.'},
+{i:'q_schroedinger',s:'ph_qm',t:'Schrödinger: Wellengleichung',a:1926,r:1,d:'Eine Differentialgleichung liefert dieselben Ergebnisse wie Heisenbergs Matrizen – für die meisten Physiker die vertrautere Sprache.'},
+{i:'q_born',s:'ph_qm',t:'Born: Wahrscheinlichkeitsdeutung',a:1926,r:1,d:'Das Quadrat der Wellenfunktion gibt eine Aufenthaltswahrscheinlichkeit an. Der Zufall wird zum Grundzug der Natur – „Gott würfelt nicht“, protestiert Einstein.'},
+{i:'q_kopenhagen',s:'ph_qm',t:'Kopenhagener Deutung & Bohr-Einstein-Debatte',a:1927,b:1935,r:2,d:'Was ist ein Teilchen vor der Messung? Die Auseinandersetzung um Realität und Vollständigkeit der Theorie prägt die Physik-Philosophie bis heute (EPR-Aufsatz, Schrödingers Katze).'},
+{i:'q_chadwick',s:'ph_qm',t:'Chadwick: das Neutron',a:1932,r:2,d:'Das fehlende, ungeladene Kernbaustein-Teilchen wird gefunden – und liefert sofort das Werkzeug, mit dem man Kerne beschießen kann.'},
+{i:'q_spaltung',s:'ph_qm',t:'Kernspaltung (Hahn, Straßmann, Meitner)',a:1938,r:1,d:'Chemisch nachgewiesen in Berlin, physikalisch gedeutet von der emigrierten Lise Meitner im schwedischen Exil. Innerhalb von sieben Jahren führt der Befund zur Atombombe.'},
+{i:'q_kernenergie',s:'ph_qm',t:'Kernwaffen & Kernenergie',a:1942,b:1990,r:1,d:'Manhattan-Projekt, Hiroshima, Reaktorbau: Die Physik verliert ihre Unschuld und wird zum Gegenstand von Politik, Ethik und öffentlicher Angst.'},
+{i:'q_qed',s:'ph_qm',t:'Quantenelektrodynamik',a:1948,r:1,d:'Feynman, Schwinger und Tomonaga vereinen Quantentheorie und Relativität für das elektromagnetische Feld. Die genaueste je geprüfte Theorie – Übereinstimmung auf zwölf Stellen.'},
+{i:'q_standard',s:'ph_qm',t:'Standardmodell & Quarks',a:1964,b:1975,r:1,d:'Alle bekannte Materie aus zwölf Teilchen und vier Wechselwirkungen, geordnet durch Symmetriegruppen. Mathematik der Gruppentheorie wird zum Konstruktionsplan der Materie.'},
+{i:'q_bell',s:'ph_qm',t:'Bellsche Ungleichung & Verschränkung',a:1964,b:1982,r:1,d:'Bell zeigt, dass sich die Frage nach „verborgenen Variablen“ experimentell entscheiden lässt; Aspects Versuche bestätigen die Quantenmechanik. Aus Philosophie wird Messtechnik – und später Quantenkryptographie.'},
+{i:'q_higgs',s:'ph_qm',t:'Nachweis des Higgs-Bosons',a:2012,r:1,d:'48 Jahre nach der Vorhersage bestätigt der LHC den Mechanismus, der Teilchen ihre Masse gibt – mit einer 27 km langen Maschine und 10000 Beteiligten.'},
+{i:'q_quantencomp',s:'ph_qm',t:'Quanteninformation & Quantencomputer',a:1994,b:2025,r:2,d:'Shors Algorithmus zeigt: Ein Quantenrechner könnte die Verschlüsselung des Internets brechen. Verschränkung wird von der Kuriosität zur Ressource.'},
+
+/* ============ ASTRONOMIE & KOSMOLOGIE ============ */
+{i:'as_megalith',s:'as_astro',t:'Megalithische Himmelsbeobachtung',a:-1800,r:2,d:'Stonehenge und die Himmelsscheibe von Nebra zeigen: Schon vor der Schrift werden Sonnenwenden und Mondphasen systematisch beobachtet – aus landwirtschaftlicher und ritueller Notwendigkeit.'},
+{i:'as_aegkal',s:'as_astro',t:'Ägyptischer Sonnenkalender',a:-2700,r:2,d:'365 Tage, gestützt auf den heliakischen Aufgang des Sirius kurz vor der Nilflut. Astronomie als Landwirtschaftsplanung – und als Legitimation der Priesterschaft.'},
+{i:'as_babtag',s:'as_astro',t:'Babylonische Himmelstagebücher',a:-1800,b:-100,r:1,d:'Über 1500 Jahre lückenlose Aufzeichnungen ermöglichen die Entdeckung von Zyklen (Saros) und die Vorhersage von Finsternissen – ohne jedes Modell, allein aus Datenreihen. Der erste große Datensatz der Wissenschaftsgeschichte.'},
+{i:'as_china',s:'as_astro',t:'Chinesische Himmelschroniken',a:-1400,b:1600,r:2,d:'Hofastronomen dokumentieren Kometen, Sonnenflecken und „Gaststerne“ – darunter die Supernova von 1054, aus der der Krebsnebel entstand. Für die moderne Astrophysik unersetzliche Quellen.'},
+{i:'as_kugel',s:'as_astro',t:'Die Erde als Kugel',a:-550,b:-330,r:2,d:'Erdschatten bei Mondfinsternissen, verschwindende Schiffe, andere Sterne im Süden: Bei den Griechen ist die Kugelgestalt spätestens seit Aristoteles gebildetes Allgemeinwissen.'},
+{i:'as_aristarch',s:'as_astro',t:'Aristarch: heliozentrischer Vorschlag',a:-270,r:1,d:'Er stellt die Sonne ins Zentrum und schätzt Größen und Entfernungen von Mond und Sonne ab. Verworfen, weil keine Sternparallaxe messbar war – ein methodisch völlig korrekter Einwand.'},
+{i:'as_eratos',s:'as_astro',t:'Eratosthenes misst den Erdumfang',a:-240,r:1,d:'Zwei Schattenlängen, eine Karawanenstrecke und Geometrie ergeben rund 40000 km – Abweichung wenige Prozent. Das Musterbeispiel dafür, wie Mathematik Messbares aus Unzugänglichem macht.'},
+{i:'as_hipparch',s:'as_astro',t:'Hipparch: Sternkatalog & Präzession',a:-130,r:2,d:'850 Sterne nach Helligkeit geordnet, dazu die Entdeckung der langsamen Verschiebung des Frühlingspunkts – möglich nur durch Vergleich mit babylonischen Daten.'},
+{i:'as_ptolem',s:'as_astro',t:'Ptolemäus: Almagest & Epizykel',a:150,r:1,d:'Ein geozentrisches Modell mit Kreisen auf Kreisen, das Planetenpositionen erstaunlich genau vorhersagt. Es ist wissenschaftlich gut begründet – das macht seine spätere Ablösung so schwer.'},
+{i:'as_aryabh',s:'as_astro',t:'Aryabhata: Erdrotation & Finsternisse',a:499,r:2,d:'Er erklärt den täglichen Sternenlauf durch die Drehung der Erde und Finsternisse durch Schattenwurf statt durch Dämonen.'},
+{i:'as_observ',s:'as_astro',t:'Islamische Observatorien',a:1259,b:1449,r:1,d:'In Maragha und Samarkand entstehen staatlich finanzierte Großobservatorien. Ulug Begs Sternkatalog bleibt 200 Jahre der genaueste; die „Tusi-Paare“ tauchen später bei Kopernikus wieder auf.'},
+{i:'as_kopernikus',s:'as_astro',t:'Kopernikus: De revolutionibus',a:1543,r:1,d:'Die Sonne im Zentrum, die Erde ein Planet. Rechnerisch zunächst kaum genauer als Ptolemäus, aber einfacher – und mit Folgen weit über die Astronomie hinaus: Der Mensch steht nicht mehr im Mittelpunkt.'},
+{i:'as_tycho',s:'as_astro',t:'Tycho Brahe: Präzisionsmessungen',a:1572,b:1601,r:1,d:'Die Supernova von 1572 beweist, dass der Himmel veränderlich ist. Mit bloßem Auge, aber riesigen Instrumenten erreicht Tycho eine Genauigkeit von Bogenminuten – die Datengrundlage für Kepler.'},
+{i:'as_kepler',s:'as_astro',t:'Keplers drei Gesetze',a:1609,b:1619,r:1,d:'Ellipsen statt Kreise, Flächensatz, T²~a³. Kepler gibt die 2000 Jahre alte Kreisidee erst auf, nachdem 8 Bogenminuten Abweichung bei Mars nicht wegzurechnen sind – ein Musterfall von Daten gegen Schönheit.'},
+{i:'as_galileiteles',s:'as_astro',t:'Galilei richtet das Fernrohr zum Himmel',a:1610,r:1,d:'Mondgebirge, Jupitermonde, Venusphasen, Sonnenflecken: Der Himmel ist nicht vollkommen, und nicht alles kreist um die Erde. Ein Instrument entscheidet eine Weltbildfrage.'},
+{i:'as_newtongrav',s:'as_astro',t:'Newton erklärt Keplers Gesetze',a:1687,r:1,d:'Aus dem 1/r²-Gesetz folgen die Ellipsenbahnen mathematisch zwingend. Astronomie wird zum Anwendungsfall der Mechanik – Himmelsmechanik entsteht.'},
+{i:'as_halley',s:'as_astro',t:'Halley: Vorhersage der Kometenwiederkehr',a:1705,b:1758,r:2,d:'Er sagt die Rückkehr für 1758 voraus – 16 Jahre nach seinem Tod erscheint der Komet. Ein spektakulärer Beleg für die Vorhersagekraft der neuen Physik.'},
+{i:'as_herschel',s:'as_astro',t:'Herschel: Uranus & Aufbau der Milchstraße',a:1781,b:1800,r:2,d:'Der erste seit der Antike neu entdeckte Planet – gefunden mit selbstgebauten Spiegelteleskopen. Herschel beginnt, die Struktur unseres Sternsystems zu vermessen.'},
+{i:'as_neptun',s:'as_astro',t:'Neptun – am Schreibtisch entdeckt',a:1846,r:1,d:'Aus Bahnstörungen des Uranus berechnen Le Verrier und Adams die Position eines unbekannten Planeten. Das Teleskop findet ihn in derselben Nacht, 1° neben der Vorhersage – der größte Triumph der Newtonschen Mechanik.'},
+{i:'as_spektral',s:'as_astro',t:'Spektralanalyse: Woraus Sterne bestehen',a:1814,b:1868,r:1,d:'Fraunhofer entdeckt dunkle Linien im Sonnenspektrum, Kirchhoff und Bunsen deuten sie als Fingerabdrücke chemischer Elemente. Was der Philosoph Comte 1835 für ewig unerkennbar erklärte, ist damit messbar.'},
+{i:'as_leavitt',s:'as_astro',t:'Leavitt: Cepheiden als Entfernungsmaß',a:1912,r:2,d:'Aus der Perioden-Leuchtkraft-Beziehung wird der erste zuverlässige Maßstab für kosmische Entfernungen – die Voraussetzung für alles Folgende.'},
+{i:'as_hrd',s:'as_astro',t:'Hertzsprung-Russell-Diagramm',a:1913,r:3,d:'Leuchtkraft gegen Temperatur aufgetragen ordnet die Sterne – und wird zur Landkarte der Sternentwicklung.'},
+{i:'as_hubble',s:'as_astro',t:'Hubble: Galaxien & Expansion',a:1924,b:1929,r:1,d:'Die „Nebel“ sind eigene Milchstraßensysteme, und je weiter sie entfernt sind, desto schneller entfernen sie sich. Das Universum hat eine Geschichte.'},
+{i:'as_urknall',s:'as_astro',t:'Lemaître: das Uranfangsatom',a:1927,r:1,d:'Ein belgischer Priester und Physiker leitet aus Einsteins Gleichungen ein expandierendes Universum ab und denkt es zurück bis zu einem Anfang. Der Spottname „Big Bang“ stammt von einem Gegner der Theorie.'},
+{i:'as_fusion',s:'as_astro',t:'Bethe: Kernfusion in Sternen',a:1939,r:2,d:'Wasserstoff verschmilzt zu Helium – endlich ist geklärt, warum die Sonne seit Milliarden Jahren scheint. Kernphysik beantwortet die älteste astronomische Frage.'},
+{i:'as_radio',s:'as_astro',t:'Radioastronomie & Pulsare',a:1932,b:1967,r:2,d:'Der Himmel wird jenseits des sichtbaren Lichts erforscht. Jocelyn Bell entdeckt regelmäßige Pulse – rotierende Neutronensterne, vorhergesagt aus der Kernphysik.'},
+{i:'as_cmb',s:'as_astro',t:'Kosmische Hintergrundstrahlung',a:1965,r:1,d:'Penzias und Wilson finden ein Rauschen, das sie zunächst für Taubendreck in der Antenne halten. Es ist das Nachglühen des Urknalls – der stärkste Beleg für die Theorie.'},
+{i:'as_dunkel',s:'as_astro',t:'Dunkle Materie',a:1933,b:1980,r:1,d:'Zwicky und später Vera Rubin messen: Galaxien rotieren zu schnell für ihre sichtbare Masse. 85 % der Materie im Universum sind unbekannter Natur.'},
+{i:'as_dunkelenergie',s:'as_astro',t:'Beschleunigte Expansion / Dunkle Energie',a:1998,r:1,d:'Supernova-Messungen zeigen: Die Expansion wird schneller statt langsamer. Der größte offene Posten der heutigen Physik.'},
+{i:'as_exo',s:'as_astro',t:'Exoplaneten',a:1995,b:2025,r:1,d:'Der erste Planet um einen sonnenähnlichen Stern; heute sind über 5000 bekannt. Die Frage nach Leben anderswo wird von Spekulation zu Messprogramm.'},
+{i:'as_teleskope',s:'as_astro',t:'Weltraumteleskope (Hubble, JWST)',a:1990,b:2025,r:2,d:'Ohne störende Atmosphäre und im Infraroten blickt man bis zu den ersten Galaxien – Beobachtung wird zur Zeitreise.'},
+
+/* ============ KONTEXT: EPOCHEN ============ */
+{i:'ke_hoch',s:'k_epoche',t:'Frühe Hochkulturen',a:-3300,b:-800,r:1,d:'Schrift, Verwaltung, Bewässerung, Tempelwirtschaft: Erstmals gibt es Menschen, deren Beruf das Rechnen und Beobachten ist.'},
+{i:'ke_antike',s:'k_epoche',t:'Antike',a:-800,b:500,r:1,d:'Griechische Beweismathematik und Naturphilosophie, hellenistische Forschung in Alexandria, römische Ingenieurleistung.'},
+{i:'ke_ma',s:'k_epoche',t:'Mittelalter',a:500,b:1500,r:1,d:'Das Zentrum exakter Wissenschaft liegt lange in Bagdad, Kairo, Córdoba, Indien und China. In Europa entstehen ab 1100 Universitäten.'},
+{i:'ke_fnz',s:'k_epoche',t:'Frühe Neuzeit',a:1500,b:1789,r:1,d:'Wissenschaftliche Revolution: Instrument, Experiment und Mathematisierung setzen sich als Methode durch.'},
+{i:'ke_19',s:'k_epoche',t:'19. Jahrhundert',a:1789,b:1900,r:1,d:'Industrie, Labor und Universität verschmelzen; Physik wird Berufsfeld, Mathematik wird streng.'},
+{i:'ke_20',s:'k_epoche',t:'20./21. Jahrhundert',a:1900,b:2025,r:1,d:'Zwei Revolutionen (Quanten, Relativität), Großforschung, Computer – Wissenschaft wird zur globalen Gemeinschaftsleistung.'},
+
+/* ============ KONTEXT: KULTURRÄUME & REICHE ============ */
+{i:'ku_meso',s:'k_kultur',t:'Mesopotamien',a:-3300,b:-300,r:1,d:'Sumer, Babylon, Assyrien: Verwaltungsschrift, Sexagesimalrechnung und die längste Beobachtungsreihe der Antike.'},
+{i:'ku_aeg',s:'k_kultur',t:'Altes Ägypten',a:-3000,b:-30,r:1,d:'Praktische Rechenkunst, Feldvermessung, Kalender und Monumentalbau über drei Jahrtausende erstaunlich stabil.'},
+{i:'ku_grie',s:'k_kultur',t:'Griechische Welt',a:-800,b:-30,r:1,d:'Der entscheidende Schritt vom Rechenrezept zum Beweis – und von der Göttererklärung zur Naturursache.'},
+{i:'ku_alex',s:'k_kultur',t:'Alexandria & Hellenismus',a:-300,b:400,r:1,d:'Museion und Bibliothek bündeln griechisches, ägyptisches und babylonisches Wissen. Euklid, Archimedes, Eratosthenes, Ptolemäus arbeiten in diesem Raum.'},
+{i:'ku_rom',s:'k_kultur',t:'Römisches Reich',a:-200,b:476,r:2,d:'Große Ingenieure, wenig Grundlagenforschung: Rom nutzt griechische Wissenschaft, entwickelt sie aber kaum weiter.'},
+{i:'ku_indien',s:'k_kultur',t:'Indien (Gupta-Zeit und später)',a:300,b:1500,r:1,d:'Stellenwertsystem mit Null, negative Zahlen, Sinusfunktion, Reihenentwicklungen – oft eng an astronomische Aufgaben gebunden.'},
+{i:'ku_china',s:'k_kultur',t:'China (Han bis Song)',a:-200,b:1300,r:1,d:'Algorithmische Mathematik, Gleichungssysteme, präzise Himmelschroniken; Papier, Druck, Kompass und Schießpulver.'},
+{i:'ku_islam',s:'k_kultur',t:'Islamische Wissenschaft',a:750,b:1450,r:1,d:'Von Córdoba bis Samarkand: Übersetzung, Bewahrung und Weiterentwicklung. Algebra, Trigonometrie, Optik und Observatorien – das Bindeglied zwischen Antike und Europa.'},
+{i:'ku_maya',s:'k_kultur',t:'Maya',a:100,b:900,r:2,d:'Ein unabhängig entwickeltes Stellenwertsystem mit Null und Kalenderastronomie von großer Präzision.'},
+{i:'ku_uni',s:'k_kultur',t:'Europäische Universitäten',a:1088,b:2025,r:1,d:'Bologna, Paris, Oxford, Prag, Wien: dauerhafte Institutionen mit Lehrplan, Prüfung und Streitkultur – die Trägerstruktur der späteren Wissenschaft.'},
+{i:'ku_akademien',s:'k_kultur',t:'Akademien & Fachzeitschriften',a:1660,b:1800,r:1,d:'Royal Society und Académie des Sciences schaffen Begutachtung, Publikation und Priorität. Wissenschaft wird zur überprüfbaren Gemeinschaftsleistung statt zum Geheimwissen.'},
+{i:'ku_industrie',s:'k_kultur',t:'Industriezeitalter',a:1760,b:1914,r:1,d:'Technische Hochschulen, Industrielabore und Messtechnik: Wirtschaft finanziert Forschung, Forschung liefert Verfahren zurück.'},
+{i:'ku_gross',s:'k_kultur',t:'Großforschung & internationale Teams',a:1940,b:2025,r:1,d:'Manhattan-Projekt, CERN, ESA, LIGO: Fragen werden so teuer, dass nur noch Staatenverbünde sie beantworten können.'},
+
+/* ============ KONTEXT: GLAUBE & WELTBILD ============ */
+{i:'gl_himmel',s:'k_glaube',t:'Himmelsdeutung als Gottesdienst',a:-3000,b:-100,r:1,d:'In Mesopotamien ist Astronomie Priesterarbeit: Der Himmel gilt als Botschaft der Götter. Die religiöse Motivation erzwingt gerade jene Genauigkeit, aus der Wissenschaft wird.'},
+{i:'gl_ordnung',s:'k_glaube',t:'Kosmos als geordnetes Ganzes',a:-550,b:-300,r:2,d:'Die Griechen setzen voraus, dass die Welt vernünftig geordnet und daher verstehbar ist. Ohne diese Grundannahme gäbe es keine Naturwissenschaft.'},
+{i:'gl_christ',s:'k_glaube',t:'Christliches Weltbild',a:300,b:1700,r:1,d:'Eine geschaffene, sinnvoll geordnete Welt lädt zum Erforschen ein; zugleich bindet die Schriftautorität, was gedacht werden darf. Beides wirkt über Jahrhunderte gleichzeitig.'},
+{i:'gl_kloster',s:'k_glaube',t:'Klöster als Wissensspeicher',a:529,b:1500,r:2,d:'Abschreiben, Sammeln, Rechnen des Osterdatums: Auch die Computistik hält mathematisches Können in Europa am Leben.'},
+{i:'gl_islamwiss',s:'k_glaube',t:'Bildungsauftrag im Islam',a:750,b:1450,r:1,d:'Gebetszeiten, Gebetsrichtung und Mondkalender verlangen Astronomie und Trigonometrie; Stiftungen finanzieren Bibliotheken und Observatorien.'},
+{i:'gl_scholastik',s:'k_glaube',t:'Scholastik: Glaube und Vernunft',a:1100,b:1500,r:1,d:'Die Verpflichtung, Positionen mit Argumenten zu prüfen, züchtet eine Streitkultur, aus der die wissenschaftliche Methode hervorgeht.'},
+{i:'gl_galilei',s:'k_glaube',t:'Prozess gegen Galilei',a:1633,r:1,d:'Nicht Wissenschaft gegen Religion schlechthin, sondern ein Konflikt um Deutungshoheit, Persönlichkeiten und Politik. Wirkung: In katholischen Ländern verlagert sich die Forschungsführung nach Norden.'},
+{i:'gl_uhrwerk',s:'k_glaube',t:'Gott als Uhrmacher (Deismus)',a:1690,b:1800,r:2,d:'Newtons Weltmaschine legt nahe: Gott hat die Gesetze gegeben und greift nicht ein. Laplace antwortet Napoleon, er brauche „diese Hypothese nicht“.'},
+{i:'gl_darwin',s:'k_glaube',t:'Konflikt um Evolution & Erdalter',a:1859,b:1925,r:2,d:'Geologie und Biologie fordern Millionen Jahre. Der Streit prägt bis heute das öffentliche Bild vom Verhältnis Glaube–Wissenschaft.'},
+{i:'gl_grenzen',s:'k_glaube',t:'Neue Grenzfragen: Zufall, Grenzen des Wissens',a:1927,b:2025,r:2,d:'Unschärfe, Gödels Sätze, Chaos und die Deutung der Quantenmechanik werfen Fragen auf, die zwischen Physik und Philosophie liegen.'},
+
+/* ============ KONTEXT: INSTRUMENTE & TECHNIK ============ */
+{i:'in_schrift',s:'k_technik',t:'Schrift & Papyrus',a:-3300,b:-300,r:2,d:'Ohne dauerhaften, transportablen Datenträger keine Beobachtungsreihen und keine überprüfbare Überlieferung.'},
+{i:'in_gnomon',s:'k_technik',t:'Gnomon, Sonnenuhr & Wasseruhr',a:-1500,b:1600,r:2,d:'Die ersten Messgeräte der Menschheit: Schattenlänge und Wasserstand liefern Winkel und Zeit – Galilei misst Fallzeiten noch mit Wasser.'},
+{i:'in_abakus',s:'k_technik',t:'Abakus & Rechenbrett',a:-500,b:1600,r:3,d:'Über zwei Jahrtausende das Standardwerkzeug des Rechnens – bis Fibonaccis Ziffern das schriftliche Rechnen ermöglichen.'},
+{i:'in_astrolab',s:'k_technik',t:'Astrolabium',a:200,b:1600,r:2,d:'Ein tragbares Analogrechengerät für Sternhöhe, Zeit und Gebetsrichtung, in der islamischen Welt zur Perfektion gebracht.'},
+{i:'in_papier',s:'k_technik',t:'Papier',a:105,b:1500,r:2,d:'Von China über Bagdad und Córdoba nach Europa – ein billiger Beschreibstoff ist Voraussetzung für Rechenbücher und später den Buchdruck.'},
+{i:'in_uhr',s:'k_technik',t:'Mechanische Räderuhr',a:1300,b:1650,r:1,d:'Gleich lange Stunden machen Zeit zur messbaren Größe. Zugleich liefert die Uhr die Leitmetapher der neuen Physik: das Universum als Uhrwerk.'},
+{i:'in_druck',s:'k_technik',t:'Buchdruck',a:1450,b:1700,r:1,d:'Formeln, Tabellen und Diagramme werden fehlerfrei vervielfältigt. Erst dadurch kann sich jemand auf die Messwerte eines anderen verlassen – die Grundlage kumulativer Forschung.'},
+{i:'in_fernrohr',s:'k_technik',t:'Fernrohr & Mikroskop',a:1608,b:1700,r:1,d:'Die Sinne werden technisch erweitert. Erstmals entscheidet ein Gerät über Weltbildfragen – und zeigt Dinge, die keine Theorie vorhergesagt hatte.'},
+{i:'in_pendeluhr',s:'k_technik',t:'Pendeluhr & Präzisionsmessung',a:1656,b:1800,r:2,d:'Sekundengenaue Zeit macht quantitative Experimente und Längengradbestimmung auf See möglich.'},
+{i:'in_vakuum',s:'k_technik',t:'Luftpumpe & Vakuum',a:1650,b:1680,r:2,d:'Guerickes Magdeburger Halbkugeln und Boyles Versuche zeigen: Der „leere Raum“ ist herstellbar und untersuchbar – ein Bruch mit Aristoteles.'},
+{i:'in_rechen',s:'k_technik',t:'Rechenschieber & Rechenmaschinen',a:1620,b:1975,r:2,d:'Von Napiers Logarithmen über Leibniz’ Staffelwalze bis zur Tischrechenmaschine: Bis in die 1970er ist der Rechenschieber das Werkzeug jedes Ingenieurs.'},
+{i:'in_spektro',s:'k_technik',t:'Spektroskop & Fotoplatte',a:1814,b:1900,r:2,d:'Licht wird zerlegt und dauerhaft aufgezeichnet. Das Auge wird als Messinstrument ersetzt – Beobachtung wird objektiv und langzeitfähig.'},
+{i:'in_vakuumroehre',s:'k_technik',t:'Vakuumröhre & Elektronenstrahl',a:1870,b:1930,r:2,d:'Kathodenstrahlröhren führen zu Elektron, Röntgenstrahlung und später zum Fernsehen – ein Gerät, drei Revolutionen.'},
+{i:'in_beschleun',s:'k_technik',t:'Teilchenbeschleuniger',a:1930,b:2025,r:1,d:'Vom Zyklotron auf der Handfläche zum 27-km-Ring des LHC: Um immer kleinere Strukturen zu sehen, braucht man immer größere Maschinen.'},
+{i:'in_computer',s:'k_technik',t:'Computer',a:1941,b:2025,r:1,d:'Zuse, Turing, ENIAC: Rechnen wird automatisiert. Simulation, Datenauswertung und Steuerung von Experimenten wären ohne ihn undenkbar.'},
+
+/* ============ KONTEXT: KUNST, MUSIK & GESELLSCHAFT ============ */
+{i:'ge_musikmath',s:'k_gesell',t:'Musik als Teil der Mathematik',a:-500,b:1600,r:1,d:'Im Quadrivium stehen Arithmetik, Geometrie, Astronomie und Musik nebeneinander. Konsonanz gilt als hörbares Zahlenverhältnis – Kepler sucht noch 1619 die „Weltharmonik“ in den Planetenbahnen.'},
+{i:'ge_kathedrale',s:'k_gesell',t:'Kathedralbau als angewandte Statik',a:1140,b:1500,r:2,d:'Gotische Baumeister beherrschen Kräfteverläufe praktisch, lange bevor die Statik theoretisch formuliert wird – Wissen steckt im Handwerk.'},
+{i:'ge_renaissance',s:'k_gesell',t:'Renaissance: Künstler als Forscher',a:1400,b:1600,r:1,d:'Perspektive, Anatomie, Proportion, Maschinenbau: Leonardo und Dürer verbinden Beobachtung, Zeichnung und Mathematik – ein Vorbild für die neue Naturforschung.'},
+{i:'ge_temperiert',s:'k_gesell',t:'Temperierte Stimmung',a:1691,b:1750,r:2,d:'Reine Zahlenverhältnisse und freie Modulation schließen sich aus. Die Lösung ist ein bewusster Kompromiss mit der zwölften Wurzel aus 2 – Mathematik entscheidet, wie Musik klingt.'},
+{i:'ge_aufklaerung',s:'k_gesell',t:'Aufklärung & Enzyklopädie',a:1650,b:1800,r:1,d:'Newtons Erfolg wird zum Modell für Politik und Gesellschaft: Auch das Zusammenleben soll vernünftigen Gesetzen folgen. Wissenschaft wird zum öffentlichen Thema.'},
+{i:'ge_revolution',s:'k_gesell',t:'Französische Revolution & metrisches System',a:1789,b:1799,r:1,d:'Meter und Kilogramm werden aus der Erdvermessung abgeleitet statt aus Fürstenmaßen – Einheiten „für alle Zeiten, für alle Völker“. Ein politisches Projekt mit rein wissenschaftlicher Begründung.'},
+{i:'ge_industrie',s:'k_gesell',t:'Industrialisierung & Bildungsexpansion',a:1800,b:1914,r:1,d:'Technische Hochschulen, Realschulen und Physiklabore entstehen; Mathematik und Physik werden zu Schulfächern für breite Schichten.'},
+{i:'ge_wk',s:'k_gesell',t:'Weltkriege, Emigration & Verantwortung',a:1914,b:1945,r:1,d:'Vertreibung und Ermordung europäischer Wissenschaftler verlagern das Zentrum der Physik nach Amerika. Die Frage nach der Verantwortung der Forschenden wird unausweichlich.'},
+{i:'ge_raumfahrt',s:'k_gesell',t:'Kalter Krieg, Raumfahrt & Bildungsoffensive',a:1947,b:1991,r:1,d:'Der Sputnikschock löst im Westen Schulreformen und Forschungsprogramme aus – Mathematikunterricht wird zur Frage nationaler Sicherheit.'},
+{i:'ge_digital',s:'k_gesell',t:'Digitalisierung & offene Wissenschaft',a:1990,b:2025,r:1,d:'Preprint-Server, Simulation und weltweite Zusammenarbeit verändern, wie Forschung entsteht und geprüft wird.'}
+];
+
+/* ============================================================
+   WECHSELWIRKUNGEN  (a wirkt auf b)
+   ============================================================ */
+const LINKS = [
+/* --- Frühe Hochkulturen --- */
+{a:'ku_meso',b:'z_token',t:'Verwaltung erzwingt Zahlzeichen'},
+{a:'in_schrift',b:'z_sexa',t:'Dauerhafte Aufzeichnung ermöglicht Stellenwertrechnung'},
+{a:'gl_himmel',b:'as_babtag',t:'Himmelsdeutung als Priesterpflicht → 1500 Jahre Messreihen'},
+{a:'z_sexa',b:'as_babtag',t:'Bequemes Bruchrechnen für Winkel und Zeiten'},
+{a:'as_babtag',b:'z_sexa',t:'Winkel- und Zeitmaß in 60er-Schritten bis heute'},
+{a:'a_babquad',b:'z_sexa',t:'Rechenverfahren im Sexagesimalsystem'},
+{a:'ku_aeg',b:'g_aegverm',t:'Nilflut zwingt zur jährlichen Neuvermessung'},
+{a:'g_aegverm',b:'z_aegbruch',t:'Vermessung und Verteilung erfordern Bruchrechnung'},
+{a:'as_aegkal',b:'ku_aeg',t:'Kalender steuert Aussaat und Verwaltung'},
+{a:'in_gnomon',b:'as_aegkal',t:'Schattenmessung liefert Sonnenstand und Datum'},
+
+/* --- Griechenland --- */
+{a:'gl_ordnung',b:'g_thales',t:'Annahme einer verstehbaren Ordnung → Suche nach Beweisen'},
+{a:'g_thales',b:'g_pyth',t:'Beweisen als Methode setzt sich durch'},
+{a:'g_plimpton',b:'g_pyth',t:'Bekanntes Zahlenmaterial, nun allgemein bewiesen'},
+{a:'g_pyth',b:'z_irrat',t:'Die Diagonale sprengt das Verhältnisdenken'},
+{a:'g_pyth',b:'ge_musikmath',t:'Konsonanz als einfaches Zahlenverhältnis'},
+{a:'z_irrat',b:'g_eudoxos',t:'Proportionenlehre als Antwort auf die Krise'},
+{a:'g_eudoxos',b:'g_euklid',t:'Strenge Grundlage der Elemente'},
+{a:'l_aristo',b:'l_beweis',t:'Formale Logik stützt das Beweisideal'},
+{a:'g_euklid',b:'l_beweis',t:'Axiomatischer Aufbau als Vorbild'},
+{a:'l_beweis',b:'p_archimedes',t:'Statik wird nach Euklids Muster bewiesen'},
+{a:'g_archim',b:'an_archim',t:'Ausschöpfung als Vorstufe der Integration'},
+{a:'p_aristo',b:'p_impetus',t:'Kritik am Erklärungsproblem des geworfenen Steins'},
+{a:'ku_grie',b:'as_kugel',t:'Beobachtung und Argument statt Mythos'},
+{a:'as_kugel',b:'as_aristarch',t:'Kugelgestalt als Voraussetzung des Modells'},
+{a:'ku_alex',b:'as_eratos',t:'Bibliothek liefert Daten aus dem ganzen Reich'},
+{a:'g_euklid',b:'as_eratos',t:'Geometrie macht Unzugängliches messbar'},
+{a:'as_aristarch',b:'as_kopernikus',t:'Antikes Vorbild, das Kopernikus ausdrücklich nennt'},
+{a:'as_hipparch',b:'as_ptolem',t:'Sternkatalog und Präzession als Grundlage'},
+{a:'as_babtag',b:'as_hipparch',t:'Babylonische Daten ermöglichen den Vergleich über Jahrhunderte'},
+{a:'g_apollon',b:'as_ptolem',t:'Exzenter und Epizykel aus der Kegelschnittgeometrie'},
+{a:'p_aristo',b:'as_ptolem',t:'Vollkommene Kreisbewegung als Vorgabe'},
+
+/* --- Indien, China, Islam --- */
+{a:'ku_indien',b:'z_null',t:'Astronomische Rechnungen begünstigen das Stellenwertsystem'},
+{a:'z_null',b:'a_brahma',t:'Rechnen mit Null und negativen Zahlen'},
+{a:'ku_china',b:'a_neunbuecher',t:'Verwaltungs- und Vermessungsaufgaben als Anlass'},
+{a:'z_chinastab',b:'z_negativ',t:'Rote und schwarze Stäbchen als Vorzeichen'},
+{a:'as_aryabh',b:'g_aryabhata',t:'Astronomie verlangt Winkelfunktionen'},
+{a:'gl_islamwiss',b:'ku_islam',t:'Religiöse Praxis fordert exakte Astronomie'},
+{a:'ku_islam',b:'a_alkhwarizmi',t:'Haus der Weisheit bündelt griechisches und indisches Wissen'},
+{a:'z_null',b:'z_alkh_ziffer',t:'Indische Ziffern gelangen nach Bagdad'},
+{a:'ku_islam',b:'g_trigo',t:'Gebetsrichtung und Kalender als Antrieb'},
+{a:'ku_islam',b:'as_observ',t:'Staatlich finanzierte Großobservatorien'},
+{a:'in_astrolab',b:'as_observ',t:'Präzise Instrumente für Höhenmessung'},
+{a:'ku_islam',b:'e_alhazen',t:'Experimentelle Optik in Kairo'},
+{a:'in_papier',b:'ku_islam',t:'Billiger Beschreibstoff für Bibliotheken'},
+
+/* --- Mittelalter Europa --- */
+{a:'gl_kloster',b:'ku_uni',t:'Kloster- und Domschulen als Vorstufe'},
+{a:'ku_islam',b:'ku_uni',t:'Übersetzungswelle aus dem Arabischen füllt die Lehrpläne'},
+{a:'gl_scholastik',b:'ku_uni',t:'Disputation als Ausbildungsform'},
+{a:'z_alkh_ziffer',b:'z_fibo',t:'Fibonacci lernt das Rechnen in Nordafrika'},
+{a:'z_fibo',b:'in_abakus',t:'Schriftliches Rechnen verdrängt das Rechenbrett'},
+{a:'ku_uni',b:'p_merton',t:'Bewegungslehre wird in Oxford und Paris diskutiert'},
+{a:'p_impetus',b:'p_merton',t:'Vorarbeit für die Beschreibung beschleunigter Bewegung'},
+{a:'p_merton',b:'an_oresme',t:'Graphische Darstellung als Beweismittel'},
+{a:'an_oresme',b:'p_galilei',t:'Weg als Fläche unter der v-t-Kurve'},
+{a:'gl_kloster',b:'in_uhr',t:'Gebetszeiten fordern gleichmäßige Zeitmessung'},
+{a:'in_uhr',b:'gl_uhrwerk',t:'Die Uhr wird zum Bild für den Kosmos'},
+{a:'ge_kathedrale',b:'p_archimedes',t:'Praktische Statik trifft auf antike Theorie'},
+
+/* --- Renaissance & Wissenschaftliche Revolution --- */
+{a:'ge_renaissance',b:'g_perspektive',t:'Maler entwickeln die Geometrie des Sehens'},
+{a:'g_perspektive',b:'g_desargues',t:'Aus der Praxis wird eine Theorie'},
+{a:'in_druck',b:'as_kopernikus',t:'Verbreitung und fehlerfreie Tabellen'},
+{a:'in_druck',b:'a_cardano',t:'Gedruckte Rechenbücher machen Verfahren öffentlich'},
+{a:'as_ptolem',b:'as_kopernikus',t:'Modell, an dem sich Kopernikus abarbeitet'},
+{a:'as_observ',b:'as_kopernikus',t:'Rechenmodelle der Maragha-Schule tauchen wieder auf'},
+{a:'as_kopernikus',b:'as_tycho',t:'Streitfrage motiviert Präzisionsmessung'},
+{a:'as_tycho',b:'as_kepler',t:'8 Bogenminuten Abweichung erzwingen die Ellipse'},
+{a:'g_apollon',b:'as_kepler',t:'Kegelschnitte liefern die passende Kurve'},
+{a:'z_log',b:'as_kepler',t:'Logarithmen verkürzen die Rechenarbeit drastisch'},
+{a:'in_fernrohr',b:'as_galileiteles',t:'Neues Instrument liefert neue Tatsachen'},
+{a:'e_snellius',b:'in_fernrohr',t:'Brechungsgesetz macht Linsen berechenbar'},
+{a:'as_galileiteles',b:'gl_galilei',t:'Beobachtung gerät in Konflikt mit der Schriftauslegung'},
+{a:'gl_galilei',b:'ku_akademien',t:'Forschungsschwerpunkt verlagert sich nach Nordwesteuropa'},
+{a:'p_galilei',b:'r_galrel',t:'Schiffsargument gegen den Einwand der ruhenden Erde'},
+{a:'in_pendeluhr',b:'p_huygens',t:'Sekundengenaue Zeit macht Experimente quantitativ'},
+{a:'in_uhr',b:'p_galilei',t:'Zeitmessung als Voraussetzung des Fallgesetzes'},
+{a:'g_descartes',b:'an_fermat',t:'Kurven als Gleichungen behandelbar'},
+{a:'g_descartes',b:'an_infinitesimal',t:'Algebraische Geometrie als Werkzeug'},
+{a:'an_fermat',b:'an_infinitesimal',t:'Tangenten- und Extremwertverfahren als Vorlage'},
+{a:'a_viete',b:'g_descartes',t:'Buchstabenrechnung ermöglicht allgemeine Kurvengleichungen'},
+{a:'as_kepler',b:'p_newton',t:'Die zu erklärenden Gesetze'},
+{a:'p_galilei',b:'p_newton',t:'Trägheit und Fallgesetz als Bausteine'},
+{a:'p_huygens',b:'p_newton',t:'Zentripetalkraft und Stoßgesetze'},
+{a:'an_infinitesimal',b:'p_newton',t:'Ohne Kalkül keine Bahnberechnung'},
+{a:'p_newton',b:'as_newtongrav',t:'Ein Gesetz erklärt alle Keplerbahnen'},
+{a:'as_newtongrav',b:'as_halley',t:'Bahnberechnung erlaubt Vorhersage'},
+{a:'p_newton',b:'gl_uhrwerk',t:'Weltmaschine ohne laufenden Eingriff'},
+{a:'gl_uhrwerk',b:'ge_aufklaerung',t:'Vernunftgesetze auch für Gesellschaft und Staat'},
+{a:'in_vakuum',b:'p_aristo',t:'Das Vakuum widerlegt „die Natur scheut die Leere“'},
+
+/* --- 18./19. Jahrhundert --- */
+{a:'ge_aufklaerung',b:'ge_revolution',t:'Vernunftideal wird politisch'},
+{a:'ge_revolution',b:'in_spektro',t:'Metrisches System schafft einheitliche Messgrundlagen'},
+{a:'as_newtongrav',b:'s_gauss',t:'Bahnbestimmung der Ceres aus wenigen Messpunkten'},
+{a:'s_gauss',b:'as_neptun',t:'Störungsrechnung und Fehlerabschätzung'},
+{a:'as_newtongrav',b:'as_neptun',t:'Vorhersage eines unbekannten Planeten'},
+{a:'s_pascalfermat',b:'s_bernoulli',t:'Vom Spielproblem zur allgemeinen Theorie'},
+{a:'s_bernoulli',b:'s_laplace',t:'Grenzwertsätze als Fundament'},
+{a:'s_moivre',b:'s_gauss',t:'Normalverteilung als Fehlerkurve gedeutet'},
+{a:'s_bayes',b:'s_ml',t:'Lernen aus Daten als Umkehrschluss'},
+{a:'an_euler',b:'p_analytmech',t:'Analysis wird zur Sprache der Mechanik'},
+{a:'an_bernoulli',b:'p_analytmech',t:'Extremalprinzipien statt Kräftebilanz'},
+{a:'p_analytmech',b:'q_schroedinger',t:'Hamiltonformalismus wird in die Quantentheorie übernommen'},
+{a:'w_watt',b:'ku_industrie',t:'Ortsunabhängige Energie schafft die Fabrik'},
+{a:'w_watt',b:'w_carnot',t:'Theorie folgt der bereits laufenden Maschine'},
+{a:'w_rumford',b:'w_energie',t:'Wärme ist kein Stoff, sondern Bewegung'},
+{a:'w_carnot',b:'w_entropie',t:'Wirkungsgradgrenze führt zum zweiten Hauptsatz'},
+{a:'w_energie',b:'w_entropie',t:'Erster und zweiter Hauptsatz ergänzen sich'},
+{a:'w_entropie',b:'w_boltzmann',t:'Statistische Deutung der Entropie'},
+{a:'s_maxwellboltz',b:'w_boltzmann',t:'Verteilungen statt Einzelbahnen'},
+{a:'w_boltzmann',b:'s_maxwellboltz',t:'Naturgesetz als Wahrscheinlichkeitsaussage'},
+{a:'an_fourier',b:'w_klima',t:'Wärmeleitungsrechnung führt zum Treibhauseffekt'},
+{a:'w_klima',b:'an_numerik',t:'Klimamodelle als Großsimulation'},
+{a:'an_fourier',b:'e_maxwell',t:'Wellenzerlegung als Standardwerkzeug der Feldtheorie'},
+{a:'ku_industrie',b:'in_spektro',t:'Feinmechanik und Optik als Industrieprodukt'},
+{a:'e_volta',b:'e_oersted',t:'Erst dauerhafter Strom macht den Versuch möglich'},
+{a:'e_oersted',b:'e_ampere',t:'Sofortige theoretische Ausarbeitung'},
+{a:'e_oersted',b:'e_faraday',t:'Umkehrfrage: Kann Magnetismus Strom erzeugen?'},
+{a:'e_faraday',b:'e_maxwell',t:'Kraftlinien werden zu Feldgleichungen'},
+{a:'e_huygenswelle',b:'e_young',t:'Wellenmodell wird experimentell bestätigt'},
+{a:'e_young',b:'e_maxwell',t:'Licht als Welle muss in die Theorie passen'},
+{a:'e_maxwell',b:'e_hertz',t:'Vorhergesagte Wellen werden erzeugt'},
+{a:'e_maxwell',b:'r_srt',t:'Konstante Lichtgeschwindigkeit in den Gleichungen'},
+{a:'e_michelson',b:'r_srt',t:'Kein Ätherwind messbar'},
+{a:'a_matrizen',b:'e_maxwell',t:'Vektor- und Matrizenschreibweise ordnet die Gleichungen'},
+{a:'in_spektro',b:'as_spektral',t:'Zerlegtes Licht wird dauerhaft aufgezeichnet'},
+{a:'as_spektral',b:'q_bohr',t:'Spektrallinien sind die zu erklärenden Daten'},
+{a:'g_riemann',b:'g_nichteukl',t:'Verallgemeinerung auf beliebige Krümmung'},
+{a:'g_nichteukl',b:'l_hilbert',t:'Axiome sind wählbar, nicht vorgegeben'},
+
+/* --- 20. Jahrhundert --- */
+{a:'g_riemann',b:'r_art',t:'Die passende Geometrie lag 60 Jahre bereit'},
+{a:'p_mach',b:'r_art',t:'Kritik am absoluten Raum als Ausgangsfrage'},
+{a:'r_srt',b:'r_emc2',t:'Massenzunahme und Energie folgen aus derselben Rechnung'},
+{a:'r_srt',b:'r_minkowski',t:'Geometrische Fassung der Theorie'},
+{a:'r_minkowski',b:'r_art',t:'Raumzeit als Objekt, das gekrümmt sein kann'},
+{a:'r_art',b:'r_eddington',t:'Vorhersage der Lichtablenkung wird geprüft'},
+{a:'r_art',b:'r_schwarzschild',t:'Erste exakte Lösung der Feldgleichungen'},
+{a:'r_art',b:'as_urknall',t:'Feldgleichungen erlauben ein expandierendes Universum'},
+{a:'as_hubble',b:'as_urknall',t:'Beobachtete Fluchtbewegung stützt das Modell'},
+{a:'as_leavitt',b:'as_hubble',t:'Entfernungsmaßstab macht die Messung möglich'},
+{a:'as_urknall',b:'as_cmb',t:'Vorhergesagtes Nachglühen wird gefunden'},
+{a:'r_emc2',b:'as_fusion',t:'Massendefekt erklärt die Sonnenenergie'},
+{a:'q_spaltung',b:'as_fusion',t:'Kernphysik beantwortet astronomische Fragen'},
+{a:'w_strahlung',b:'q_planck',t:'Das Strahlungsproblem erzwingt das Wirkungsquantum'},
+{a:'q_planck',b:'q_photoeffekt',t:'Energieportionen auch für Licht selbst'},
+{a:'e_young',b:'q_debroglie',t:'Interferenz auch bei Materie erwartbar'},
+{a:'q_photoeffekt',b:'q_debroglie',t:'Welle-Teilchen-Symmetrie'},
+{a:'e_elektron',b:'q_rutherford',t:'Bausteine des Atoms werden gesucht'},
+{a:'q_rutherford',b:'q_bohr',t:'Kernmodell braucht stabile Elektronenbahnen'},
+{a:'q_bohr',b:'q_heisenberg',t:'Widersprüche des Bahnbegriffs erzwingen den Neuanfang'},
+{a:'q_debroglie',b:'q_schroedinger',t:'Materiewelle wird zur Wellengleichung'},
+{a:'a_matrizen',b:'q_heisenberg',t:'Matrizenrechnung als fertiges Werkzeug'},
+{a:'z_komplex',b:'q_schroedinger',t:'Die Wellenfunktion ist notwendig komplex'},
+{a:'an_hilbertraum',b:'q_schroedinger',t:'Mathematischer Rahmen der Quantenmechanik'},
+{a:'q_schroedinger',b:'q_born',t:'Deutung des Betragsquadrats'},
+{a:'s_kolmogorow',b:'q_born',t:'Wahrscheinlichkeit als exakter Begriff verfügbar'},
+{a:'q_born',b:'q_kopenhagen',t:'Streit um Realität und Determinismus'},
+{a:'q_kopenhagen',b:'gl_grenzen',t:'Physik berührt Erkenntnistheorie'},
+{a:'q_heisenberg',b:'gl_grenzen',t:'Grenzen der Messbarkeit als Naturgesetz'},
+{a:'l_goedel',b:'gl_grenzen',t:'Grenzen des Beweisbaren'},
+{a:'q_kopenhagen',b:'q_bell',t:'Aus der Deutungsfrage wird ein Experiment'},
+{a:'a_lie',b:'q_standard',t:'Symmetriegruppen als Bauplan der Teilchen'},
+{a:'a_noether',b:'q_standard',t:'Erhaltungssätze aus Symmetrien'},
+{a:'a_noether',b:'p_analytmech',t:'Neue Deutung der klassischen Erhaltungssätze'},
+{a:'q_qed',b:'q_standard',t:'Vorbild für die weiteren Wechselwirkungen'},
+{a:'in_beschleun',b:'q_standard',t:'Immer höhere Energien zeigen immer kleinere Strukturen'},
+{a:'in_beschleun',b:'q_higgs',t:'LHC als Nachweisinstrument'},
+{a:'q_chadwick',b:'q_spaltung',t:'Neutronen als Geschosse für Kernreaktionen'},
+{a:'q_spaltung',b:'q_kernenergie',t:'Vom Laborbefund zur Waffe und zum Reaktor'},
+{a:'ge_wk',b:'q_kernenergie',t:'Krieg beschleunigt und belastet die Kernphysik'},
+{a:'ge_wk',b:'in_computer',t:'Ballistik und Codeknacken treiben den Rechnerbau'},
+{a:'l_turing',b:'in_computer',t:'Theorie der Berechenbarkeit als Bauplan'},
+{a:'l_boole',b:'in_computer',t:'Schaltalgebra der Logikgatter'},
+{a:'z_binaer',b:'in_computer',t:'Dualsystem als Datenformat'},
+{a:'in_computer',b:'an_numerik',t:'Simulation als dritte Säule der Forschung'},
+{a:'in_computer',b:'an_chaos',t:'Lorenz entdeckt Chaos am Wettermodell'},
+{a:'in_computer',b:'l_vierfarben',t:'Maschinell geführte Beweise'},
+{a:'in_computer',b:'g_fraktal',t:'Fraktale werden erst am Bildschirm sichtbar'},
+{a:'e_halbleiter',b:'in_computer',t:'Transistor ersetzt die Röhre'},
+{a:'q_standard',b:'e_halbleiter',t:'Quantenmechanik der Festkörper wird Technik'},
+{a:'q_qed',b:'e_laser',t:'Stimulierte Emission technisch nutzbar'},
+{a:'e_laser',b:'r_gravwellen',t:'Laserinterferometrie als Messprinzip'},
+{a:'e_michelson',b:'r_gravwellen',t:'Dasselbe Messprinzip, milliardenfach verfeinert'},
+{a:'r_art',b:'r_gravwellen',t:'Vorhersage von 1916 wird bestätigt'},
+{a:'r_art',b:'r_gps',t:'Zeitdilatation muss laufend korrigiert werden'},
+{a:'r_schwarzschild',b:'r_bild',t:'Berechneter Horizont wird abgebildet'},
+{a:'ku_gross',b:'in_beschleun',t:'Nur Staatenverbünde können solche Maschinen bauen'},
+{a:'ge_raumfahrt',b:'ku_gross',t:'Systemwettstreit finanziert Großforschung'},
+{a:'as_teleskope',b:'as_exo',t:'Weltraumbeobachtung erlaubt Präzisionsphotometrie'},
+{a:'as_dunkel',b:'as_dunkelenergie',t:'Zwei offene Posten der kosmischen Bilanz'},
+{a:'z_cantor',b:'l_mengen',t:'Mengen als gemeinsame Sprache der Mathematik'},
+{a:'l_mengen',b:'l_russell',t:'Widerspruch im Fundament'},
+{a:'l_russell',b:'l_hilbert',t:'Ruf nach einem Widerspruchsfreiheitsbeweis'},
+{a:'l_hilbert',b:'l_goedel',t:'Das Programm wird widerlegt'},
+{a:'l_goedel',b:'l_turing',t:'Unentscheidbarkeit wird berechenbarkeitstheoretisch gefasst'},
+{a:'an_cauchy',b:'z_reell',t:'Strenge Analysis verlangt exakte Zahlbegriffe'},
+{a:'z_reell',b:'z_cantor',t:'Untersuchung der Struktur des Kontinuums'},
+{a:'g_nichteukl',b:'g_riemann',t:'Verallgemeinerung des Krümmungsbegriffs'},
+{a:'a_galois',b:'a_abstrakt',t:'Gruppen als eigenständige Struktur'},
+{a:'a_galois',b:'a_lie',t:'Symmetrie als mathematisches Objekt'},
+{a:'z_rsa',b:'q_quantencomp',t:'Quantenrechner bedrohen die Faktorisierungsannahme'},
+{a:'q_bell',b:'q_quantencomp',t:'Verschränkung wird zur Ressource'},
+{a:'s_montecarlo',b:'an_numerik',t:'Zufall als Rechenverfahren'},
+{a:'q_kernenergie',b:'s_montecarlo',t:'Neutronentransport erzwingt statistische Simulation'},
+{a:'ge_musikmath',b:'ge_temperiert',t:'Reine Verhältnisse werden zum Kompromiss'},
+{a:'z_irrat',b:'ge_temperiert',t:'Die zwölfte Wurzel aus 2 als Stimmungsgrundlage'},
+{a:'ku_akademien',b:'ge_aufklaerung',t:'Öffentliche Wissenschaft als Vorbild'},
+{a:'ge_industrie',b:'ku_gross',t:'Ausbildung und Labore als Voraussetzung'},
+{a:'ge_digital',b:'s_ml',t:'Daten und Rechenleistung in bisher unbekanntem Umfang'}
+];
+
+/* ============================================================
+   ZUSTAND & HILFSFUNKTIONEN
+   ============================================================ */
+const MIN_JAHR = -3500, MAX_JAHR = 2060;
+const AXIS_H = 34;
+const ROW_H = 25, BAND_H = 19;
+const LANE_PAD = 9;
+
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+const mk = document.getElementById('mk');
+const mctx = mk.getContext('2d');
+const tipp = document.getElementById('tipp');
+const panel = document.getElementById('panel');
+const panelinhalt = document.getElementById('panelinhalt');
+
+const ITEM_VON_ID = {};
+ITEMS.forEach(o => { ITEM_VON_ID[o.i] = o; });
+const SPUR_VON_ID = {};
+SPUREN.forEach(s => { SPUR_VON_ID[s.id] = s; });
+
+const state = {
+  x0: MIN_JAHR,
+  z: 0.2,
+  offsetY: 0,
+  aktiv: new Set(SPUREN.map(s => s.id)),
+  einfluesse: false,
+  auswahl: null,
+  hover: null
+};
+
+function labelBreite(){ return cv.clientWidth < 620 ? 98 : 140; }
+function plotBreite(){ return Math.max(60, cv.clientWidth - labelBreite()); }
+function zMin(){ return plotBreite() / (MAX_JAHR - MIN_JAHR); }
+const Z_MAX = 6;
+
+function xVon(j){ return labelBreite() + (j - state.x0) * state.z; }
+function jahrVon(x){ return state.x0 + (x - labelBreite()) / state.z; }
+function spanJahre(){ return plotBreite() / state.z; }
+
+function fmtJahr(j){
+  j = Math.round(j);
+  if (j < 0) return (-j) + ' v.Chr.';
+  if (j === 0) return 'Zeitenwende';
+  return String(j);
+}
+function fmtZeitraum(o){
+  if (o.b === undefined || o.b === null) return fmtJahr(o.a);
+  return fmtJahr(o.a) + ' – ' + fmtJahr(o.b);
+}
+function hexRgba(hex, a){
+  const n = parseInt(hex.slice(1), 16);
+  return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + a + ')';
+}
+function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+
+function detailStufe(){
+  const sp = spanJahre();
+  if (sp <= 950) return 3;
+  if (sp <= 3400) return 2;
+  return 1;
+}
+function sichtbar(o){
+  return state.aktiv.has(o.s) && o.r <= detailStufe();
+}
+
+/* ============================================================
+   LAYOUT (Zeilenpackung)
+   ============================================================ */
+let layout = null, layoutKey = '';
+
+function baueLayout(){
+  const key = [...state.aktiv].sort().join(',') + '|' + detailStufe();
+  if (key === layoutKey && layout) return layout;
+  layoutKey = key;
+
+  const spuren = [];
+  let y = AXIS_H;
+  const luecke = 14;
+  let letzteGruppe = null;
+
+  for (const sp of SPUREN){
+    if (!state.aktiv.has(sp.id)) continue;
+    const neueGruppe = sp.g !== letzteGruppe;
+    if (neueGruppe) y += (letzteGruppe === null ? 6 : 20);
+    letzteGruppe = sp.g;
+    const eigene = ITEMS.filter(o => o.s === sp.id && o.r <= detailStufe());
+    const baender = eigene.filter(o => o.b !== undefined && o.b !== null)
+                          .sort((p,q) => p.a - q.a);
+    const punkte  = eigene.filter(o => o.b === undefined || o.b === null)
+                          .sort((p,q) => p.a - q.a);
+
+    const zeilenEnde = [];
+    const zeile = {};
+    for (const o of baender){
+      let z = 0;
+      while (z < zeilenEnde.length && zeilenEnde[z] > o.a - luecke) z++;
+      zeile[o.i] = z;
+      zeilenEnde[z] = o.b;
+    }
+    const nZeilen = Math.max(zeilenEnde.length, punkte.length ? 0 : 1);
+    const ebenen = punkte.length ? (sp.id === 'ereignis' ? 3 : 2) : 0;
+    const punktZone = ebenen ? (12 + ebenen * 15 + 4) : 0;
+    const hoehe = nZeilen * ROW_H + punktZone + LANE_PAD;
+
+    spuren.push({ sp, y0: y, hoehe, baender, punkte, zeile, neueGruppe,
+                  bandHoehe: nZeilen * ROW_H, ebenen });
+    y += hoehe + 6;
+  }
+  layout = { spuren, gesamt: y + 10 };
+  return layout;
+}
+
+function maxOffsetY(){
+  const l = baueLayout();
+  return Math.max(0, l.gesamt - cv.clientHeight);
+}
+
+/* ============================================================
+   ZEICHNEN
+   ============================================================ */
+let treffer = [];   // {o,x,y,w,h}
+let ankerVon = {};  // id -> {x,y,w,h}
+
+function schritt(){
+  const kand = [2000,1000,500,200,100,50,20,10,5,2,1];
+  for (const s of kand){ if (s * state.z >= 78) return s; }
+  return 1;
+}
+
+function render(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  const W = cv.clientWidth, H = cv.clientHeight;
+  if (cv.width !== Math.round(W*dpr) || cv.height !== Math.round(H*dpr)){
+    cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+  }
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+  treffer = []; ankerVon = {};
+
+  const L = baueLayout();
+  const LB = labelBreite();
+  state.offsetY = clamp(state.offsetY, 0, maxOffsetY());
+  const oy = -state.offsetY;
+
+  /* --- Hintergrund der Spuren --- */
+  for (let k=0;k<L.spuren.length;k++){
+    const g = L.spuren[k];
+    const y = g.y0 + oy;
+    if (y > H || y + g.hoehe < AXIS_H) continue;
+    ctx.fillStyle = k % 2 ? 'rgba(255,255,255,.55)' : 'rgba(255,255,255,.28)';
+    ctx.fillRect(0, y, W, g.hoehe);
+    ctx.strokeStyle = 'rgba(214,202,179,.9)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, y+g.hoehe+.5); ctx.lineTo(W, y+g.hoehe+.5); ctx.stroke();
+    if (g.neueGruppe && y - 9 > AXIS_H){
+      ctx.strokeStyle = 'rgba(138,75,42,.30)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, y-9.5); ctx.lineTo(W, y-9.5); ctx.stroke();
+    }
+  }
+
+  /* --- Gitterlinien --- */
+  const st = schritt();
+  const j0 = Math.ceil(state.x0 / st) * st;
+  const j1 = state.x0 + spanJahre();
+  ctx.save(); ctx.beginPath(); ctx.rect(LB, AXIS_H, W-LB, H-AXIS_H); ctx.clip();
+  for (let j = j0; j <= j1; j += st){
+    const x = Math.round(xVon(j)) + .5;
+    ctx.strokeStyle = (j === 0) ? 'rgba(138,75,42,.55)' : 'rgba(190,175,150,.42)';
+    ctx.lineWidth = (j === 0) ? 1.6 : 1;
+    ctx.beginPath(); ctx.moveTo(x, AXIS_H); ctx.lineTo(x, H); ctx.stroke();
+  }
+  ctx.restore();
+
+  /* --- Bänder --- */
+  ctx.save(); ctx.beginPath(); ctx.rect(LB, AXIS_H, W-LB, H-AXIS_H); ctx.clip();
+  for (const g of L.spuren){
+    const farbe = g.sp.farbe;
+    for (const o of g.baender){
+      const x = xVon(o.a), w = Math.max(3, (o.b - o.a) * state.z);
+      const y = g.y0 + oy + g.zeile[o.i] * ROW_H + (ROW_H - BAND_H)/2;
+      if (x + w < LB - 200 || x > W + 200 || y > H || y + BAND_H < AXIS_H) continue;
+      const gew = state.auswahl === o.i;
+      zeichneBand(x, y, w, BAND_H, farbe, o.t, gew, LB, W);
+      treffer.push({o, x:Math.max(x,LB), y, w:Math.min(x+w,W)-Math.max(x,LB), h:BAND_H});
+      ankerVon[o.i] = {x:clamp(x+w/2, LB+8, W-8), y, w, h:BAND_H};
+    }
+  }
+  ctx.restore();
+
+  /* --- Punktereignisse --- */
+  ctx.save(); ctx.beginPath(); ctx.rect(LB, AXIS_H, W-LB, H-AXIS_H); ctx.clip();
+  for (const g of L.spuren){
+    if (!g.ebenen) continue;
+    const zoneY = g.y0 + oy + g.bandHoehe;
+    const belegt = []; for (let e=0;e<g.ebenen;e++) belegt.push([]);
+    ctx.font = '11.5px -apple-system,Segoe UI,Roboto,sans-serif';
+    for (const o of g.punkte){
+      const x = xVon(o.a);
+      if (x < LB - 4 || x > W + 4) continue;
+      const gew = state.auswahl === o.i;
+      const txt = o.t;
+      const tw = ctx.measureText(txt).width;
+      let ebene = -1;
+      for (let e=0;e<g.ebenen;e++){
+        let frei = true;
+        for (const iv of belegt[e]) if (x - 4 < iv[1] && x + tw + 12 > iv[0]) { frei = false; break; }
+        if (frei){ ebene = e; belegt[e].push([x-4, x+tw+12]); break; }
+      }
+      const py = zoneY + 8;
+      ctx.fillStyle = g.sp.farbe;
+      ctx.strokeStyle = gew ? '#241f18' : 'rgba(255,255,255,.9)';
+      ctx.lineWidth = gew ? 2 : 1.2;
+      ctx.beginPath(); ctx.arc(x, py, gew ? 6 : 4.4, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+      let hh = 14;
+      if (ebene >= 0){
+        const ly = zoneY + 20 + ebene * 15;
+        hh = ly - py + 10;
+        ctx.strokeStyle = hexRgba(g.sp.farbe, .55); ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(x, py+5); ctx.lineTo(x, ly-3); ctx.stroke();
+        ctx.fillStyle = gew ? '#241f18' : '#443b2f';
+        if (gew) ctx.font = 'bold 11.5px -apple-system,Segoe UI,Roboto,sans-serif';
+        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillText(txt, x + 6, ly + 2);
+        ctx.font = '11.5px -apple-system,Segoe UI,Roboto,sans-serif';
+        treffer.push({o, x:x-7, y:py-7, w:tw+14, h:hh+8});
+      } else {
+        treffer.push({o, x:x-8, y:py-8, w:16, h:16});
+      }
+      ankerVon[o.i] = {x, y:py-5, w:0, h:10};
+    }
+  }
+  ctx.restore();
+
+  /* --- Einflusslinien --- */
+  zeichneEinfluesse(LB, W, H);
+
+  /* --- Zeitachse --- */
+  ctx.fillStyle = 'rgba(246,242,233,.96)';
+  ctx.fillRect(0,0,W,AXIS_H);
+  ctx.strokeStyle = '#d6cab3'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0,AXIS_H+.5); ctx.lineTo(W,AXIS_H+.5); ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.rect(LB,0,W-LB,AXIS_H); ctx.clip();
+  ctx.font = '12px -apple-system,Segoe UI,Roboto,sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for (let j = j0; j <= j1; j += st){
+    const x = xVon(j);
+    ctx.strokeStyle = '#b6a88c';
+    ctx.beginPath(); ctx.moveTo(x, AXIS_H-7); ctx.lineTo(x, AXIS_H); ctx.stroke();
+    ctx.fillStyle = (j===0) ? '#8a4b2a' : '#5b5145';
+    ctx.fillText(fmtJahr(j), x, AXIS_H/2 - 1);
+  }
+  ctx.restore();
+  ctx.fillStyle = '#8a4b2a'; ctx.textAlign = 'left'; ctx.font = '11px -apple-system,sans-serif';
+  ctx.fillText('Jahre', 8, AXIS_H/2 - 1);
+
+  /* --- Spurenbeschriftung --- */
+  ctx.save();
+  ctx.beginPath(); ctx.rect(0, AXIS_H, LB, H-AXIS_H); ctx.clip();
+  ctx.fillStyle = 'rgba(246,242,233,.94)'; ctx.fillRect(0, AXIS_H, LB, H-AXIS_H);
+  ctx.strokeStyle = '#d6cab3'; ctx.beginPath();
+  ctx.moveTo(LB-.5, AXIS_H); ctx.lineTo(LB-.5, H); ctx.stroke();
+  for (const g of L.spuren){
+    const y = g.y0 + oy;
+    if (y > H || y + g.hoehe < AXIS_H) continue;
+    if (g.neueGruppe && y - 6 > AXIS_H){
+      ctx.fillStyle = '#8a4b2a';
+      ctx.font = '700 9.5px -apple-system,Segoe UI,Roboto,sans-serif';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.fillText(g.sp.g.toUpperCase(), 5, y - 4);
+    }
+    ctx.fillStyle = g.sp.farbe;
+    ctx.fillRect(4, y + 5, 3, Math.max(12, g.hoehe - 11));
+    ctx.fillStyle = '#3a3228';
+    ctx.font = '600 11px -apple-system,Segoe UI,Roboto,sans-serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    umbrich(g.sp.name, LB - 17, 12, y + 5, 12);
+  }
+  ctx.restore();
+  zeichneMinikarte();
+}
+
+function umbrich(text, maxW, x, y, lh){
+  const worte = text.split(' ');
+  let zeile = '', yy = y;
+  for (const w of worte){
+    const t = zeile ? zeile + ' ' + w : w;
+    if (ctx.measureText(t).width > maxW && zeile){ ctx.fillText(zeile, x, yy); yy += lh; zeile = w; }
+    else zeile = t;
+  }
+  if (zeile) ctx.fillText(zeile, x, yy);
+}
+
+function zeichneBand(x, y, w, h, farbe, titel, gewaehlt, LB, W){
+  const r = 4;
+  ctx.beginPath();
+  const xa = x, xb = x + w;
+  ctx.moveTo(xa + r, y);
+  ctx.lineTo(xb - r, y); ctx.quadraticCurveTo(xb, y, xb, y + r);
+  ctx.lineTo(xb, y + h - r); ctx.quadraticCurveTo(xb, y + h, xb - r, y + h);
+  ctx.lineTo(xa + r, y + h); ctx.quadraticCurveTo(xa, y + h, xa, y + h - r);
+  ctx.lineTo(xa, y + r); ctx.quadraticCurveTo(xa, y, xa + r, y);
+  ctx.closePath();
+  ctx.fillStyle = hexRgba(farbe, gewaehlt ? .45 : .26); ctx.fill();
+  ctx.strokeStyle = gewaehlt ? '#241f18' : hexRgba(farbe, .75);
+  ctx.lineWidth = gewaehlt ? 2 : 1; ctx.stroke();
+
+  const vx0 = Math.max(x, LB + 3), vx1 = Math.min(x + w, W - 2);
+  if (vx1 - vx0 > 26){
+    ctx.save();
+    ctx.beginPath(); ctx.rect(vx0, y, vx1 - vx0, h); ctx.clip();
+    ctx.font = (gewaehlt ? '600 ' : '') + '11.5px -apple-system,Segoe UI,Roboto,sans-serif';
+    ctx.fillStyle = '#2e2519'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    let t = titel;
+    const platz = vx1 - vx0 - 10;
+    if (ctx.measureText(t).width > platz){
+      while (t.length > 1 && ctx.measureText(t + '…').width > platz) t = t.slice(0, -1);
+      t += '…';
+    }
+    ctx.fillText(t, vx0 + 5, y + h/2 + .5);
+    ctx.restore();
+  }
+}
+
+function zeichneEinfluesse(LB, W, H){
+  const gew = state.auswahl;
+  if (!state.einfluesse && !gew) return;
+  ctx.save();
+  ctx.beginPath(); ctx.rect(LB, AXIS_H, W-LB, H-AXIS_H); ctx.clip();
+  const beschriftet = [];
+  for (const v of LINKS){
+    const A = ankerVon[v.a], B = ankerVon[v.b];
+    if (!A || !B) continue;
+    const relevant = gew && (v.a === gew || v.b === gew);
+    if (!relevant && !state.einfluesse) continue;
+    const ax = A.x, ay = A.y + A.h/2, bx = B.x, by = B.y + B.h/2;
+    const dx = bx - ax, dy = by - ay;
+    const mx = (ax+bx)/2, my = (ay+by)/2;
+    const len = Math.hypot(dx,dy) || 1;
+    const off = clamp(len * .18, 14, 60);
+    const cx = mx - dy/len * off, cy = my + dx/len * off;
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.quadraticCurveTo(cx, cy, bx, by);
+    ctx.strokeStyle = relevant ? 'rgba(138,75,42,.92)' : 'rgba(90,75,55,.17)';
+    ctx.lineWidth = relevant ? 2.2 : 1;
+    ctx.stroke();
+    // Pfeilspitze
+    const t = .93;
+    const px = (1-t)*(1-t)*ax + 2*(1-t)*t*cx + t*t*bx;
+    const py = (1-t)*(1-t)*ay + 2*(1-t)*t*cy + t*t*by;
+    const w1 = Math.atan2(by-py, bx-px);
+    const gr = relevant ? 7 : 4.5;
+    ctx.beginPath();
+    ctx.moveTo(bx, by);
+    ctx.lineTo(bx - gr*Math.cos(w1 - .42), by - gr*Math.sin(w1 - .42));
+    ctx.lineTo(bx - gr*Math.cos(w1 + .42), by - gr*Math.sin(w1 + .42));
+    ctx.closePath();
+    ctx.fillStyle = relevant ? 'rgba(138,75,42,.92)' : 'rgba(90,75,55,.22)';
+    ctx.fill();
+    if (relevant && v.t) beschriftet.push({x:cx, y:cy, t:v.t});
+  }
+  ctx.font = '11px -apple-system,Segoe UI,Roboto,sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for (const b of beschriftet){
+    const tw = ctx.measureText(b.t).width;
+    ctx.fillStyle = 'rgba(255,253,248,.93)';
+    ctx.fillRect(b.x - tw/2 - 5, b.y - 9, tw + 10, 17);
+    ctx.strokeStyle = 'rgba(138,75,42,.35)'; ctx.lineWidth = 1;
+    ctx.strokeRect(b.x - tw/2 - 5, b.y - 9, tw + 10, 17);
+    ctx.fillStyle = '#6b3a20';
+    ctx.fillText(b.t, b.x, b.y);
+  }
+  ctx.restore();
+}
+
+/* --- Minikarte --- */
+function zeichneMinikarte(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  const W = mk.clientWidth, H = mk.clientHeight;
+  if (mk.width !== Math.round(W*dpr) || mk.height !== Math.round(H*dpr)){
+    mk.width = Math.round(W*dpr); mk.height = Math.round(H*dpr);
+  }
+  mctx.setTransform(dpr,0,0,dpr,0,0);
+  mctx.clearRect(0,0,W,H);
+  const f = W / (MAX_JAHR - MIN_JAHR);
+  const mx = j => (j - MIN_JAHR) * f;
+  const epochen = ITEMS.filter(o => o.s === 'k_epoche');
+  mctx.font = '10.5px -apple-system,Segoe UI,Roboto,sans-serif';
+  mctx.textAlign = 'center'; mctx.textBaseline = 'middle';
+  epochen.forEach((o,k) => {
+    const x = mx(o.a), w = mx(o.b) - x;
+    mctx.fillStyle = k%2 ? 'rgba(138,111,69,.30)' : 'rgba(138,111,69,.19)';
+    mctx.fillRect(x, 6, w, H-12);
+    mctx.strokeStyle = 'rgba(138,111,69,.5)'; mctx.lineWidth=1;
+    mctx.strokeRect(x+.5, 6.5, w-1, H-13);
+    mctx.fillStyle = '#5b4a2e';
+    let t = o.t, platz = w - 8;
+    if (mctx.measureText(t).width > platz){
+      while (t.length>1 && mctx.measureText(t+'…').width > platz) t = t.slice(0,-1);
+      t = t.length>2 ? t+'…' : '';
+    }
+    if (t) mctx.fillText(t, x + w/2, H/2);
+  });
+  const vx = mx(state.x0), vw = Math.max(6, spanJahre() * f);
+  mctx.fillStyle = 'rgba(138,75,42,.16)';
+  mctx.fillRect(vx, 2, vw, H-4);
+  mctx.strokeStyle = '#8a4b2a'; mctx.lineWidth = 2;
+  mctx.strokeRect(vx+1, 3, Math.max(3,vw-2), H-6);
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function begrenze(){
+  state.z = clamp(state.z, zMin(), Z_MAX);
+  const sp = spanJahre();
+  if (sp >= MAX_JAHR - MIN_JAHR) state.x0 = MIN_JAHR;
+  else state.x0 = clamp(state.x0, MIN_JAHR, MAX_JAHR - sp);
+}
+function zoomeUm(faktor, ankerX){
+  const j = jahrVon(ankerX);
+  state.z *= faktor;
+  state.z = clamp(state.z, zMin(), Z_MAX);
+  state.x0 = j - (ankerX - labelBreite()) / state.z;
+  begrenze(); render();
+}
+let animId = null;
+function geheZu(von, bis, dauer){
+  if (animId) cancelAnimationFrame(animId);
+  const zZiel = clamp(plotBreite() / Math.max(40, bis - von), zMin(), Z_MAX);
+  const xZiel = von - (plotBreite()/zZiel - (bis-von))/2;
+  const x0a = state.x0, za = state.z, t0 = performance.now();
+  dauer = dauer || 480;
+  function tick(t){
+    const p = Math.min(1, (t - t0)/dauer);
+    const e = p<.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+    state.z = za + (zZiel - za)*e;
+    state.x0 = x0a + (xZiel - x0a)*e;
+    begrenze(); render();
+    if (p < 1) animId = requestAnimationFrame(tick); else animId = null;
+  }
+  animId = requestAnimationFrame(tick);
+}
+
+/* --- Zeiger/Touch --- */
+const zeiger = new Map();
+let zieht = false, bewegt = 0, startZeit = 0, pinchD = 0, pinchM = 0;
+
+cv.addEventListener('pointerdown', e => {
+  cv.setPointerCapture(e.pointerId);
+  zeiger.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if (zeiger.size === 1){ zieht = true; bewegt = 0; startZeit = performance.now(); cv.classList.add('zieht'); }
+  if (zeiger.size === 2){
+    const p = [...zeiger.values()];
+    pinchD = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
+    pinchM = (p[0].x + p[1].x)/2;
+  }
+});
+cv.addEventListener('pointermove', e => {
+  const alt = zeiger.get(e.pointerId);
+  if (!alt){ hoverPruefen(e); return; }
+  const dx = e.clientX - alt.x, dy = e.clientY - alt.y;
+  zeiger.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  bewegt += Math.abs(dx) + Math.abs(dy);
+  if (zeiger.size >= 2){
+    const p = [...zeiger.values()];
+    const d = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
+    const m = (p[0].x + p[1].x)/2;
+    const r = cv.getBoundingClientRect();
+    if (pinchD > 0 && d > 0){
+      const j = jahrVon(pinchM - r.left);
+      state.z = clamp(state.z * (d/pinchD), zMin(), Z_MAX);
+      state.x0 = j - (m - r.left - labelBreite())/state.z;
+    }
+    pinchD = d; pinchM = m;
+    begrenze(); render();
+  } else if (zieht){
+    state.x0 -= dx / state.z;
+    state.offsetY = clamp(state.offsetY - dy, 0, maxOffsetY());
+    begrenze(); render();
+  }
+});
+function beenden(e){
+  const war = zeiger.size;
+  zeiger.delete(e.pointerId);
+  if (zeiger.size < 2) pinchD = 0;
+  if (zeiger.size === 0){
+    cv.classList.remove('zieht');
+    if (zieht && war === 1 && bewegt < 9 && performance.now() - startZeit < 600){
+      const r = cv.getBoundingClientRect();
+      klick(e.clientX - r.left, e.clientY - r.top);
+    }
+    zieht = false;
+  }
+}
+cv.addEventListener('pointerup', beenden);
+cv.addEventListener('pointercancel', beenden);
+
+cv.addEventListener('wheel', e => {
+  e.preventDefault();
+  const r = cv.getBoundingClientRect();
+  if (e.shiftKey){
+    state.x0 += (e.deltaY + e.deltaX) / state.z;
+    begrenze(); render();
+  } else if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.4){
+    state.x0 += e.deltaX / state.z; begrenze(); render();
+  } else {
+    zoomeUm(Math.pow(1.0016, -e.deltaY * (e.ctrlKey ? 3 : 1)), e.clientX - r.left);
+  }
+}, {passive:false});
+
+function finde(x, y){
+  for (let k = treffer.length - 1; k >= 0; k--){
+    const t = treffer[k];
+    if (x >= t.x && x <= t.x + t.w && y >= t.y && y <= t.y + t.h) return t.o;
+  }
+  return null;
+}
+function klick(x, y){
+  const o = finde(x, y);
+  waehle(o ? o.i : null);
+}
+function hoverPruefen(e){
+  const r = cv.getBoundingClientRect();
+  const o = finde(e.clientX - r.left, e.clientY - r.top);
+  if (o){
+    tipp.classList.add('an');
+    tipp.innerHTML = '<b>' + esc(o.t) + '</b><br>' + esc(fmtZeitraum(o));
+    const bx = Math.min(e.clientX - r.left + 14, cv.clientWidth - 250);
+    tipp.style.left = Math.max(4, bx) + 'px';
+    tipp.style.top = (e.clientY - r.top + 16) + 'px';
+    cv.style.cursor = 'pointer';
+  } else {
+    tipp.classList.remove('an');
+    cv.style.cursor = zieht ? 'grabbing' : 'grab';
+  }
+}
+cv.addEventListener('pointerleave', () => tipp.classList.remove('an'));
+
+/* --- Minikarte bedienen --- */
+let mkZieht = false;
+function mkGehe(clientX){
+  const r = mk.getBoundingClientRect();
+  const j = MIN_JAHR + ((clientX - r.left)/r.width) * (MAX_JAHR - MIN_JAHR);
+  state.x0 = j - spanJahre()/2; begrenze(); render();
+}
+mk.addEventListener('pointerdown', e => { mkZieht = true; mk.setPointerCapture(e.pointerId); mkGehe(e.clientX); });
+mk.addEventListener('pointermove', e => { if (mkZieht) mkGehe(e.clientX); });
+mk.addEventListener('pointerup', () => mkZieht = false);
+mk.addEventListener('pointercancel', () => mkZieht = false);
+
+/* ============================================================
+   AUSWAHL & PANEL
+   ============================================================ */
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function waehle(id){
+  state.auswahl = id;
+  if (!id){ panel.classList.remove('offen'); render(); return; }
+  const o = ITEM_VON_ID[id];
+  const sp = SPUR_VON_ID[o.s];
+  const rein = LINKS.filter(v => v.b === id);
+  const raus = LINKS.filter(v => v.a === id);
+  let h = '';
+  h += '<span class="badge" style="background:' + sp.farbe + '">' + esc(sp.name) + '</span>';
+  h += '<h2>' + esc(o.t) + '</h2>';
+  h += '<p class="zeitraum">' + esc(fmtZeitraum(o)) + '</p>';
+  h += '<p class="text">' + esc(o.d || '') + '</p>';
+  if (rein.length){
+    h += '<h3>Beeinflusst von</h3>';
+    for (const v of rein) h += verweisHtml(v.a, v.t, '←');
+  }
+  if (raus.length){
+    h += '<h3>Wirkte auf</h3>';
+    for (const v of raus) h += verweisHtml(v.b, v.t, '→');
+  }
+  if (!rein.length && !raus.length){
+    h += '<h3>Einordnung</h3><p class="text" style="color:#5b5145">Für dieses Element sind keine direkten Verbindungspfeile hinterlegt – betrachte die Nachbarspuren im selben Zeitraum.</p>';
+  }
+  panelinhalt.innerHTML = h;
+  panel.classList.add('offen');
+  panelinhalt.querySelectorAll('.verweis').forEach(b => {
+    b.addEventListener('click', () => springeZu(b.dataset.ziel));
+  });
+  render();
+}
+function verweisHtml(id, text, pfeil){
+  const o = ITEM_VON_ID[id];
+  if (!o) return '';
+  const sp = SPUR_VON_ID[o.s];
+  return '<button class="verweis" data-ziel="' + id + '" style="border-left:4px solid ' + sp.farbe + '">' +
+         pfeil + ' <b>' + esc(o.t) + '</b> <span style="color:#5b5145">(' + esc(fmtZeitraum(o)) + ')</span>' +
+         '<i>' + esc(text) + '</i></button>';
+}
+function springeZu(id){
+  const o = ITEM_VON_ID[id];
+  if (!o) return;
+  if (!state.aktiv.has(o.s)){ state.aktiv.add(o.s); zeichneSpurleiste(); }
+  const a = o.a, b = (o.b === undefined || o.b === null) ? o.a : o.b;
+  const rand = Math.max(120, (b - a) * 0.6);
+  geheZu(a - rand, b + rand);
+  setTimeout(() => waehle(id), 60);
+}
+document.getElementById('zu').addEventListener('click', () => waehle(null));
+
+/* ============================================================
+   BEDIENLEISTE
+   ============================================================ */
+const spurleiste = document.getElementById('spurleiste');
+function pruefeAuswahl(){
+  if (state.auswahl && !state.aktiv.has(ITEM_VON_ID[state.auswahl].s)) waehle(null);
+}
+function zeichneSpurleiste(){
+  spurleiste.innerHTML = '';
+  for (const gr of GRUPPEN){
+    const alle = SPUREN.filter(s => s.g === gr);
+    const anzahlAn = alle.filter(s => state.aktiv.has(s.id)).length;
+    const box = document.createElement('div');
+    box.className = 'gruppenbox';
+    const gb = document.createElement('button');
+    gb.className = 'gruppenknopf' + (anzahlAn ? ' aktiv' : '');
+    gb.textContent = gr;
+    gb.title = gr + ' vollständig ein- oder ausblenden';
+    gb.addEventListener('click', () => {
+      const aus = anzahlAn === alle.length;
+      alle.forEach(s => aus ? state.aktiv.delete(s.id) : state.aktiv.add(s.id));
+      pruefeAuswahl(); zeichneSpurleiste(); layoutKey = ''; render();
+    });
+    box.appendChild(gb);
+    for (const s of alle){
+      const b = document.createElement('button');
+      b.className = 'spurchip' + (state.aktiv.has(s.id) ? '' : ' aus');
+      b.innerHTML = '<span class="punkt" style="background:' + s.farbe + '"></span>' + s.kurz;
+      b.addEventListener('click', () => {
+        if (state.aktiv.has(s.id)) state.aktiv.delete(s.id); else state.aktiv.add(s.id);
+        pruefeAuswahl(); zeichneSpurleiste(); layoutKey = ''; render();
+      });
+      box.appendChild(b);
+    }
+    spurleiste.appendChild(box);
+  }
+}
+zeichneSpurleiste();
+
+const SPRUNG = [
+  {n:'Babylon & Ägypten', a:-3300, b:-300},
+  {n:'Griechische Antike', a:-650, b:200},
+  {n:'Indien, China & Islam', a:100, b:1450},
+  {n:'Wiss. Revolution', a:1540, b:1700},
+  {n:'Aufklärung', a:1680, b:1800},
+  {n:'19. Jahrhundert', a:1780, b:1900},
+  {n:'Quanten & Relativität', a:1895, b:1945},
+  {n:'Gegenwart', a:1940, b:2030}
+];
+const sprungleiste = document.getElementById('sprungleiste');
+for (const s of SPRUNG){
+  const b = document.createElement('button');
+  b.textContent = s.n;
+  b.addEventListener('click', () => geheZu(s.a, s.b));
+  sprungleiste.appendChild(b);
+}
+
+const btnEinfluss = document.getElementById('btnEinfluss');
+btnEinfluss.addEventListener('click', () => {
+  state.einfluesse = !state.einfluesse;
+  btnEinfluss.classList.toggle('aktiv', state.einfluesse);
+  render();
+});
+const KERN = SPUREN.filter(s => s.g !== 'Kontext').map(s => s.id).concat(['k_epoche']);
+document.getElementById('btnKern').addEventListener('click', () => {
+  const istKern = state.aktiv.size === KERN.length && KERN.every(id => state.aktiv.has(id));
+  state.aktiv = new Set(istKern ? SPUREN.map(s => s.id) : KERN);
+  pruefeAuswahl(); zeichneSpurleiste(); layoutKey = ''; render();
+});
+document.getElementById('btnReset').addEventListener('click', () => {
+  waehle(null); state.offsetY = 0; geheZu(MIN_JAHR, MAX_JAHR);
+});
+document.getElementById('btnHilfe').addEventListener('click', () => document.getElementById('hilfe').classList.add('offen'));
+document.getElementById('hilfe').addEventListener('click', e => {
+  if (e.target.id === 'hilfe') e.currentTarget.classList.remove('offen');
+});
+
+window.addEventListener('keydown', e => {
+  const W = cv.clientWidth;
+  if (e.key === '+' || e.key === '=') zoomeUm(1.35, W/2);
+  else if (e.key === '-') zoomeUm(1/1.35, W/2);
+  else if (e.key === 'ArrowRight'){ state.x0 += spanJahre()*0.12; begrenze(); render(); }
+  else if (e.key === 'ArrowLeft'){ state.x0 -= spanJahre()*0.12; begrenze(); render(); }
+  else if (e.key === 'ArrowDown'){ state.offsetY = clamp(state.offsetY + 40, 0, maxOffsetY()); render(); }
+  else if (e.key === 'ArrowUp'){ state.offsetY = clamp(state.offsetY - 40, 0, maxOffsetY()); render(); }
+  else if (e.key === 'Escape'){ waehle(null); document.getElementById('hilfe').classList.remove('offen'); }
+});
+
+window.addEventListener('resize', () => { layoutKey = ''; begrenze(); render(); });
+
+/* Start */
+state.z = zMin();
+state.x0 = MIN_JAHR;
+begrenze();
+render();
+window.__zl = {state, ITEMS, LINKS, SPUREN, GRUPPEN, render, waehle, geheZu, ITEM_VON_ID};
+</script>
+</body>
+</html>
