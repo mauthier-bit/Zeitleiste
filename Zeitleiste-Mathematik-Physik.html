@@ -69,6 +69,10 @@
     overflow:auto;padding:18px 20px 24px;box-shadow:var(--schatten);position:relative}
   .pibox h2{margin:0 0 4px;font-size:20px}
   .pibox .pinote{font-size:13px;line-height:1.5;color:var(--ink2);margin:0 0 12px}
+  .chroniktabs{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 12px;align-items:center}
+  .chroniktabs .trenner{height:18px}
+  .chroniktabs button{font-size:12px}
+  .chroniktabs button.aktiv{background:var(--akzent);color:#fff;border-color:var(--akzent)}
   #pichart{display:block;width:100%;height:170px;border:1px solid var(--line);border-radius:10px;background:#fffefb}
   .pichartunter{font-size:11px;color:var(--ink2);margin:5px 0 14px;text-align:center}
   .pizeile{display:grid;grid-template-columns:82px 1fr;gap:10px;padding:9px 6px;border-top:1px solid var(--line);
@@ -76,9 +80,9 @@
   .pizeile:hover{background:var(--bg2)}
   .pizeile.klickbar{cursor:pointer}
   .pijahr{font-variant-numeric:tabular-nums;font-weight:600;font-size:12.5px;color:var(--akzent);padding-top:1px}
-  .piwer{font-size:13.5px;font-weight:600}
-  .piwas{font-size:13px;color:#3a3228;margin-top:1px}
-  .pim{font-size:12.5px;color:var(--ink2);line-height:1.45;margin-top:3px}
+  .piwer{display:block;font-size:13.5px;font-weight:600;line-height:1.3}
+  .piwas{display:block;font-size:13px;color:#3a3228;margin-top:2px;line-height:1.35}
+  .pim{display:block;font-size:12.5px;color:var(--ink2);line-height:1.45;margin-top:4px}
   .pistellen{display:inline-block;font-size:10.5px;background:var(--bg2);border:1px solid var(--line);
     border-radius:999px;padding:2px 7px;margin-top:4px;color:var(--ink2)}
   #pizu{position:absolute;top:12px;right:14px;border-radius:50%;width:30px;height:30px;padding:0;justify-content:center;font-size:16px}
@@ -103,7 +107,8 @@
   .verweis{display:block;width:100%;text-align:left;margin:0 0 5px;border-radius:9px;
     padding:8px 10px;font-size:13px;line-height:1.3}
   .verweis b{font-weight:600}
-  .verweis i{font-style:normal;color:var(--ink2);font-size:12px;display:block;margin-top:2px}
+  .verweis b + span{margin-left:.35em}
+  .verweis i{font-style:normal;color:var(--ink2);font-size:12px;display:block;margin-top:2px;line-height:1.35}
   #zu{position:absolute;top:8px;right:10px;border-radius:50%;width:30px;height:30px;padding:0;justify-content:center;font-size:16px}
 
   #hilfe{position:absolute;inset:0;background:rgba(36,31,24,.55);z-index:40;display:none;
@@ -146,7 +151,7 @@
     </div>
     <div class="trenner"></div>
     <div class="gruppe">
-      <button id="btnPi">π-Chronik</button>
+      <button id="btnPi">Chroniken</button>
       <button id="btnEinfluss"><span class="icon">⇄</span>Einflüsse</button>
       <button id="btnKern">Nur Hauptstränge</button>
       <button id="btnReset"><span class="icon">⟲</span>Gesamtansicht</button>
@@ -176,7 +181,7 @@
         <li><b>Wechselwirkungen:</b> <span class="schluessel">⇄ Einflüsse</span> zeigt alle Pfeile. Ein ausgewähltes Element zeigt seine eigenen immer, mit Beschriftung.</li>
         <li><b>Suchen:</b> Das Suchfeld durchsucht Titel und Beschreibungstexte. Treffer werden auf der Zeitleiste gelb umrandet; ein Klick springt hin.</li>
         <li><b>Zeitachse:</b> Beim Zoomen verfeinert sich das Raster automatisch bis auf einzelne Jahre. Mit der Maus zeigt eine Hilfslinie das Jahr unter dem Zeiger.</li>
-        <li><b>π-Chronik:</b> eigene Zeittafel zur Kreiszahl – auch über den Balken „Die Kreiszahl π“ in der Spur <i>Zahlen</i> erreichbar.</li>
+        <li><b>Chroniken:</b> drei vertiefende Zeittafeln – zur Kreiszahl π, zur Geschichte der Gleichungen und zum Funktionsbegriff. Auch über die zugehörigen Balken auf der Zeitleiste erreichbar; Zeilen mit farbigem Jahr springen zurück in die Zeitleiste.</li>
       </ul>
       <h3>Die Idee</h3>
       <p>Hauptstränge sind <b>Mathematik</b> (Zahlen, Geometrie, Algebra, Analysis, Stochastik, Logik) und <b>Physik</b> (Mechanik, Wärmelehre, Elektrodynamik, Relativität, Quantenphysik) sowie die eigenständige <b>Astronomie</b>. Die Kontextspuren – Kulturräume, Weltbild, Instrumente, Gesellschaft – erklären, <i>warum</i> etwas gerade dort und dann entdeckt wurde.</p>
@@ -186,10 +191,11 @@
   <div id="pi">
     <div class="pibox">
       <button id="pizu" title="Schließen">✕</button>
-      <h2>π – Chronik einer Zahl</h2>
-      <p class="pinote">Keine andere Zahl verbindet so viele Kulturen und Jahrtausende. An der Jagd nach π lässt sich die jeweils verfügbare Mathematik ablesen: erst Vielecke, dann unendliche Reihen, schließlich Rechenmaschinen. Zeilen mit farbigem Jahr führen zur passenden Stelle auf der Zeitleiste.</p>
+      <h2 id="pititel">Chronik</h2>
+      <div class="chroniktabs" id="chroniktabs"></div>
+      <p class="pinote" id="pinote"></p>
       <canvas id="pichart"></canvas>
-      <div class="pichartunter">Gesicherte Nachkommastellen (logarithmisch) – Meilensteine in zeitlicher Reihenfolge, nicht maßstäblich</div>
+      <div class="pichartunter" id="pichartunter">Gesicherte Nachkommastellen (logarithmisch) – Meilensteine in zeitlicher Reihenfolge, nicht maßstäblich</div>
       <div id="piliste"></div>
     </div>
   </div>
@@ -233,11 +239,13 @@ const ITEMS = [
 
 /* ============ ZAHLEN, ZIFFERN & RECHNEN ============ */
 {i:'z_pi',s:'ma_zahl',t:'Die Kreiszahl π – 4000 Jahre Annäherung',a:-1900,b:2025,r:1,d:'Kein anderes mathematisches Objekt zieht sich so durch alle Kulturen und Epochen. An π lassen sich Rechenverfahren, Beweisideen und sogar Rechenmaschinen der jeweiligen Zeit ablesen – von babylonischen Tontafeln über Archimedes’ Vielecke und unendliche Reihen bis zu Rekorden im Billionenbereich. Öffne die eigene π-Chronik für den vollständigen Verlauf.'},
+{i:'z_bereiche',s:'ma_zahl',t:'Erweiterung der Zahlbereiche',a:-450,b:1930,r:1,d:'ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ ⊂ ℂ – jede Erweiterung entsteht, weil eine Rechnung im alten Bereich keine Lösung hat, und jede kostet etwas: Die natürliche Ordnung geht verloren, später sogar die Vertauschbarkeit der Faktoren. Die Reihenfolge im Unterricht kehrt die Geschichte um: Was zuletzt begründet wurde (die reellen Zahlen), erscheint uns heute am selbstverständlichsten. Öffne die Chronik der Zahlbereiche.'},
 {i:'z_token',s:'ma_zahl',t:'Zählsteine & erste Zahlzeichen',a:-3300,r:1,d:'In Uruk werden Warenmengen zuerst mit Tonmarken, dann mit eingedrückten Zahlzeichen festgehalten. Zahl und Schrift entstehen gemeinsam – aus dem Bedarf der Verwaltung.'},
 {i:'z_sexa',s:'ma_zahl',t:'Babylonisches Sexagesimalsystem',a:-2000,b:-300,r:1,d:'Ein Stellenwertsystem zur Basis 60 – mit demselben Zeichen für 1, 60 und 3600. Es erlaubt bequemes Bruchrechnen (1/2, 1/3, 1/4, 1/5, 1/6 sind alle „glatt“) und lebt bis heute in Minuten, Sekunden und 360° fort.'},
 {i:'z_aegbruch',s:'ma_zahl',t:'Ägyptische Stammbruchrechnung',a:-1850,b:-1550,r:2,d:'Der Papyrus Rhind zeigt: Ägypter schreiben jeden Bruch als Summe von Stammbrüchen (1/n). Umständlich, aber ein vollständiges, geschlossenes Rechenverfahren – die älteste erhaltene Mathematik-„Aufgabensammlung“.'},
 {i:'z_chinastab',s:'ma_zahl',t:'Chinesische Stäbchenzahlen (dezimal, Stellenwert)',a:-400,b:1400,r:2,d:'Gelegte Rechenstäbchen mit abwechselnder Ausrichtung ergeben ein dezimales Stellenwertsystem – inklusive Leerstelle und negativer Zahlen (rote/schwarze Stäbchen).'},
 {i:'z_irrat',s:'ma_zahl',t:'Entdeckung der irrationalen Zahlen',a:-450,r:1,d:'Die Diagonale des Quadrats lässt sich nicht als Bruch schreiben. Für die Pythagoreer, deren Weltbild auf „alles ist Zahl (= Verhältnis)“ ruhte, war das eine Grundlagenkrise – und der erste große Unmöglichkeitsbeweis.'},
+{i:'z_roem',s:'ma_zahl',t:'Römische Zahlen',a:-500,b:1500,r:1,d:'I, V, X, L, C, D, M – ein additiv-subtraktives System ohne Stellenwert und ohne Null. Zum Notieren von Ergebnissen taugt es gut, zum Rechnen kaum: Multiplikation und Division erfolgen auf dem Rechenbrett, nicht auf dem Papier. Genau diese Trennung von Schreiben und Rechnen endet erst mit den indisch-arabischen Ziffern. In Inschriften, Jahreszahlen und Kapitelnummern lebt das System bis heute.'},
 {i:'z_maya',s:'ma_zahl',t:'Maya-Zahlen mit Nullzeichen',a:100,b:900,r:2,d:'Ein Zwanzigersystem mit Stellenwert und eigenem Zeichen für Null – unabhängig von der Alten Welt entwickelt, vor allem für Kalender- und Astronomierechnungen.'},
 {i:'z_negativ',s:'ma_zahl',t:'Negative Zahlen in China',a:100,r:2,d:'Die „Neun Bücher arithmetischer Technik“ rechnen selbstverständlich mit Schulden und Guthaben. In Europa gelten negative Zahlen noch 1500 Jahre später als „falsche“ Zahlen.'},
 {i:'z_null',s:'ma_zahl',t:'Indische Ziffern & die Null als Zahl',a:500,b:700,r:1,d:'In Indien wird die Null vom bloßen Platzhalter zur vollwertigen Zahl: Brahmagupta (628) formuliert Rechenregeln für Null und negative Zahlen. Eine der folgenreichsten Ideen der Mathematikgeschichte.'},
@@ -246,6 +254,7 @@ const ITEMS = [
 {i:'z_dezbruch',s:'ma_zahl',t:'Dezimalbrüche',a:1427,b:1585,r:2,d:'Al-Kaschi in Samarkand und später Simon Stevin machen die Kommaschreibweise populär – Voraussetzung für alle späteren Messwerttabellen der Naturwissenschaft.'},
 {i:'z_log',s:'ma_zahl',t:'Logarithmen (Napier, Bürgi)',a:1614,b:1620,r:1,d:'Multiplikation wird zur Addition. Für Astronomen halbiert das die Rechenzeit – Kepler nannte es eine Verlängerung des Astronomenlebens. Der Rechenschieber lebt davon bis 1975.'},
 {i:'z_komplex',s:'ma_zahl',t:'Komplexe Zahlen',a:1545,b:1806,r:1,d:'Cardano stolpert beim Lösen kubischer Gleichungen über Wurzeln aus negativen Zahlen; Euler, Gauß und Argand geben ihnen mit der Zahlenebene eine anschauliche Bedeutung. Ohne sie gäbe es keine Wechselstromtechnik und keine Quantenmechanik.'},
+{i:'z_e',s:'ma_zahl',t:'Die Eulersche Zahl e',a:1618,b:1873,r:1,d:'Sie taucht zuerst dort auf, wo niemand eine neue Zahl sucht: bei der Zinseszinsrechnung. Jakob Bernoulli fragt 1683, wohin (1+1/n)^n strebt, wenn immer häufiger verzinst wird – der Grenzwert ist e ≈ 2,71828. Euler gibt ihr 1731 den Namen, berechnet 18 Stellen und zeigt, dass e die einzige Basis ist, bei der die Exponentialfunktion ihre eigene Ableitung ist. Damit wird e zur Naturkonstante jedes Wachstums- und Zerfallsvorgangs.'},
 {i:'z_binaer',s:'ma_zahl',t:'Leibniz: Dualsystem',a:1703,r:2,d:'Nur 0 und 1 – für Leibniz zugleich eine philosophisch-theologische Idee. 240 Jahre später wird daraus die Sprache jedes Computers.'},
 {i:'z_reell',s:'ma_zahl',t:'Konstruktion der reellen Zahlen',a:1872,r:2,d:'Dedekind (Schnitte) und Cantor (Fundamentalfolgen) definieren endlich exakt, was eine reelle Zahl ist – 2300 Jahre nach der Entdeckung der Irrationalität.'},
 {i:'z_transz',s:'ma_zahl',t:'e und π sind transzendent',a:1873,b:1882,r:2,d:'Hermite und Lindemann beweisen: π ist keine Lösung irgendeiner algebraischen Gleichung. Damit ist die Quadratur des Kreises endgültig unmöglich.'},
@@ -253,6 +262,7 @@ const ITEMS = [
 {i:'z_rsa',s:'ma_zahl',t:'Primzahlen & Kryptographie (RSA)',a:1977,r:2,d:'Die „nutzloseste“ Disziplin, die Zahlentheorie, sichert plötzlich jede Banküberweisung: Multiplizieren ist leicht, Faktorisieren schwer.'},
 
 /* ============ GEOMETRIE ============ */
+{i:'g_chronik',s:'ma_geo',t:'Was ist Raum? – Geometrie als Leitfrage',a:-2700,b:1975,r:1,d:'Erst das, was man abmisst; dann das, was man beweist; dann eines von mehreren möglichen Systemen; schließlich eine physikalische Größe, die sich krümmt. Der rote Faden ist das Parallelenpostulat: 2200 Jahre Zweifel an einem einzigen Satz führen über die nichteuklidische Geometrie bis zu Einstein. Öffne die Chronik der Geometrie.'},
 {i:'g_aegverm',s:'ma_geo',t:'Ägyptische Feldvermessung',a:-2700,b:-300,r:1,d:'Nach jeder Nilflut müssen Felder neu abgesteckt werden. Die „Seilspanner“ arbeiten mit rechten Winkeln und Flächenformeln – Geometrie heißt wörtlich „Erdmessung“.'},
 {i:'g_plimpton',s:'ma_geo',t:'Babylonische Tripel (Plimpton 322)',a:-1800,r:2,d:'Eine Tontafel listet systematisch rechtwinklige Dreiecke mit ganzzahligen Seiten – über tausend Jahre vor Pythagoras, allerdings ohne allgemeinen Beweis.'},
 {i:'g_thales',s:'ma_geo',t:'Thales: der erste Beweis',a:-600,r:2,d:'Thales begründet Aussagen nicht mehr durch Nachmessen, sondern durch Argumentation. Aus Rezeptmathematik wird beweisende Mathematik.'},
@@ -262,6 +272,7 @@ const ITEMS = [
 {i:'g_euklid',s:'ma_geo',t:'Euklid: „Die Elemente“',a:-300,r:1,d:'Alles folgt aus fünf Postulaten und wenigen Axiomen. Das Buch ist über 2000 Jahre Schulbuch und wird zum Vorbild jeder strengen Wissenschaft – Newton und Spinoza schreiben nach seinem Muster.'},
 {i:'g_archim',s:'ma_geo',t:'Archimedes: Kreiszahl, Kugel & Zylinder',a:-250,r:1,d:'Er schachtelt π zwischen 3+10/71 und 3+1/7 ein und bestimmt Kugelvolumen und -oberfläche. Seine Methode der Ausschöpfung kommt der Integralrechnung sehr nahe.'},
 {i:'g_apollon',s:'ma_geo',t:'Apollonios: Kegelschnitte',a:-200,r:1,d:'Ellipse, Parabel, Hyperbel werden systematisch untersucht – reine Geometrie ohne jeden Nutzen. 1800 Jahre später sind es genau die Bahnen der Planeten und Wurfgeschosse.'},
+{i:'g_groma',s:'ma_geo',t:'Römische Vermessung (Groma, Chorobates)',a:-200,b:400,r:2,d:'Mit Groma für rechte Winkel und Chorobates als Wasserwaage stecken römische Landmesser Lager, Städte und Aquädukttrassen ab. Über 50 km hält man ein Gefälle von wenigen Zentimetern je hundert Meter ein – angewandte Geometrie auf höchstem Niveau, ohne dass daraus neue Mathematik entstünde.'},
 {i:'g_liuhui',s:'ma_geo',t:'Liu Hui & Zu Chongzhi: π',a:263,b:480,r:2,d:'Mit einem 3072-Eck erreicht Liu Hui fünf, Zu Chongzhi schließlich sieben korrekte Stellen von π – ein Rekord, den Europa erst 1000 Jahre später einholt.'},
 {i:'g_aryabhata',s:'ma_geo',t:'Aryabhata: Sinustafeln',a:499,r:2,d:'Indische Astronomen ersetzen die griechischen Sehnentafeln durch Halbsehnen – daraus wird über das Arabische unser Wort „Sinus“.'},
 {i:'g_trigo',s:'ma_geo',t:'Trigonometrie in der islamischen Welt',a:850,b:1050,r:2,d:'Al-Battani und Abu l-Wafa entwickeln die sechs Winkelfunktionen und sphärische Trigonometrie – gebraucht für Gebetsrichtung, Kalender und Astronomie.'},
@@ -275,8 +286,10 @@ const ITEMS = [
 {i:'g_fraktal',s:'ma_geo',t:'Fraktale Geometrie (Mandelbrot)',a:1975,r:2,d:'Küstenlinien, Wolken und Farne haben gebrochene Dimension. Mit dem Computer wird eine Geometrie sichtbar, die zur Natur besser passt als Kugel und Kegel.'},
 
 /* ============ ALGEBRA & GLEICHUNGEN ============ */
+{i:'a_chronik',s:'ma_alg',t:'Die Gleichung – vom Rezept zur Struktur',a:-1800,b:1994,r:1,d:'Erst ein Rechenrezept an einem Beispiel, dann eine geometrische Figur, dann ein Gegenstand mit eigener Theorie, schließlich eine Frage nach Symmetrie. Die Geschichte der Gleichung ist die Geschichte wachsender Abstraktion – und jedes Stadium ist im heutigen Unterricht noch greifbar. Öffne die Chronik der Gleichungen.'},
 {i:'a_babquad',s:'ma_alg',t:'Babylonische quadratische Gleichungen',a:-1800,r:1,d:'Tontafeln enthalten Rezepte, die exakt unserer Lösungsformel entsprechen – formuliert als Wortalgorithmus ohne Symbole und ohne negative Lösungen.'},
 {i:'a_neunbuecher',s:'ma_alg',t:'„Neun Bücher arithmetischer Technik“ (China)',a:100,r:1,d:'246 Aufgaben mit Verfahren für lineare Gleichungssysteme – im Kern das Gauß-Verfahren, 1700 Jahre vor Gauß.'},
+{i:'a_heron',s:'ma_alg',t:'Heron-Verfahren zur Wurzelberechnung',a:60,r:1,d:'Schätze die Wurzel, teile die Zahl durch die Schätzung, nimm den Mittelwert beider Werte – und wiederhole. Die Genauigkeit verdoppelt sich mit jedem Schritt. Heron von Alexandria beschreibt das Verfahren, babylonische Tafeln nutzen es schon 1800 Jahre früher. Es ist der älteste bis heute verwendete Iterationsalgorithmus – und ein Spezialfall des Newton-Verfahrens.'},
 {i:'a_diophant',s:'ma_alg',t:'Diophant: „Arithmetica“',a:250,r:2,d:'Erste Abkürzungen statt reiner Wortsprache und die Suche nach ganzzahligen Lösungen. An seinem Rand notiert Fermat 1637 seine berühmte Vermutung.'},
 {i:'a_brahma',s:'ma_alg',t:'Brahmagupta: Regeln für Null & Negatives',a:628,r:2,d:'Er löst quadratische Gleichungen allgemein und akzeptiert negative Lösungen als „Schulden“ – ein Schritt, den Europa erst im 17. Jh. nachvollzieht.'},
 {i:'a_alkhwarizmi',s:'ma_alg',t:'Al-Chwarizmi: „al-dschabr“',a:820,r:1,d:'Das Buch über das Ergänzen und Ausgleichen behandelt Gleichungen systematisch als eigenständiges Thema. Aus dem Titel wird das Wort Algebra.'},
@@ -292,6 +305,7 @@ const ITEMS = [
 {i:'a_abstrakt',s:'ma_alg',t:'Abstrakte Algebra',a:1920,b:1935,r:2,d:'Noether und van der Waerden ordnen die Mathematik nach Strukturen (Gruppe, Ring, Körper) statt nach Rechenobjekten – der moderne Stil der Mathematik entsteht.'},
 
 /* ============ ANALYSIS ============ */
+{i:'an_funktion',s:'ma_ana',t:'Der Funktionsbegriff',a:-1800,b:1960,r:1,d:'Von der Wertetabelle über den gezeichneten Graphen und den Rechenausdruck bis zur beliebigen eindeutigen Zuordnung: Der Begriff wurde fünfmal umgebaut, jedes Mal, weil ein neues Problem – meist aus der Physik – die alte Fassung sprengte. Öffne die Chronik des Funktionsbegriffs.'},
 {i:'an_archim',s:'ma_ana',t:'Antike Vorformen der Integration',a:-250,r:2,d:'Archimedes berechnet Flächen und Volumina durch Ausschöpfung mit immer feineren Figuren. Es fehlt nur der Grenzwertbegriff – und die Algebra, um es allgemein zu formulieren.'},
 {i:'an_oresme',s:'ma_ana',t:'Oresme: Bewegung als Fläche im Diagramm',a:1360,r:2,d:'Er trägt Geschwindigkeit über der Zeit auf und erkennt: Die Fläche darunter ist der zurückgelegte Weg. Die Merton-Regel für gleichmäßig beschleunigte Bewegung ist damit bewiesen – 270 Jahre vor Galilei.'},
 {i:'an_kerala',s:'ma_ana',t:'Kerala-Schule: unendliche Reihen',a:1350,b:1500,r:2,d:'Madhava entwickelt in Südindien Potenzreihen für Sinus, Kosinus und Arkustangens – Ergebnisse, die in Europa erst Newton und Leibniz wiederfinden.'},
@@ -301,6 +315,7 @@ const ITEMS = [
 {i:'an_streit',s:'ma_ana',t:'Prioritätsstreit Newton–Leibniz',a:1700,b:1720,r:3,d:'Der Streit spaltet die europäische Mathematik: England bleibt an Newtons unhandlicher Notation hängen und verliert für ein Jahrhundert den Anschluss an den Kontinent.'},
 {i:'an_bernoulli',s:'ma_ana',t:'Bernoullis & Variationsrechnung',a:1696,b:1750,r:3,d:'Das Problem der schnellsten Fallkurve (Brachistochrone) begründet eine Methode, mit der man Naturgesetze als Extremalprinzipien schreiben kann.'},
 {i:'an_euler',s:'ma_ana',t:'Euler: Funktionsbegriff & e^(iπ)+1=0',a:1740,b:1770,r:1,d:'Der produktivste Mathematiker der Geschichte macht die Analysis zur Theorie der Funktionen und verbindet in einer Formel e, i, π, 1 und 0. Von ihm stammen f(x), Σ, i und e.'},
+{i:'an_newtonverf',s:'ma_ana',t:'Newton-Raphson-Verfahren',a:1669,b:1690,r:2,d:'Nullstellen findet man, indem man die Tangente anlegt und deren Schnittpunkt mit der x-Achse als neue Näherung nimmt. Angewendet auf x²−a ergibt sich exakt das Heron-Verfahren – nach 1600 Jahren erhält der antike Algorithmus seine Begründung.'},
 {i:'an_lagrange',s:'ma_ana',t:'Differentialgleichungen als Sprache der Natur',a:1750,b:1900,r:2,d:'Von der schwingenden Saite über die Wärmeleitung bis zum Elektromagnetismus: Naturgesetze werden als Differentialgleichungen formuliert – das bleibt bis heute so.'},
 {i:'an_fourier',s:'ma_ana',t:'Fourier: Reihen aus Sinus und Kosinus',a:1822,r:1,d:'Beim Studium der Wärmeleitung zerlegt Fourier beliebige Vorgänge in Schwingungen. Heute steckt das in jeder Tonanalyse, jedem MP3, jedem Bildformat und jedem Spektrum.'},
 {i:'an_cauchy',s:'ma_ana',t:'Cauchy & Weierstraß: Strenge Grenzwerte',a:1821,b:1872,r:1,d:'Die ε-δ-Definition ersetzt die anschaulichen „unendlich kleinen Größen“. Erst jetzt steht die Analysis auf sicherem Boden – 150 Jahre nach ihrer Erfindung.'},
@@ -310,6 +325,7 @@ const ITEMS = [
 {i:'an_numerik',s:'ma_ana',t:'Numerik & Computersimulation',a:1950,b:2025,r:2,d:'Wo Formeln versagen, rechnet der Computer: Wetter, Strömungen, Sterne, Moleküle. Die Simulation tritt als dritte Säule neben Experiment und Theorie.'},
 
 /* ============ WAHRSCHEINLICHKEIT & STATISTIK ============ */
+{i:'s_chronik',s:'ma_sto',t:'Vom Glücksspiel zur Naturbeschreibung',a:-3000,b:2000,r:1,d:'Gewürfelt wurde seit jeher – gerechnet erst ab 1654. Die Sperre war keine mathematische, sondern eine gedankliche: Was als Götterentscheid gilt, berechnet man nicht. Danach geht es schnell: Spieltisch, Versicherung, Messfehler, Gastheorie, Quantenmechanik. Öffne die Chronik der Wahrscheinlichkeitsrechnung.'},
 {i:'s_cardano',s:'ma_sto',t:'Cardano: Buch über Glücksspiele',a:1564,r:2,d:'Der erste systematische Versuch, Chancen beim Würfeln zu berechnen – geschrieben von einem Spieler für Spieler und erst 100 Jahre später gedruckt.'},
 {i:'s_pascalfermat',s:'ma_sto',t:'Pascal & Fermat: das Teilungsproblem',a:1654,r:1,d:'Wie teilt man den Einsatz eines abgebrochenen Spiels gerecht? Der Briefwechsel begründet die Wahrscheinlichkeitsrechnung – aus einer Frage nach Gerechtigkeit, nicht nach Natur.'},
 {i:'s_huygens',s:'ma_sto',t:'Huygens: Erwartungswert',a:1657,r:3,d:'Die erste gedruckte Abhandlung zur Wahrscheinlichkeit führt den Erwartungswert als zentralen Begriff ein.'},
@@ -342,20 +358,29 @@ const ITEMS = [
 
 /* ============ MECHANIK ============ */
 {i:'p_aristo',s:'ph_mech',t:'Aristotelische Bewegungslehre',a:-350,b:1600,r:1,d:'Schwere Körper streben nach unten, Bewegung braucht dauernd eine Ursache, im Himmel gelten andere Gesetze als auf der Erde. Ein stimmiges, alltagsnahes System – und für 2000 Jahre das Hindernis, das es zu überwinden gilt.'},
+{i:'p_antrieb',s:'ph_mech',t:'Antriebe',a:-3000,b:2025,r:1,d:'Muskel, Zugtier, Segel, Ruder, Dampf, Verbrennung, Elektro, Strahl, Rakete, Ion. Zwei Fragen kehren dabei immer wieder: Woher kommt die Energie – und wogegen stützt sich der Antrieb ab? Die Rakete beantwortet die zweite Frage als einzige mit „gegen nichts“. Öffne die Chronik der Antriebe.'},
+{i:'p_kraftwandler',s:'ph_mech',t:'Kraftwandler & einfache Maschinen',a:-2600,b:1970,r:1,d:'Hebel, schiefe Ebene, Flaschenzug, Zahnrad, Hydraulik: Alle beruhen auf demselben Tausch – weniger Kraft gegen mehr Weg. Rampen und Hebel waren Jahrtausende im Einsatz, bevor Archimedes das Gesetz bewies und Galilei es zum Prinzip erhob: Eine Maschine erzeugt nie Arbeit, sie formt sie um. Öffne die Chronik der Kraftwandler.'},
 {i:'p_archimedes',s:'ph_mech',t:'Archimedes: Hebel, Schwerpunkt, Auftrieb',a:-250,r:1,d:'Die erste mathematisierte Physik: Aus wenigen Grundsätzen werden Gleichgewichtsgesetze streng bewiesen – Statik nach Euklids Vorbild.'},
+{i:'p_vitruv',s:'ph_mech',t:'Vitruv: „De architectura“',a:-25,r:2,d:'Zehn Bücher über Baukunst, Maschinen, Wasserversorgung und Proportion – das einzige vollständig erhaltene Architekturwerk der Antike. Vitruv sammelt und ordnet griechisches Wissen für die Praxis; in der Renaissance wird sein Buch zur Bibel der Baumeister und liefert den vitruvianischen Menschen.'},
 {i:'p_heron',s:'ph_mech',t:'Heron: Maschinen & Dampfkugel',a:60,r:3,d:'Automaten, Hebel, Winden und ein rotierender Dampfball – Technik als Spielerei, ohne wirtschaftlichen Druck zur Nutzung.'},
 {i:'p_impetus',s:'ph_mech',t:'Impetustheorie (Philoponos, Buridan)',a:530,b:1360,r:2,d:'Ein geworfener Stein trägt eine „eingeprägte Kraft“ in sich. Falsch, aber der entscheidende Zwischenschritt vom aristotelischen zum Trägheitsdenken.'},
 {i:'p_merton',s:'ph_mech',t:'Merton-Regel & Oresmes Diagramme',a:1350,r:2,d:'Gleichmäßig beschleunigte Bewegung wird korrekt beschrieben – graphisch bewiesen an der Universität Oxford und in Paris, lange vor jedem Experiment.'},
 {i:'p_stevin',s:'ph_mech',t:'Stevin: Kräfteparallelogramm',a:1586,r:3,d:'Kräfte werden als gerichtete Größen addiert – und ein Fallversuch zeigt schon vor Galilei, dass unterschiedlich schwere Kugeln gleich schnell fallen.'},
 {i:'p_galilei',s:'ph_mech',t:'Galilei: Fallgesetz, Trägheit, Wurfparabel',a:1590,b:1638,r:1,d:'Er misst statt zu spekulieren (schiefe Ebene, Wasseruhr), findet s ~ t², das Trägheitsprinzip und die Unabhängigkeit von waagrechter und senkrechter Bewegung. Das Buch der Natur, sagt er, sei in mathematischen Zeichen geschrieben.'},
+{i:'p_torricelli',s:'ph_mech',t:'Torricelli: Luftdruck & Barometer',a:1643,r:1,d:'Eine oben geschlossene Quecksilbersäule fällt auf 76 cm und bleibt dort stehen – darüber ist nichts. Torricelli erklärt das mit dem Gewicht der Luft und erzeugt nebenbei das erste dauerhafte Vakuum. Pascal lässt 1648 das Barometer auf einen Berg tragen: Oben steht die Säule niedriger, wie vorhergesagt. Damit ist die Luft ein wägbarer Stoff und das Vakuum möglich – gegen Aristoteles gleich zweifach.'},
 {i:'p_huygens',s:'ph_mech',t:'Huygens: Pendel, Zentripetalkraft, Stoßgesetze',a:1656,b:1673,r:1,d:'Die Pendeluhr macht Zeitmessung auf Sekunden genau – und liefert damit dem Experiment das entscheidende Werkzeug. Dazu Kreisbewegung und elastischer Stoß mathematisch exakt.'},
 {i:'p_newton',s:'ph_mech',t:'Newton: „Principia“ – Axiome & Gravitation',a:1687,r:1,d:'Drei Axiome und ein Gravitationsgesetz erklären Fall, Wurf, Pendel, Gezeiten und Planetenbahnen mit denselben Formeln. Himmel und Erde gehorchen erstmals einer einzigen Physik.'},
+{i:'p_cavendish',s:'ph_mech',t:'Cavendish: „Die Erde wiegen“',a:1798,r:1,d:'Mit einer Drehwaage misst Cavendish die Anziehung zwischen Bleikugeln im Labor – eine Kraft von wenigen Millionstel Newton. Daraus folgen die Gravitationskonstante und damit die Masse der Erde. Newtons Gesetz war 111 Jahre alt und lieferte nur Verhältnisse; erst jetzt stehen absolute Werte fest.'},
 {i:'p_analytmech',s:'ph_mech',t:'Euler, Lagrange, Hamilton: analytische Mechanik',a:1750,b:1834,r:1,d:'Die Mechanik wird aus einem Extremalprinzip hergeleitet und in Energien statt Kräften formuliert. Genau diese Formulierung übernimmt später die Quantenmechanik.'},
 {i:'p_hydro',s:'ph_mech',t:'Hydrodynamik & Kontinuumsmechanik',a:1738,b:1845,r:2,d:'Bernoulli, Navier und Stokes beschreiben strömende Flüssigkeiten und Gase – Gleichungen, die bis heute nur numerisch lösbar sind.'},
 {i:'p_foucault',s:'ph_mech',t:'Foucaultsches Pendel',a:1851,r:2,d:'Ein Pendel im Pariser Panthéon macht die Erddrehung im Hörsaal sichtbar – 300 Jahre nach Kopernikus der erste direkte irdische Nachweis.'},
 {i:'p_mach',s:'ph_mech',t:'Mach: Kritik am absoluten Raum',a:1883,r:2,d:'Trägheit hat vielleicht ihre Ursache in allen Massen des Universums. Diese Frage wird für den jungen Einstein zum Ausgangspunkt.'},
 
 /* ============ WÄRME & ENERGIE ============ */
+{i:'w_erhaltung',s:'ph_waerme',t:'Energie & Erhaltungsgrößen',a:-250,b:2012,r:1,d:'Die Energie war 200 Jahre lang in Einzelteilen bekannt – als Hebelregel, Stoßgesetz, Wärmeäquivalent – bevor sie 1847 als ein Prinzip erkannt wurde. Noether zeigte 1918, warum es Erhaltungsgrößen überhaupt gibt: Sie folgen aus Symmetrien der Naturgesetze. Öffne die Chronik des Energiebegriffs.'},
+{i:'w_kaelte',s:'ph_waerme',t:'Kälte & tiefe Temperaturen',a:1600,b:2025,r:1,d:'Kälte ist keine Substanz, sondern fehlende Wärme – diese Einsicht kostete 150 Jahre. Danach wurde der Weg nach unten zum Präzisionswettlauf: Amontons ahnte 1702 einen tiefsten Punkt, Kelvin definierte ihn, Nernst zeigte, dass er unerreichbar bleibt. Je näher man ihm kommt, desto merkwürdiger wird die Materie. Öffne die Chronik der Kälte.'},
+{i:'w_quellen',s:'ph_waerme',t:'Energiequellen',a:-3000,b:2025,r:1,d:'Feuer, Muskel, Wind, Wasser, Kohle, Öl, Kern, Sonne: Fast alle sind umgewandeltes Sonnenlicht – nur Kernenergie, Geothermie und Gezeiten nicht. Entscheidend war nie allein die Menge, sondern die Verfügbarkeit: Erst die Dampfmaschine machte Leistung unabhängig von Wetter, Ort und Jahreszeit. Öffne die Chronik der Energiequellen.'},
+{i:'w_transport',s:'ph_waerme',t:'Energietransport – vom Kanal zur Hochspannung',a:-2000,b:2025,r:1,d:'Wasser im Kanal, Gestänge im Bergwerk, Welle und Riemen in der Fabrik, schließlich Strom im Draht: Die Frage lautet immer, wie weit sich Energie vom Ort ihrer Erzeugung entfernen kann. Bis 1891 lag die Antwort bei wenigen Metern bis Kilometern – und bestimmte damit, wo Menschen arbeiteten und wohnten. Öffne die Chronik des Energietransports.'},
 {i:'w_element',s:'ph_waerme',t:'Wärme als Element / Stoff',a:-400,b:1798,r:3,d:'Von den vier Elementen bis zum „Caloricum“: Wärme gilt als unsichtbarer Stoff, der von warm nach kalt fließt – erstaunlich brauchbar für die frühe Wärmelehre.'},
 {i:'w_thermo',s:'ph_waerme',t:'Thermometer & Temperaturskalen',a:1600,b:1742,r:2,d:'Von Galileis Thermoskop zu Fahrenheit und Celsius. Erst eine reproduzierbare Skala macht Wärme messbar – und damit zum Gegenstand der Physik.'},
 {i:'w_black',s:'ph_waerme',t:'Black: Wärmekapazität & latente Wärme',a:1761,r:2,d:'Temperatur und Wärmemenge sind zweierlei: Beim Schmelzen fließt Wärme, ohne dass die Temperatur steigt. Eine Unterscheidung, die auch heute im Unterricht Mühe macht.'},
@@ -372,6 +397,9 @@ const ITEMS = [
 {i:'w_klima',s:'ph_waerme',t:'Treibhauseffekt & Klimaphysik',a:1824,b:2025,r:2,d:'Fourier beschreibt ihn, Tyndall misst ihn, Arrhenius rechnet 1896 die Erwärmung durch CO₂ aus. Aus Grundlagenphysik wird die politisch brisanteste Rechnung der Gegenwart.'},
 
 /* ============ OPTIK, ELEKTRIZITÄT & MAGNETISMUS ============ */
+{i:'e_optik',s:'ph_em',t:'Optische Geräte',a:-700,b:2019,r:1,d:'Lesestein, Brille, Lupe, Mikroskop, Fernrohr, Spiegelteleskop, Radioantenne, Weltraumteleskop: Jedes Gerät erweitert die Sinne – und zeigt regelmäßig Dinge, die keine Theorie vorhergesagt hatte. Auffällig oft ging das Handwerk der Theorie voraus: Die Brille gab es 300 Jahre vor dem Brechungsgesetz. Öffne die Chronik der optischen Geräte.'},
+{i:'e_licht',s:'ph_em',t:'Was ist Licht?',a:-300,b:2015,r:1,d:'Sehstrahl, Teilchen, Welle, elektromagnetisches Feld, Quant: Keine physikalische Frage wurde so oft neu beantwortet – und keine Antwort war einfach falsch. Jedes Modell erklärt genau das, was seine Zeit messen konnte. Öffne die Chronik des Lichts.'},
+{i:'e_chronik',s:'ph_em',t:'Elektrizität – von der Kuriosität zur Infrastruktur',a:-600,b:1969,r:1,d:'Zweieinhalb Jahrtausende lang ein Jahrmarktseffekt, dann innerhalb von 120 Jahren die Grundlage von Licht, Antrieb, Nachricht und Rechnen. Bemerkenswert: Das Elektron – das, was hier eigentlich fließt – wurde erst 1897 entdeckt, als Motoren und Telegrafen längst liefen. Öffne die Chronik der Elektrizitätslehre.'},
 {i:'e_bernstein',s:'ph_em',t:'Bernstein & Magneteisenstein',a:-600,r:3,d:'Thales beobachtet Anziehung durch geriebenen Bernstein (griech. elektron) und durch Magnetit aus Magnesia – beide Wortwurzeln stammen von hier.'},
 {i:'e_antikoptik',s:'ph_em',t:'Antike Optik (Euklid, Ptolemäus)',a:-300,b:150,r:3,d:'Geradlinige Ausbreitung, Reflexionsgesetz und Brechungstabellen – Optik ist das erste geometrisch behandelte Naturphänomen.'},
 {i:'e_alhazen',s:'ph_em',t:'Ibn al-Haitham: „Buch der Optik“',a:1020,r:1,d:'Nicht das Auge sendet Strahlen aus, sondern Licht fällt ins Auge. Mit Camera obscura und systematischen Versuchen entsteht ein früher Prototyp naturwissenschaftlicher Methodik.'},
@@ -413,6 +441,8 @@ const ITEMS = [
 {i:'q_dalton',s:'ph_qm',t:'Dalton: chemische Atomtheorie',a:1808,r:2,d:'Konstante Massenverhältnisse in Verbindungen lassen sich am einfachsten mit Atomen erklären – erstmals ein empirisches Argument.'},
 {i:'q_planck',s:'ph_qm',t:'Planck: das Wirkungsquantum',a:1900,r:1,d:'Um die Strahlung des schwarzen Körpers zu erklären, muss Energie in Portionen E = h·f abgegeben werden. Planck hält es selbst jahrelang für einen Rechentrick – es ist der Beginn der Quantenphysik.'},
 {i:'q_photoeffekt',s:'ph_qm',t:'Einstein: Lichtquanten & Photoeffekt',a:1905,r:1,d:'Licht verhält sich beim Herauslösen von Elektronen wie ein Strom von Teilchen. Für genau diese Arbeit – nicht für die Relativitätstheorie – erhält Einstein den Nobelpreis.'},
+{i:'q_roentgen',s:'ph_qm',t:'Röntgen: eine neue Art von Strahlen',a:1895,r:1,d:'Beim Arbeiten mit einer Kathodenstrahlröhre leuchtet ein Schirm auf, der abgedeckt ist. Innerhalb weniger Wochen geht das Bild einer durchleuchteten Hand um die Welt – Physik verändert die Medizin schneller als je zuvor. Was die Strahlen sind, bleibt 17 Jahre offen.'},
+{i:'q_radioaktiv',s:'ph_qm',t:'Radioaktivität (Becquerel, Marie & Pierre Curie)',a:1896,b:1911,r:1,d:'Becquerel findet 1896, dass Uransalze von selbst strahlen – ohne Anregung von außen. Marie Curie prägt den Begriff Radioaktivität, isoliert unter körperlich harten Bedingungen Polonium und Radium und erhält als erster Mensch zwei Nobelpreise in zwei Fächern. Die Energie kommt aus dem Atom selbst – der erste Hinweis, dass es eine innere Struktur haben muss. Ihre Präparate liefern zugleich die Alphateilchen für Rutherfords Streuversuch.'},
 {i:'q_rutherford',s:'ph_qm',t:'Rutherford: der Atomkern',a:1911,r:1,d:'Alphateilchen prallen an Goldfolie zurück – „so unwahrscheinlich, als hätte man eine Granate auf Seidenpapier geschossen“. Das Atom ist fast leer, seine Masse steckt im winzigen Kern.'},
 {i:'q_bohr',s:'ph_qm',t:'Bohr: Atommodell mit Quantenbahnen',a:1913,r:1,d:'Erlaubte Bahnen und Quantensprünge erklären erstmals die Spektrallinien des Wasserstoffs quantitativ. Ein widersprüchliches Zwischenmodell, das trotzdem funktioniert.'},
 {i:'q_debroglie',s:'ph_qm',t:'de Broglie: Materiewellen',a:1924,r:1,d:'Wenn Licht Teilchen sein kann, warum sollen Teilchen nicht Wellen sein? Drei Jahre später zeigen Elektronenbeugungsversuche, dass es stimmt.'},
@@ -430,7 +460,8 @@ const ITEMS = [
 {i:'q_quantencomp',s:'ph_qm',t:'Quanteninformation & Quantencomputer',a:1994,b:2025,r:2,d:'Shors Algorithmus zeigt: Ein Quantenrechner könnte die Verschlüsselung des Internets brechen. Verschränkung wird von der Kuriosität zur Ressource.'},
 
 /* ============ ASTRONOMIE & KOSMOLOGIE ============ */
-{i:'as_megalith',s:'as_astro',t:'Megalithische Himmelsbeobachtung',a:-1800,r:2,d:'Stonehenge und die Himmelsscheibe von Nebra zeigen: Schon vor der Schrift werden Sonnenwenden und Mondphasen systematisch beobachtet – aus landwirtschaftlicher und ritueller Notwendigkeit.'},
+{i:'as_entfernung',s:'as_astro',t:'Kosmische Entfernungsleiter',a:-270,b:2020,r:1,d:'Jede Sprosse ruht auf der darunter: Erdradius → Mondparallaxe → Astronomische Einheit → Sternparallaxe → Cepheiden → Supernovae → Rotverschiebung. Eine Korrektur unten verschiebt alles darüber – 1944 verdoppelte sich so die Größe des ganzen Universums. Öffne die Chronik der Entfernungsbestimmung.'},
+{i:'as_megalith',s:'as_astro',t:'Megalithische Himmelsbeobachtung',a:-3000,b:-1600,r:2,d:'Stonehenge und die Himmelsscheibe von Nebra zeigen: Schon vor der Schrift werden Sonnenwenden und Mondphasen systematisch beobachtet – aus landwirtschaftlicher und ritueller Notwendigkeit.'},
 {i:'as_aegkal',s:'as_astro',t:'Ägyptischer Sonnenkalender',a:-2700,r:2,d:'365 Tage, gestützt auf den heliakischen Aufgang des Sirius kurz vor der Nilflut. Astronomie als Landwirtschaftsplanung – und als Legitimation der Priesterschaft.'},
 {i:'as_babtag',s:'as_astro',t:'Babylonische Himmelstagebücher',a:-1800,b:-100,r:1,d:'Über 1500 Jahre lückenlose Aufzeichnungen ermöglichen die Entdeckung von Zyklen (Saros) und die Vorhersage von Finsternissen – ohne jedes Modell, allein aus Datenreihen. Der erste große Datensatz der Wissenschaftsgeschichte.'},
 {i:'as_china',s:'as_astro',t:'Chinesische Himmelschroniken',a:-1400,b:1600,r:2,d:'Hofastronomen dokumentieren Kometen, Sonnenflecken und „Gaststerne“ – darunter die Supernova von 1054, aus der der Krebsnebel entstand. Für die moderne Astrophysik unersetzliche Quellen.'},
@@ -439,6 +470,7 @@ const ITEMS = [
 {i:'as_eratos',s:'as_astro',t:'Eratosthenes misst den Erdumfang',a:-240,r:1,d:'Zwei Schattenlängen, eine Karawanenstrecke und Geometrie ergeben rund 40000 km – Abweichung wenige Prozent. Das Musterbeispiel dafür, wie Mathematik Messbares aus Unzugänglichem macht.'},
 {i:'as_hipparch',s:'as_astro',t:'Hipparch: Sternkatalog & Präzession',a:-130,r:2,d:'850 Sterne nach Helligkeit geordnet, dazu die Entdeckung der langsamen Verschiebung des Frühlingspunkts – möglich nur durch Vergleich mit babylonischen Daten.'},
 {i:'as_ptolem',s:'as_astro',t:'Ptolemäus: Almagest & Epizykel',a:150,r:1,d:'Ein geozentrisches Modell mit Kreisen auf Kreisen, das Planetenpositionen erstaunlich genau vorhersagt. Es ist wissenschaftlich gut begründet – das macht seine spätere Ablösung so schwer.'},
+{i:'as_juliankal',s:'as_astro',t:'Julianischer Kalender',a:-45,r:2,d:'Caesar lässt den römischen Kalender durch den alexandrinischen Astronomen Sosigenes reformieren: 365,25 Tage mit Schaltjahr. Die Abweichung von elf Minuten pro Jahr summiert sich bis 1582 auf zehn Tage – dann folgt die gregorianische Korrektur. Ein Musterfall dafür, wie astronomische Genauigkeit politisch verordnet wird.'},
 {i:'as_aryabh',s:'as_astro',t:'Aryabhata: Erdrotation & Finsternisse',a:499,r:2,d:'Er erklärt den täglichen Sternenlauf durch die Drehung der Erde und Finsternisse durch Schattenwurf statt durch Dämonen.'},
 {i:'as_observ',s:'as_astro',t:'Islamische Observatorien',a:1259,b:1449,r:1,d:'In Maragha und Samarkand entstehen staatlich finanzierte Großobservatorien. Ulug Begs Sternkatalog bleibt 200 Jahre der genaueste; die „Tusi-Paare“ tauchen später bei Kopernikus wieder auf.'},
 {i:'as_kopernikus',s:'as_astro',t:'Kopernikus: De revolutionibus',a:1543,r:1,d:'Die Sonne im Zentrum, die Erde ein Planet. Rechnerisch zunächst kaum genauer als Ptolemäus, aber einfacher – und mit Folgen weit über die Astronomie hinaus: Der Mensch steht nicht mehr im Mittelpunkt.'},
@@ -465,6 +497,8 @@ const ITEMS = [
 /* ============ KONTEXT: EPOCHEN ============ */
 {i:'ke_hoch',s:'k_epoche',t:'Frühe Hochkulturen',a:-3300,b:-800,r:1,d:'Schrift, Verwaltung, Bewässerung, Tempelwirtschaft: Erstmals gibt es Menschen, deren Beruf das Rechnen und Beobachten ist.'},
 {i:'ke_antike',s:'k_epoche',t:'Antike',a:-800,b:500,r:1,d:'Griechische Beweismathematik und Naturphilosophie, hellenistische Forschung in Alexandria, römische Ingenieurleistung.'},
+{i:'ke_gr_antike',s:'k_epoche',t:'Griechische Antike',a:-800,b:-146,r:2,d:'Der entscheidende Schritt vom Rechenrezept zum Beweis und von der Göttererklärung zur Naturursache – geleistet in kleinen Stadtstaaten ohne zentrale Forschungsförderung.'},
+{i:'ke_rom_antike',s:'k_epoche',t:'Römische Antike',a:-509,b:476,r:2,d:'Wissenschaftsgeschichtlich eine eigentümliche Epoche: Rom baut Aquädukte, Straßen und Kuppeln von unerreichter Qualität, entwickelt aber die griechische Grundlagenforschung kaum weiter. Angewandtes Können und theoretische Neugier fallen hier deutlich auseinander.'},
 {i:'ke_ma',s:'k_epoche',t:'Mittelalter',a:500,b:1500,r:1,d:'Das Zentrum exakter Wissenschaft liegt lange in Bagdad, Kairo, Córdoba, Indien und China. In Europa entstehen ab 1100 Universitäten.'},
 {i:'ke_fnz',s:'k_epoche',t:'Frühe Neuzeit',a:1500,b:1789,r:1,d:'Wissenschaftliche Revolution: Instrument, Experiment und Mathematisierung setzen sich als Methode durch.'},
 {i:'ke_19',s:'k_epoche',t:'19. Jahrhundert',a:1789,b:1900,r:1,d:'Industrie, Labor und Universität verschmelzen; Physik wird Berufsfeld, Mathematik wird streng.'},
@@ -475,7 +509,7 @@ const ITEMS = [
 {i:'ku_aeg',s:'k_kultur',t:'Altes Ägypten',a:-3000,b:-30,r:1,d:'Praktische Rechenkunst, Feldvermessung, Kalender und Monumentalbau über drei Jahrtausende erstaunlich stabil.'},
 {i:'ku_grie',s:'k_kultur',t:'Griechische Welt',a:-800,b:-30,r:1,d:'Der entscheidende Schritt vom Rechenrezept zum Beweis – und von der Göttererklärung zur Naturursache.'},
 {i:'ku_alex',s:'k_kultur',t:'Alexandria & Hellenismus',a:-300,b:400,r:1,d:'Museion und Bibliothek bündeln griechisches, ägyptisches und babylonisches Wissen. Euklid, Archimedes, Eratosthenes, Ptolemäus arbeiten in diesem Raum.'},
-{i:'ku_rom',s:'k_kultur',t:'Römisches Reich',a:-200,b:476,r:2,d:'Große Ingenieure, wenig Grundlagenforschung: Rom nutzt griechische Wissenschaft, entwickelt sie aber kaum weiter.'},
+{i:'ku_rom',s:'k_kultur',t:'Römisches Reich',a:-509,b:476,r:1,d:'Große Ingenieure, wenig Grundlagenforschung. Rom beherrscht Vermessung, Statik, Wasserbau und Logistik meisterhaft, übernimmt die Wissenschaft aber als Bildungsgut statt als Forschungsprogramm – Latein wird nie Wissenschaftssprache im griechischen Sinn. Als Plinius und Vitruv Wissen sammeln, ordnen sie, statt zu prüfen. Erhalten bleibt dennoch Entscheidendes: Über römische Straßen, Recht und Sprache erreicht antikes Wissen das spätere Europa.'},
 {i:'ku_indien',s:'k_kultur',t:'Indien (Gupta-Zeit und später)',a:300,b:1500,r:1,d:'Stellenwertsystem mit Null, negative Zahlen, Sinusfunktion, Reihenentwicklungen – oft eng an astronomische Aufgaben gebunden.'},
 {i:'ku_china',s:'k_kultur',t:'China (Han bis Song)',a:-200,b:1300,r:1,d:'Algorithmische Mathematik, Gleichungssysteme, präzise Himmelschroniken; Papier, Druck, Kompass und Schießpulver.'},
 {i:'ku_islam',s:'k_kultur',t:'Islamische Wissenschaft',a:750,b:1450,r:1,d:'Von Córdoba bis Samarkand: Übersetzung, Bewahrung und Weiterentwicklung. Algebra, Trigonometrie, Optik und Observatorien – das Bindeglied zwischen Antike und Europa.'},
@@ -499,8 +533,10 @@ const ITEMS = [
 
 /* ============ KONTEXT: INSTRUMENTE & TECHNIK ============ */
 {i:'in_schrift',s:'k_technik',t:'Schrift & Papyrus',a:-3300,b:-300,r:2,d:'Ohne dauerhaften, transportablen Datenträger keine Beobachtungsreihen und keine überprüfbare Überlieferung.'},
+{i:'in_zeit',s:'k_technik',t:'Zeitmessung',a:-3000,b:2025,r:1,d:'Viereinhalb Jahrtausende lang misst jede Uhr letztlich die Erddrehung. Erst als Quarzuhren zeigen, dass die Erde selbst ungleichmäßig läuft, löst sich die Sekunde vom Himmel: Seit 1967 ist sie eine feste Zahl von Schwingungen im Cäsiumatom – definiert durch die Atomuhr. Öffne die Chronik der Zeitmessung.'},
 {i:'in_gnomon',s:'k_technik',t:'Gnomon, Sonnenuhr & Wasseruhr',a:-1500,b:1600,r:2,d:'Die ersten Messgeräte der Menschheit: Schattenlänge und Wasserstand liefern Winkel und Zeit – Galilei misst Fallzeiten noch mit Wasser.'},
 {i:'in_abakus',s:'k_technik',t:'Abakus & Rechenbrett',a:-500,b:1600,r:3,d:'Über zwei Jahrtausende das Standardwerkzeug des Rechnens – bis Fibonaccis Ziffern das schriftliche Rechnen ermöglichen.'},
+{i:'in_wasserrad',s:'k_technik',t:'Wasserrad, Mühle & Kurbel',a:100,b:1700,r:2,d:'Die erste breit genutzte Maschinenkraft: Mahlen, Sägen, Hämmern ohne Muskelkraft. Nockenwelle und Kurbel wandeln Drehung in jede gewünschte Bewegung. Weil sich die Kraft nur wenige Meter übertragen lässt, entscheidet der Bach über den Standort jedes Gewerbes.'},
 {i:'in_astrolab',s:'k_technik',t:'Astrolabium',a:200,b:1600,r:2,d:'Ein tragbares Analogrechengerät für Sternhöhe, Zeit und Gebetsrichtung, in der islamischen Welt zur Perfektion gebracht.'},
 {i:'in_papier',s:'k_technik',t:'Papier',a:105,b:1500,r:2,d:'Von China über Bagdad und Córdoba nach Europa – ein billiger Beschreibstoff ist Voraussetzung für Rechenbücher und später den Buchdruck.'},
 {i:'in_uhr',s:'k_technik',t:'Mechanische Räderuhr',a:1300,b:1650,r:1,d:'Gleich lange Stunden machen Zeit zur messbaren Größe. Zugleich liefert die Uhr die Leitmetapher der neuen Physik: das Universum als Uhrwerk.'},
@@ -509,6 +545,16 @@ const ITEMS = [
 {i:'in_pendeluhr',s:'k_technik',t:'Pendeluhr & Präzisionsmessung',a:1656,b:1800,r:2,d:'Sekundengenaue Zeit macht quantitative Experimente und Längengradbestimmung auf See möglich.'},
 {i:'in_vakuum',s:'k_technik',t:'Luftpumpe & Vakuum',a:1650,b:1680,r:2,d:'Guerickes Magdeburger Halbkugeln und Boyles Versuche zeigen: Der „leere Raum“ ist herstellbar und untersuchbar – ein Bruch mit Aristoteles.'},
 {i:'in_rechen',s:'k_technik',t:'Rechenschieber & Rechenmaschinen',a:1620,b:1975,r:2,d:'Von Napiers Logarithmen über Leibniz’ Staffelwalze bis zur Tischrechenmaschine: Bis in die 1970er ist der Rechenschieber das Werkzeug jedes Ingenieurs.'},
+{i:'in_kaelte',s:'k_technik',t:'Kältemaschine & Kühlkette',a:1834,b:1950,r:2,d:'Der Kompressionskreislauf nutzt Blacks latente Wärme: Ein Gas verdampft, kühlt, wird verdichtet, gibt Wärme ab. Linde baut ihn ab 1873 zunächst für Brauereien; daraus wird die weltweite Kühlkette für Lebensmittel, Impfstoffe und Medikamente – eine der stillsten, aber folgenreichsten Techniken der Moderne.'},
+{i:'in_verbrennung',s:'k_technik',t:'Verbrennungsmotor',a:1876,b:1950,r:1,d:'Ottos Viertaktverfahren verlegt die Verbrennung in den Zylinder: kein Kessel, kein Vorheizen, sofort startbereit. Der Antrieb wird so klein und leicht, dass er sich selbst und seine Last trägt – Automobil und Flugzeug werden möglich, und mit ihnen eine völlig neue Siedlungs- und Wirtschaftsform.'},
+{i:'in_raumfahrt',s:'k_technik',t:'Raketenantrieb & Raumfahrt',a:1926,b:2025,r:1,d:'Der einzige Antrieb, der ohne umgebendes Medium arbeitet – reiner Rückstoß nach Newtons drittem Axiom. Mehrstufenprinzip und Flüssigtreibstoff bringen Satelliten, Menschen und Teleskope ins All; der Systemwettstreit des Kalten Krieges finanziert dabei Grundlagenforschung in bis dahin unbekanntem Umfang.'},
+{i:'in_dampf',s:'k_technik',t:'Dampfmaschine',a:1712,b:1900,r:1,d:'Newcomen pumpt Wasser aus Kohlebergwerken, Watt macht die Maschine mit separatem Kondensator und Fliehkraftregler wirtschaftlich. Erstmals ist Leistung unabhängig von Wind, Wasser, Muskel und Jahreszeit verfügbar – und der Wunsch, sie zu verbessern, bringt die Thermodynamik hervor.'},
+{i:'in_transmission',s:'k_technik',t:'Transmission: Wellen & Riemen',a:1780,b:1920,r:2,d:'Eine zentrale Dampfmaschine treibt eine Deckenwelle, Lederriemen führen zu jeder Maschine. Die Halle steht still, wenn die Welle steht – und die Anordnung der Arbeitsplätze richtet sich nach der Mechanik. Erst der Elektromotor befreit die Fabrik davon.'},
+{i:'in_telegraf',s:'k_technik',t:'Telegraf & Telefon',a:1833,b:1900,r:1,d:'Gauß und Weber verbinden 1833 in Göttingen Sternwarte und Labor, Morse macht daraus ein System, Bell überträgt 1876 Sprache. Erstmals reist Information schneller als der Bote – und die Physik liefert dem Alltag ihr erstes täglich genutztes Gerät.'},
+{i:'in_motor',s:'k_technik',t:'Elektromotor',a:1821,b:1900,r:1,d:'Faraday zeigt 1821 die erste elektromagnetische Drehbewegung, Jacobi treibt 1838 ein Boot auf der Newa an, Tesla und Dolivo-Dobrowolsky machen den Drehstrommotor um 1890 industriereif. Der Motor ist der Gegenspieler des Generators – dieselbe Maschine, rückwärts betrieben. Weil er klein, leise und überall aufstellbar ist, löst er die Fabrik von Transmissionswelle und Wasserlauf.'},
+{i:'in_stromnetz',s:'k_technik',t:'Generator, Transformator & Stromnetz',a:1866,b:1930,r:1,d:'Siemens’ dynamoelektrisches Prinzip macht elektrische Energie in großen Mengen erzeugbar, der Transformator macht sie transportabel. Damit löst sich die Energie erstmals vom Ort ihrer Erzeugung – eine der folgenreichsten Veränderungen der Industriegesellschaft.'},
+{i:'in_funk',s:'k_technik',t:'Funk & Rundfunk',a:1887,b:1950,r:2,d:'Von Hertz’ Hallenversuch über Marconis Atlantiksignal zum Rundfunk: elektromagnetische Wellen als Nachrichtenträger. Aus einer Formel Maxwells wird binnen 35 Jahren das erste Echtzeit-Massenmedium.'},
+{i:'in_netze',s:'k_technik',t:'Digitale Netze',a:1969,b:2025,r:2,d:'Rechnen und Kommunikation, seit dem 19. Jahrhundert getrennte Stränge der Elektrotechnik, fallen zusammen: Jede Nachricht ist eine Rechnung, jedes Signal ein Datum.'},
 {i:'in_spektro',s:'k_technik',t:'Spektroskop & Fotoplatte',a:1814,b:1900,r:2,d:'Licht wird zerlegt und dauerhaft aufgezeichnet. Das Auge wird als Messinstrument ersetzt – Beobachtung wird objektiv und langzeitfähig.'},
 {i:'in_vakuumroehre',s:'k_technik',t:'Vakuumröhre & Elektronenstrahl',a:1870,b:1930,r:2,d:'Kathodenstrahlröhren führen zu Elektron, Röntgenstrahlung und später zum Fernsehen – ein Gerät, drei Revolutionen.'},
 {i:'in_beschleun',s:'k_technik',t:'Teilchenbeschleuniger',a:1930,b:2025,r:1,d:'Vom Zyklotron auf der Handfläche zum 27-km-Ring des LHC: Um immer kleinere Strukturen zu sehen, braucht man immer größere Maschinen.'},
@@ -591,6 +637,127 @@ const LINKS = [
 {a:'ku_islam',b:'ku_uni',t:'Übersetzungswelle aus dem Arabischen füllt die Lehrpläne'},
 {a:'gl_scholastik',b:'ku_uni',t:'Disputation als Ausbildungsform'},
 {a:'z_alkh_ziffer',b:'z_fibo',t:'Fibonacci lernt das Rechnen in Nordafrika'},
+{a:'z_irrat',b:'z_bereiche',t:'Erste Krise: die Zahl reicht nicht aus'},
+{a:'z_komplex',b:'z_bereiche',t:'Letzte große Erweiterung der Schulmathematik'},
+{a:'z_bereiche',b:'a_fundamental',t:'ℂ erweist sich als der passende Rahmen der Algebra'},
+{a:'a_alkhwarizmi',b:'a_chronik',t:'Die Gleichung wird zum eigenen Gegenstand'},
+{a:'a_chronik',b:'a_galois',t:'Die Frage nach Lösbarkeit führt zur Struktur'},
+{a:'an_oresme',b:'an_funktion',t:'Der Graph als erste Darstellung einer Zuordnung'},
+{a:'an_funktion',b:'an_euler',t:'f(x) wird zum Grundbegriff der Analysis'},
+{a:'an_fourier',b:'an_funktion',t:'Unstetige Verläufe sprengen den Formelbegriff'},
+{a:'e_alhazen',b:'e_licht',t:'Erste experimentell geprüfte Lichttheorie'},
+{a:'e_licht',b:'q_photoeffekt',t:'Der Dualismus als Ausgangspunkt der Quantenphysik'},
+{a:'e_maxwell',b:'e_licht',t:'Licht als elektromagnetische Welle'},
+{a:'w_energie',b:'w_erhaltung',t:'Aus Einzelbefunden wird ein Prinzip'},
+{a:'e_volta',b:'e_chronik',t:'Dauerhafter Strom macht die Forschung erst möglich'},
+{a:'e_chronik',b:'in_stromnetz',t:'Aus Laborbefunden wird Infrastruktur'},
+{a:'e_chronik',b:'e_halbleiter',t:'Vom Schalten mit Röhren zum Schalten im Kristall'},
+{a:'p_archimedes',b:'p_kraftwandler',t:'Das Hebelgesetz als erste bewiesene Maschinenregel'},
+{a:'p_kraftwandler',b:'w_erhaltung',t:'Die goldene Regel wird zum Energieerhaltungssatz'},
+{a:'p_kraftwandler',b:'w_watt',t:'Getriebe und Regler machen die Dampfmaschine brauchbar'},
+{a:'in_wasserrad',b:'p_kraftwandler',t:'Kurbel und Nockenwelle wandeln Drehung in jede Bewegung'},
+{a:'w_transport',b:'in_stromnetz',t:'Der Transformator löst das Entfernungsproblem'},
+{a:'in_transmission',b:'w_transport',t:'Mechanische Kraftübertragung als Vorstufe'},
+{a:'w_watt',b:'in_transmission',t:'Zentrale Kraftquelle verlangt Verteilung in der Halle'},
+{a:'in_dampf',b:'w_carnot',t:'Die laufende Maschine wirft die Frage nach der Grenze auf'},
+{a:'w_watt',b:'in_dampf',t:'Kondensator und Regler machen sie wirtschaftlich'},
+{a:'in_dampf',b:'ku_industrie',t:'Ortsunabhängige Kraft schafft die Fabrik'},
+{a:'in_dampf',b:'in_transmission',t:'Eine Quelle treibt eine ganze Halle'},
+{a:'in_stromnetz',b:'ku_industrie',t:'Die Fabrik löst sich vom Standort der Kraftquelle'},
+{a:'e_faraday',b:'in_stromnetz',t:'Induktion wird zu Generator und Transformator'},
+{a:'e_oersted',b:'in_motor',t:'Strom im Magnetfeld erfährt eine Kraft'},
+{a:'e_faraday',b:'in_motor',t:'Erste elektromagnetische Drehbewegung 1821'},
+{a:'in_motor',b:'in_transmission',t:'Der Einzelantrieb macht die Deckenwelle überflüssig'},
+{a:'in_stromnetz',b:'in_motor',t:'Drehstrom macht den Motor industrietauglich'},
+{a:'in_motor',b:'ku_industrie',t:'Maschinen dürfen stehen, wo die Arbeit es verlangt'},
+{a:'e_chronik',b:'in_motor',t:'Vom Laborversuch zum meistgebauten Kraftantrieb'},
+{a:'e_hertz',b:'in_funk',t:'Vom Hallenversuch zur Weltkommunikation'},
+{a:'e_maxwell',b:'in_funk',t:'Vorhergesagte Wellen als Nachrichtenträger'},
+{a:'in_telegraf',b:'in_netze',t:'Information als elektrisches Signal'},
+{a:'in_computer',b:'in_netze',t:'Rechnen und Kommunikation verschmelzen'},
+{a:'e_halbleiter',b:'in_netze',t:'Mikroelektronik als Träger der Netze'},
+{a:'in_telegraf',b:'ku_industrie',t:'Märkte und Verwaltung werden echtzeitfähig'},
+{a:'gl_kloster',b:'in_zeit',t:'Gebetszeiten treiben die Uhrmacherei'},
+{a:'in_uhr',b:'in_zeit',t:'Gleich lange Stunden statt Tageszwölftel'},
+{a:'in_pendeluhr',b:'in_zeit',t:'Sekundengenauigkeit macht Experimente quantitativ'},
+{a:'in_zeit',b:'r_srt',t:'Gleichzeitigkeit verliert ihre Selbstverständlichkeit'},
+{a:'in_zeit',b:'r_gps',t:'Ortsbestimmung durch Zeitvergleich'},
+{a:'in_zeit',b:'w_kaelte',t:'Optische Uhren arbeiten mit lasergekühlten Atomen'},
+{a:'as_juliankal',b:'in_zeit',t:'Kalenderrechnung als älteste Zeitnormung'},
+{a:'as_eratos',b:'as_entfernung',t:'Der Erdradius ist die unterste Sprosse'},
+{a:'as_hipparch',b:'as_entfernung',t:'Parallaxe als Grundprinzip'},
+{a:'as_leavitt',b:'as_entfernung',t:'Standardkerzen erweitern die Reichweite'},
+{a:'as_entfernung',b:'as_hubble',t:'Ohne Maßstab keine Expansion messbar'},
+{a:'as_entfernung',b:'as_dunkelenergie',t:'Supernova-Entfernungen zeigen die Beschleunigung'},
+{a:'g_groma',b:'as_entfernung',t:'Dreiecksmessung als gemeinsame Grundlage'},
+{a:'g_euklid',b:'g_chronik',t:'Fünf Postulate als Ausgangspunkt'},
+{a:'g_chronik',b:'g_nichteukl',t:'Der Zweifel am Parallelenpostulat trägt Früchte'},
+{a:'g_chronik',b:'r_art',t:'Die Frage nach dem wirklichen Raum wird physikalisch'},
+{a:'s_pascalfermat',b:'s_chronik',t:'Aus einer Gerechtigkeitsfrage wird ein Gebiet'},
+{a:'s_chronik',b:'q_born',t:'Zufall wird Bestandteil der Naturbeschreibung'},
+{a:'s_chronik',b:'s_kolmogorow',t:'Späte Axiomatisierung eines alten Gebiets'},
+{a:'w_transport',b:'w_klima',t:'Speicherfrage bestimmt die Energiewende'},
+{a:'w_quellen',b:'in_dampf',t:'Kohle macht Leistung wetterunabhängig'},
+{a:'w_quellen',b:'w_transport',t:'Erst die Quelle, dann die Frage nach der Reichweite'},
+{a:'as_fusion',b:'w_quellen',t:'Fast alle Quellen sind umgewandeltes Sonnenlicht'},
+{a:'r_emc2',b:'w_quellen',t:'Massendefekt als Energiequelle'},
+{a:'w_quellen',b:'w_klima',t:'Fossile Quellen verändern die Atmosphäre'},
+{a:'w_erhaltung',b:'w_quellen',t:'Energie wird nicht erzeugt, nur umgewandelt'},
+{a:'w_black',b:'in_kaelte',t:'Latente Wärme als Prinzip des Kältekreislaufs'},
+{a:'w_carnot',b:'w_kaelte',t:'Kühlen kostet Arbeit – und zwar zunehmend'},
+{a:'w_thermo',b:'w_kaelte',t:'Erst die Messbarkeit macht Kälte zum Forschungsgegenstand'},
+{a:'w_kaelte',b:'w_tieftemp',t:'Der Weg nach unten führt zu neuen Quantenphänomenen'},
+{a:'w_kaelte',b:'in_kaelte',t:'Aus der Laborfrage wird eine Industrie'},
+{a:'w_nernst',b:'w_kaelte',t:'Der Nullpunkt bleibt unerreichbar'},
+{a:'in_kaelte',b:'ku_industrie',t:'Kühlkette verändert Ernährung und Medizin'},
+{a:'w_kaelte',b:'q_quantencomp',t:'Tiefe Temperaturen als Betriebsbedingung'},
+{a:'e_alhazen',b:'e_optik',t:'Erste Theorie des Sehens mit eigenem Gerät'},
+{a:'e_optik',b:'in_fernrohr',t:'Glasschleiferei bringt Fernrohr und Mikroskop hervor'},
+{a:'e_snellius',b:'e_optik',t:'Linsen werden berechenbar statt erprobt'},
+{a:'e_optik',b:'as_galileiteles',t:'Ein Handwerksprodukt entscheidet eine Weltbildfrage'},
+{a:'q_debroglie',b:'e_optik',t:'Materiewellen erlauben das Elektronenmikroskop'},
+{a:'e_optik',b:'as_teleskope',t:'Beobachtung jenseits des sichtbaren Lichts'},
+{a:'p_archimedes',b:'p_antrieb',t:'Kraft, Weg und Wirkungsgrad als gemeinsame Fragen'},
+{a:'p_newton',b:'p_antrieb',t:'Das dritte Axiom trägt jeden Rückstoßantrieb'},
+{a:'in_dampf',b:'p_antrieb',t:'Wärme wird erstmals in Bewegung verwandelt'},
+{a:'in_verbrennung',b:'p_antrieb',t:'Der Antrieb wird klein genug, sich selbst zu tragen'},
+{a:'in_motor',b:'p_antrieb',t:'Antrieb aus der Steckdose'},
+{a:'in_raumfahrt',b:'p_antrieb',t:'Vortrieb ohne umgebendes Medium'},
+{a:'p_antrieb',b:'w_quellen',t:'Jeder Antrieb braucht eine passende Energiequelle'},
+{a:'w_carnot',b:'in_verbrennung',t:'Höhere Verdichtung bedeutet höheren Wirkungsgrad'},
+{a:'in_verbrennung',b:'ku_industrie',t:'Individuelle Mobilität verändert Siedlung und Wirtschaft'},
+{a:'p_newton',b:'in_raumfahrt',t:'Rückstoßprinzip als Grundlage'},
+{a:'in_raumfahrt',b:'as_teleskope',t:'Instrumente gelangen über die Atmosphäre'},
+{a:'ge_raumfahrt',b:'in_raumfahrt',t:'Systemwettstreit finanziert die Entwicklung'},
+{a:'a_noether',b:'w_erhaltung',t:'Symmetrie erklärt, warum es Erhaltungsgrößen gibt'},
+{a:'w_erhaltung',b:'r_emc2',t:'Masse und Energie werden ein Erhaltungssatz'},
+{a:'ku_rom',b:'z_roem',t:'Verwaltung und Handel notieren, rechnen aber am Brett'},
+{a:'ke_gr_antike',b:'ke_rom_antike',t:'Rom übernimmt die griechische Bildung'},
+{a:'g_euklid',b:'g_groma',t:'Geometrie wird zum Vermessungshandwerk'},
+{a:'ku_rom',b:'g_groma',t:'Straßen, Lager und Aquädukte verlangen exakte Absteckung'},
+{a:'g_groma',b:'w_transport',t:'Gefälleführung über 50 km als Energietransport'},
+{a:'p_archimedes',b:'p_vitruv',t:'Griechische Mechanik wird für die Praxis gesammelt'},
+{a:'p_vitruv',b:'p_kraftwandler',t:'Hebezeuge, Winden und Wasserschnecken beschrieben'},
+{a:'p_vitruv',b:'ge_renaissance',t:'Wiederentdeckung 1414 prägt Architektur und Proportionslehre'},
+{a:'p_vitruv',b:'in_wasserrad',t:'Früheste ausführliche Beschreibung des Wasserrads'},
+{a:'as_babtag',b:'as_juliankal',t:'Ägyptisch-babylonische Kalenderrechnung als Grundlage'},
+{a:'as_juliankal',b:'gl_kloster',t:'Osterrechnung hält Kalenderastronomie im Westen lebendig'},
+{a:'ku_alex',b:'as_juliankal',t:'Sosigenes aus Alexandria berät Caesar'},
+{a:'ku_rom',b:'ke_rom_antike',t:'Ingenieurleistung ohne Grundlagenforschung'},
+{a:'ku_rom',b:'gl_christ',t:'Reichsstruktur trägt die neue Religion'},
+{a:'z_roem',b:'in_abakus',t:'Ohne Stellenwert bleibt das Rechenbrett unentbehrlich'},
+{a:'z_fibo',b:'z_roem',t:'Indisch-arabische Ziffern verdrängen das römische System'},
+{a:'z_sexa',b:'a_heron',t:'Babylonische Tafeln nutzen das Mittelungsverfahren bereits'},
+{a:'a_heron',b:'an_newtonverf',t:'Antiker Algorithmus als Spezialfall der Tangentenmethode'},
+{a:'an_fermat',b:'an_newtonverf',t:'Tangentenkonstruktion als Grundlage'},
+{a:'an_newtonverf',b:'an_numerik',t:'Iteration wird zum Standardwerkzeug des Rechnens'},
+{a:'a_heron',b:'z_irrat',t:'Näherung statt exakter Bruchdarstellung'},
+{a:'s_bernoulli',b:'z_e',t:'Zinseszinsfrage führt auf den Grenzwert'},
+{a:'z_e',b:'an_euler',t:'Exponentialfunktion als Herzstück der Analysis'},
+{a:'z_e',b:'z_komplex',t:'Eulersche Formel verbindet e, i und π'},
+{a:'z_e',b:'z_transz',t:'Hermite beweist 1873 die Transzendenz von e'},
+{a:'z_e',b:'w_boltzmann',t:'Exponentialfunktion in Verteilungen und Zerfallsgesetzen'},
+{a:'an_infinitesimal',b:'z_e',t:'e ist die Basis, bei der Ableiten nichts ändert'},
 {a:'z_fibo',b:'in_abakus',t:'Schriftliches Rechnen verdrängt das Rechenbrett'},
 {a:'ku_uni',b:'p_merton',t:'Bewegungslehre wird in Oxford und Paris diskutiert'},
 {a:'p_impetus',b:'p_merton',t:'Vorarbeit für die Beschreibung beschleunigter Bewegung'},
@@ -691,6 +858,19 @@ const LINKS = [
 {a:'e_young',b:'q_debroglie',t:'Interferenz auch bei Materie erwartbar'},
 {a:'q_photoeffekt',b:'q_debroglie',t:'Welle-Teilchen-Symmetrie'},
 {a:'e_elektron',b:'q_rutherford',t:'Bausteine des Atoms werden gesucht'},
+{a:'in_vakuum',b:'p_torricelli',t:'Vom Barometer zur systematischen Vakuumforschung'},
+{a:'p_torricelli',b:'p_aristo',t:'Die Natur scheut die Leere doch nicht'},
+{a:'p_torricelli',b:'w_thermo',t:'Luftdruck stört frühe Thermoskope – und wird korrigierbar'},
+{a:'p_torricelli',b:'in_dampf',t:'Der Luftdruck treibt die erste Dampfmaschine'},
+{a:'p_newton',b:'p_cavendish',t:'Das Gravitationsgesetz liefert nur Verhältnisse'},
+{a:'e_coulomb',b:'p_cavendish',t:'Die Drehwaage als gemeinsames Präzisionswerkzeug'},
+{a:'p_cavendish',b:'as_entfernung',t:'Absolute Massen und Entfernungen im Sonnensystem'},
+{a:'in_vakuumroehre',b:'q_roentgen',t:'Kathodenstrahlröhre als Entdeckungsinstrument'},
+{a:'q_roentgen',b:'q_radioaktiv',t:'Die Suche nach weiteren Strahlungsarten beginnt'},
+{a:'q_radioaktiv',b:'q_rutherford',t:'Alphateilchen als Geschosse für den Streuversuch'},
+{a:'q_radioaktiv',b:'q_spaltung',t:'Kernumwandlung wird zum Forschungsfeld'},
+{a:'q_radioaktiv',b:'as_fusion',t:'Kernprozesse als Energiequelle denkbar'},
+{a:'q_roentgen',b:'in_spektro',t:'Neue Strahlung wird sofort zum Messwerkzeug'},
 {a:'q_rutherford',b:'q_bohr',t:'Kernmodell braucht stabile Elektronenbahnen'},
 {a:'q_bohr',b:'q_heisenberg',t:'Widersprüche des Bahnbegriffs erzwingen den Neuanfang'},
 {a:'q_debroglie',b:'q_schroedinger',t:'Materiewelle wird zur Wellengleichung'},
@@ -755,8 +935,10 @@ const LINKS = [
 ];
 
 /* ============================================================
-   π-CHRONIK
-   st = Anzahl gesicherter Nachkommastellen (0 = theoretisches Ergebnis)
+   CHRONIKEN – vertiefende Zeittafeln zu einzelnen Themen
+   j = Jahr, wer = Person/Ort, was = Kernaussage, m = Erläuterung
+   ziel = ID auf der Zeitleiste (optional)
+   st (nur π) = gesicherte Nachkommastellen
    ============================================================ */
 const PI_CHRONIK = [
 {j:-1900,wer:'Babylon',was:'3 1/8 = 3,125',st:1,m:'Tontafel von Susa: Der Umfang des einbeschriebenen Sechsecks wird zum Kreisumfang ins Verhältnis gesetzt.',ziel:'z_sexa'},
@@ -782,9 +964,366 @@ const PI_CHRONIK = [
 {j:1973,wer:'Guilloud & Bouyer',was:'1 Million Stellen',st:1000000,m:'Großrechner CDC 7600. Der Sprung um drei Zehnerpotenzen in 24 Jahren zeigt, wie schnell Rechenleistung wächst.'},
 {j:1989,wer:'Brüder Chudnovsky',was:'1 Milliarde Stellen',st:1000000000,m:'Gerechnet auf einem selbstgebauten Rechner in einer New Yorker Wohnung. Ihre Reihenformel ist bis heute der Standard für Rekorde.'},
 {j:1995,wer:'BBP-Formel',was:'n-te Stelle einzeln',st:0,m:'Man kann die millionste Hexadezimalstelle berechnen, ohne eine einzige davor zu kennen. Fast niemand hatte das für möglich gehalten.'},
-{j:2002,wer:'Kanada, Tokio',was:'1,24 Billionen Stellen',st:1240000000000,m:'64 Stunden auf einem Supercomputer.'},
+{j:2002,wer:'Kanada, Tokio',was:'1,24 Billionen Stellen',st:1240000000000,m:'\u00dcber 600 Stunden Rechenzeit an der Universit\u00e4t Tokio. Kanada hatte den Rekord zwei Jahrzehnte lang immer wieder selbst \u00fcberboten – \u03c0 ist l\u00e4ngst Testfall f\u00fcr Hardware und Algorithmus zugleich.'},
 {j:2021,wer:'FH Graubünden',was:'62,8 Billionen Stellen',st:62800000000000,m:'108 Tage auf einem einzelnen, gut ausgestatteten Serverrechner – Rekorde sind keine Frage von Großforschung mehr.'},
 {j:2024,wer:'Rechenzentren',was:'über 100 Billionen Stellen',st:100000000000000,m:'Die Rekorde wechseln inzwischen fast jährlich. Zum Vergleich: Für jede physikalische Anwendung, auch für Bahnberechnungen im Sonnensystem, genügen rund 40 Stellen.'}
+];
+
+const GLEICHUNG_CHRONIK = [
+{j:-1800,wer:'Babylon',was:'Quadratische Gleichungen als Wortrezept',m:'Tontafeln enthalten Schritt-für-Schritt-Anweisungen, die genau unserer Lösungsformel entsprechen – ohne Symbole, ohne Begründung und ohne negative Lösungen. Gerechnet wird an konkreten Zahlen, das Verfahren steckt im Beispiel.',ziel:'a_babquad'},
+{j:-1650,wer:'Ägypten, Papyrus Rhind',was:'Lineare Gleichungen, Methode des falschen Ansatzes',m:'Man rät eine Zahl, rechnet aus, was herauskommt, und skaliert das Ergebnis passend. Ein Verfahren ohne Unbekannte – aber mit sicherem Erfolg bei linearen Aufgaben.',ziel:'z_aegbruch'},
+{j:-300,wer:'Euklid',was:'Gleichungen als Flächenprobleme',m:'Die Griechen misstrauen der Zahl seit der Entdeckung der Irrationalität. Sie lösen quadratische Aufgaben geometrisch als Flächenanlegung – exakt, aber unbeweglich: Ein x³ ist ein Volumen, ein x⁴ ist nichts mehr.',ziel:'g_euklid'},
+{j:100,wer:'China, Neun Bücher',was:'Lineare Gleichungssysteme',m:'Koeffizienten werden als Zahlenschema gelegt und spaltenweise eliminiert – im Kern das Gauß-Verfahren, 1700 Jahre vor Gauß. Negative Zwischenwerte sind selbstverständlich erlaubt.',ziel:'a_neunbuecher'},
+{j:250,wer:'Diophant',was:'Erste Symbolkürzel, ganzzahlige Lösungen',m:'Statt reiner Wortsprache treten Abkürzungen für Unbekannte und Potenzen auf. Diophant sucht ganzzahlige Lösungen – ein Fragetyp, der die Zahlentheorie bis heute beschäftigt.',ziel:'a_diophant'},
+{j:628,wer:'Brahmagupta, Indien',was:'Allgemeine Lösung mit negativen Wurzeln',m:'Er formuliert die quadratische Lösungsformel allgemein und akzeptiert negative Ergebnisse als „Schulden“ – ein Schritt, den Europa erst 1000 Jahre später nachvollzieht.',ziel:'a_brahma'},
+{j:820,wer:'al-Chwarizmi',was:'al-dschabr: Gleichungen als eigenes Thema',m:'Sechs Grundtypen, jeweils mit Verfahren und geometrischem Beweis. Erstmals geht es nicht mehr um Einzelaufgaben, sondern um die Gleichung als Gegenstand. Aus dem Buchtitel wird das Wort Algebra.',ziel:'a_alkhwarizmi'},
+{j:1070,wer:'Omar Chayyam',was:'Kubische Gleichungen geometrisch',m:'Er klassifiziert Gleichungen dritten Grades und löst sie über Schnittpunkte von Kegelschnitten. Eine algebraische Formel hält er für unmöglich – ein Irrtum, aber ein produktiver.',ziel:'a_chayyam'},
+{j:1202,wer:'Fibonacci',was:'Rechnen mit Ziffern statt am Brett',m:'Mit dem Stellenwertsystem wird das schriftliche Umformen von Gleichungen überhaupt erst praktikabel.',ziel:'z_fibo'},
+{j:1545,wer:'Cardano & Tartaglia',was:'Grad 3 und 4 gelöst',m:'Der berühmteste Prioritätsstreit der Mathematik: Tartaglia verrät die Formel unter Schweigegebot, Cardano veröffentlicht sie doch. Nebenwirkung: In den Zwischenrechnungen stehen Wurzeln aus negativen Zahlen, die sich nicht wegdiskutieren lassen.',ziel:'a_cardano'},
+{j:1591,wer:'Viète',was:'Buchstaben für Bekannte und Unbekannte',m:'Konsonanten für gegebene Größen, Vokale für gesuchte. Erst jetzt kann man „die“ quadratische Gleichung hinschreiben statt hunderter Einzelfälle – die Geburt der Formel.',ziel:'a_viete'},
+{j:1637,wer:'Descartes',was:'Gleichung und Kurve sind dasselbe',m:'x und y als Koordinaten: Jede Gleichung wird zu einer Kurve, jede Kurve zu einer Gleichung. Von ihm stammen auch die Schreibweise x² und der Gebrauch von a, b, c bzw. x, y, z.',ziel:'g_descartes'},
+{j:1669,wer:'Newton',was:'Näherungsverfahren für beliebige Gleichungen',m:'Wenn keine Formel hilft, hilft Iteration: Tangente anlegen, Schnittpunkt nehmen, wiederholen. Damit wird jede Gleichung numerisch lösbar – auch die, für die es keine Lösungsformel gibt.',ziel:'an_newtonverf'},
+{j:1799,wer:'Gauß',was:'Fundamentalsatz der Algebra',m:'Jede Polynomgleichung n-ten Grades hat genau n Lösungen – wenn man komplexe Zahlen zulässt. Die zunächst unheimlichen „imaginären“ Zahlen erweisen sich als der natürliche Rahmen.',ziel:'a_fundamental'},
+{j:1824,wer:'Abel',was:'Ab Grad 5 gibt es keine Formel',m:'Kein Ausdruck aus Wurzeln und Grundrechenarten kann die allgemeine Gleichung fünften Grades lösen. Nach 300 Jahren Suche wird bewiesen, dass die Suche vergeblich war.',ziel:'a_galois'},
+{j:1832,wer:'Galois',was:'Warum – die Gruppentheorie',m:'In der Nacht vor einem tödlichen Duell schreibt der 20-Jährige nieder, wovon die Lösbarkeit abhängt: von der Symmetriestruktur der Lösungen. Aus einer Frage nach Formeln entsteht ein ganzes Teilgebiet.',ziel:'a_galois'},
+{j:1858,wer:'Cayley',was:'Gleichungssysteme als Matrizen',m:'Ein ganzes System wird zu einem einzigen Objekt, mit dem sich rechnen lässt. Diese Sprache übernimmt später die Quantenmechanik.',ziel:'a_matrizen'},
+{j:1900,wer:'Hilbert',was:'Diophantische Gleichungen als 10. Problem',m:'Gibt es ein Verfahren, das für jede Gleichung entscheidet, ob sie ganzzahlige Lösungen hat? Die Antwort 1970: nein, ein solches Verfahren kann es nicht geben.',ziel:'l_hilbert'},
+{j:1950,wer:'Computer',was:'Numerisches Lösen im großen Stil',m:'Millionen Gleichungen gleichzeitig – Statik, Strömung, Wetter, Quantenchemie. Die exakte Lösung wird zur Ausnahme, die kontrollierte Näherung zum Normalfall.',ziel:'an_numerik'},
+{j:1994,wer:'Wiles',was:'Fermats Gleichung xⁿ+yⁿ=zⁿ',m:'350 Jahre nach einer Randnotiz Fermats ist bewiesen: Für n>2 gibt es keine Lösung in natürlichen Zahlen. Der Beweis nutzt Gebiete, die zu Fermats Zeit undenkbar waren.',ziel:'l_wiles'}
+];
+
+const FUNKTION_CHRONIK = [
+{j:-1800,wer:'Babylon',was:'Tabellen statt Formeln',m:'Quadrat-, Kehrwert- und Zinstafeln ordnen jeder Zahl eine andere zu. Die Zuordnung existiert – aber nur als Liste, ohne Begriff und ohne Vorstellung eines Zusammenhangs.',ziel:'z_sexa'},
+{j:-130,wer:'Hipparch',was:'Sehnentafeln',m:'Zu jedem Winkel gehört eine Sehnenlänge. Die erste systematisch berechnete Zuordnung der Wissenschaftsgeschichte – entstanden aus astronomischer Notwendigkeit.',ziel:'as_hipparch'},
+{j:499,wer:'Aryabhata',was:'Sinus als Halbsehne',m:'Indische Astronomen ersetzen die Sehne durch die Halbsehne und tabellieren sie in Schritten. Aus dem Sanskritwort wird über das Arabische unser „Sinus“.',ziel:'g_aryabhata'},
+{j:1360,wer:'Oresme',was:'Der Graph wird erfunden',m:'Er trägt Geschwindigkeit über der Zeit auf und zeichnet die Zuordnung als Flächenfigur. Erstmals wird ein Zusammenhang nicht aufgelistet, sondern gezeichnet – die Idee des Funktionsgraphen entsteht 300 Jahre vor dem Koordinatensystem.',ziel:'an_oresme'},
+{j:1614,wer:'Napier',was:'Logarithmus als Zuordnung zweier Bewegungen',m:'Napier definiert seinen Logarithmus über zwei gekoppelte Bewegungen – eine Funktion, die als Vorgang gedacht wird, nicht als Rechenausdruck.',ziel:'z_log'},
+{j:1637,wer:'Descartes',was:'Koordinaten verbinden Gleichung und Kurve',m:'Jede Gleichung in x und y wird zur Kurve. Der Funktionsbegriff ist noch nicht formuliert, aber sein Werkzeug liegt bereit.',ziel:'g_descartes'},
+{j:1673,wer:'Leibniz',was:'Das Wort „Funktion“',m:'Zunächst meint es nur Größen, die von einer Kurve abhängen – Tangentenlänge, Abszisse. Von Leibniz stammen auch die Schreibweisen, mit denen der Begriff später operierbar wird.',ziel:'an_infinitesimal'},
+{j:1718,wer:'Johann Bernoulli',was:'Funktion als Rechenausdruck',m:'Eine Funktion ist ein aus Veränderlichen und Konstanten zusammengesetzter Ausdruck. Damit ist alles Funktion, was sich als Formel schreiben lässt – und nur das.',ziel:'an_bernoulli'},
+{j:1747,wer:'Streit um die schwingende Saite',was:'Was darf eine Funktion sein?',m:'d’Alembert, Euler und Daniel Bernoulli streiten über die Anfangsauslenkung: Muss sie durch eine Formel gegeben sein oder darf sie beliebig gezeichnet sein? Ein physikalisches Problem zwingt die Mathematik, ihren Grundbegriff zu überdenken.',ziel:'an_lagrange'},
+{j:1748,wer:'Euler',was:'f(x) und die Trennung von Formel und Zuordnung',m:'Euler führt die Schreibweise f(x) ein und stellt die Analysis konsequent auf Funktionen um. Später erweitert er den Begriff auf beliebige gezeichnete Kurven – ein Zugeständnis an die Physik.',ziel:'an_euler'},
+{j:1822,wer:'Fourier',was:'Auch Sprungfunktionen sind darstellbar',m:'Bei der Wärmeleitung zerlegt Fourier auch unstetige Verläufe in Sinusreihen. Der Formelbegriff der Funktion bricht endgültig zusammen – etwas ganz Neues muss her.',ziel:'an_fourier'},
+{j:1837,wer:'Dirichlet',was:'Die moderne Definition',m:'Eine Funktion ist eine beliebige eindeutige Zuordnung – ganz gleich, ob eine Formel existiert. Sein Beispiel (1 für rationale, 0 für irrationale Zahlen) lässt sich nicht zeichnen, ist aber eine Funktion. Das ist die Definition, die heute im Unterricht steht.',ziel:'an_cauchy'},
+{j:1872,wer:'Weierstraß',was:'Überall stetig, nirgends differenzierbar',m:'Eine Kurve ohne jede Ecke, an der man dennoch nirgends eine Tangente anlegen kann. Die Anschauung als Beweismittel ist damit erledigt – man braucht die ε-δ-Strenge.',ziel:'an_cauchy'},
+{j:1895,wer:'Cantor & Dedekind',was:'Funktion als Menge von Paaren',m:'Der Begriff wird auf die Mengenlehre zurückgeführt: Eine Funktion ist eine Menge geordneter Paare mit einer Eindeutigkeitsbedingung. Abstrakter geht es kaum – und genau deshalb funktioniert es überall.',ziel:'l_mengen'},
+{j:1902,wer:'Lebesgue',was:'Auch „wilde“ Funktionen werden integrierbar',m:'Ein neuer Integralbegriff kommt mit Funktionen zurecht, an denen Riemann scheitert – die Grundlage der modernen Wahrscheinlichkeitstheorie.',ziel:'an_lebesgue'},
+{j:1906,wer:'Funktionalanalysis',was:'Funktionen als Punkte in einem Raum',m:'Statt einzelne Funktionen zu untersuchen, betrachtet man ganze Räume von Funktionen als geometrische Objekte. In genau diesem Rahmen wird 1932 die Quantenmechanik formuliert.',ziel:'an_hilbertraum'},
+{j:1936,wer:'Turing & Church',was:'Berechenbare Funktionen',m:'Nicht jede Funktion lässt sich durch ein Verfahren berechnen – es gibt überabzählbar viele Funktionen, aber nur abzählbar viele Programme. Der Funktionsbegriff stößt an eine prinzipielle Grenze.',ziel:'l_turing'},
+{j:1960,wer:'Schulmathematik',was:'Funktion als Leitbegriff',m:'Im Zuge der „Neuen Mathematik“ rückt die Zuordnung ins Zentrum des Unterrichts: Definitionsmenge, Wertemenge, Eindeutigkeit – der Weg von der Wertetabelle über den Graphen zum Term bildet die historische Entwicklung nach.',ziel:'l_bourbaki'}
+];
+
+const ZAHLBEREICH_CHRONIK = [
+{j:-30000,wer:'Kerbhölzer',was:'ℕ – die natürlichen Zahlen',m:'Der Ishango-Knochen und ähnliche Funde tragen gruppierte Kerben. Zählen ist älter als jede Schrift – und lange die einzige Art von Zahl, die es gibt.'},
+{j:-2000,wer:'Ägypten & Babylon',was:'Brüche als Verhältnisse',m:'Teilen von Brot, Land und Erbe erzwingt Zwischenwerte. Ägypten nutzt Stammbrüche, Babylon Sexagesimalbrüche – beides ohne den Gedanken, dass hier ein neuer Zahlbereich entsteht.',ziel:'z_aegbruch'},
+{j:-450,wer:'Pythagoreer',was:'Die Krise: irrationale Verhältnisse',m:'Die Diagonale des Einheitsquadrats lässt sich durch keinen Bruch beschreiben. Für eine Schule, deren Weltbild auf Zahlenverhältnissen ruht, ist das eine Katastrophe – der erste Beweis, dass etwas nicht geht.',ziel:'z_irrat'},
+{j:-300,wer:'Euklid',was:'Ausweichen in die Geometrie',m:'Weil die Zahl versagt, rechnet man mit Strecken und Flächen weiter. Größen sind messbar, aber nicht immer Zahlen – eine Trennung, die 2000 Jahre hält.',ziel:'g_euklid'},
+{j:100,wer:'China, Neun Bücher',was:'ℤ – negative Zahlen im Gebrauch',m:'Rote und schwarze Rechenstäbchen stehen für Guthaben und Schulden. Man rechnet damit selbstverständlich, lange bevor jemand fragt, ob so etwas „existiert“.',ziel:'z_negativ'},
+{j:628,wer:'Brahmagupta',was:'Null und negative Zahlen mit Rechenregeln',m:'Erstmals werden Null und negative Zahlen nicht nur benutzt, sondern definiert: Regeln für Addition, Multiplikation und Vorzeichen. Nur bei der Division durch null bleibt er unklar – wie alle nach ihm.',ziel:'z_null'},
+{j:1545,wer:'Cardano',was:'Wurzeln aus negativen Zahlen tauchen auf',m:'Beim Lösen kubischer Gleichungen stehen sie zwangsläufig in der Zwischenrechnung – und heben sich am Ende weg. Cardano nennt sie „ebenso raffiniert wie nutzlos“.',ziel:'a_cardano'},
+{j:1637,wer:'Descartes',was:'Der Spottname „imaginär“',m:'Descartes prägt den Begriff abwertend: eingebildete Zahlen. Er bleibt – wie so oft in der Wissenschaft wird aus dem Schimpfwort der Fachausdruck.',ziel:'g_descartes'},
+{j:1707,wer:'Europa im 17./18. Jh.',was:'Negative Zahlen bleiben umstritten',m:'Noch Mitte des 18. Jahrhunderts halten angesehene Mathematiker negative Lösungen für „falsch“ oder sinnlos. Was sich rechnen lässt, ist damit noch lange nicht anerkannt.'},
+{j:1748,wer:'Euler',was:'e^(iφ) verbindet alles',m:'Die Eulersche Formel zeigt: Exponentialfunktion, Kreisfunktionen und imaginäre Einheit gehören zusammen. Die „nutzlosen“ Zahlen erweisen sich als tiefer Zusammenhang.',ziel:'z_e'},
+{j:1799,wer:'Wessel, Argand, Gauß',was:'ℂ – die Zahlenebene',m:'Komplexe Zahlen als Punkte der Ebene: Addition wird Verschiebung, Multiplikation Drehstreckung. Mit der Anschauung verschwindet der Verdacht des Unwirklichen.',ziel:'z_komplex'},
+{j:1831,wer:'Gauß',was:'Der Name „komplexe Zahl“',m:'Gauß setzt den neutralen Begriff durch und stellt fest, dass die Schwierigkeit nie in der Sache lag, sondern in der schlechten Namensgebung.',ziel:'a_fundamental'},
+{j:1843,wer:'Hamilton',was:'ℍ – Quaternionen, ohne Kommutativität',m:'Um Drehungen im Raum zu beschreiben, opfert Hamilton a·b = b·a. Erstmals wird ein Rechengesetz bewusst aufgegeben – Zahlbereiche sind konstruierbar, nicht vorgefunden.',ziel:'a_hamilton_q'},
+{j:1872,wer:'Dedekind & Cantor',was:'ℝ – die reellen Zahlen definiert',m:'Schnitte und Fundamentalfolgen klären endlich, was eine reelle Zahl ist. 2300 Jahre nach der Entdeckung der Irrationalität bekommt sie ein Fundament.',ziel:'z_reell'},
+{j:1874,wer:'Cantor',was:'Verschieden große Unendlichkeiten',m:'ℚ ist abzählbar, ℝ nicht. Es gibt also „mehr“ irrationale als rationale Zahlen – obwohl man kaum eine einzelne irrationale Zahl hinschreiben kann.',ziel:'z_cantor'},
+{j:1882,wer:'Lindemann',was:'Algebraisch und transzendent',m:'Der Zahlenstrahl zerfällt erneut: Zahlen, die Lösung einer Polynomgleichung sind – und solche wie π und e, die es nicht sind. Letztere sind die überwiegende Mehrheit.',ziel:'z_transz'},
+{j:1889,wer:'Peano',was:'Axiome für ℕ',m:'Auch die selbstverständlichsten Zahlen brauchen eine Grundlage: Fünf Axiome und das Prinzip der vollständigen Induktion genügen. Der Aufbau kehrt sich um – vom Komplexen zurück zum Einfachsten.',ziel:'l_frege'},
+{j:1930,wer:'Moderne Algebra',was:'Zahlbereiche als Strukturen',m:'Halbring, Ring, Körper: Nicht mehr die Zahlen stehen im Zentrum, sondern die Rechengesetze, die in ihnen gelten. ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ ⊂ ℂ wird zur Kette von Erweiterungen mit jeweiligem Preis.',ziel:'a_abstrakt'},
+{j:1960,wer:'Robinson',was:'Nonstandard-Analysis',m:'Infinitesimale Zahlen, die Leibniz benutzte und Weierstraß verbannte, werden streng begründet. Auch ausgemusterte Zahlbereiche können zurückkehren.',ziel:'an_cauchy'}
+];
+
+const LICHT_CHRONIK = [
+{j:-300,wer:'Euklid',was:'Sehstrahlen aus dem Auge',m:'Licht wird geometrisch behandelt: geradlinige Ausbreitung, Reflexionsgesetz. Die Richtung stimmt allerdings nicht – man denkt sich Strahlen, die vom Auge ausgehen und die Dinge abtasten.',ziel:'e_antikoptik'},
+{j:150,wer:'Ptolemäus',was:'Brechung wird vermessen',m:'Tabellen für den Übergang Luft–Wasser. Ein Gesetz findet er nicht, aber die Messreihen bleiben über 1000 Jahre die genauesten.',ziel:'e_antikoptik'},
+{j:1020,wer:'Ibn al-Haitham',was:'Licht fällt ins Auge',m:'Mit Camera obscura und Dunkelkammerversuchen dreht er die Richtung um: Nicht das Auge sendet, es empfängt. Dazu die Forderung, Behauptungen durch Versuche zu prüfen – ein Meilenstein der Methode.',ziel:'e_alhazen'},
+{j:1621,wer:'Snellius',was:'Das Brechungsgesetz',m:'Der quantitative Zusammenhang der Winkel macht Linsen berechenbar. Fernrohr und Mikroskop entstehen nicht mehr durch Probieren, sondern durch Konstruktion.',ziel:'e_snellius'},
+{j:1672,wer:'Newton',was:'Weißes Licht ist zusammengesetzt',m:'Das Prisma erzeugt die Farben nicht, es trennt sie – bewiesen durch das Wiedervereinigen mit einem zweiten Prisma. Newton deutet Licht als Teilchenstrom.',ziel:'e_newtonoptik'},
+{j:1676,wer:'Rømer',was:'Licht ist nicht unendlich schnell',m:'Die Jupitermonde verfinstern sich verzögert, wenn die Erde weiter entfernt ist. Aus einer astronomischen Beobachtung folgt eine physikalische Grundgröße.',ziel:'e_roemer'},
+{j:1678,wer:'Huygens',was:'Licht als Welle',m:'Jeder Punkt der Wellenfront erzeugt Elementarwellen. Das Modell erklärt Reflexion und Brechung ebenso gut – der Streit Welle gegen Teilchen beginnt und dauert 130 Jahre.',ziel:'e_huygenswelle'},
+{j:1801,wer:'Young',was:'Doppelspalt: Licht interferiert',m:'Helle und dunkle Streifen entstehen dort, wo Wellen sich verstärken oder auslöschen. Teilchen können das nicht – die Wellentheorie setzt sich durch.',ziel:'e_young'},
+{j:1814,wer:'Fraunhofer',was:'Dunkle Linien im Sonnenspektrum',m:'Hunderte scharfe Lücken im Farbband der Sonne. Ihre Bedeutung bleibt zunächst rätselhaft – sie werden zur Eintrittskarte in die Sternphysik.',ziel:'as_spektral'},
+{j:1865,wer:'Maxwell',was:'Licht ist eine elektromagnetische Welle',m:'Aus den Feldgleichungen folgt eine Wellengeschwindigkeit, die genau der gemessenen Lichtgeschwindigkeit entspricht. Optik wird zum Teilgebiet der Elektrodynamik – eine der großen Vereinheitlichungen der Physik.',ziel:'e_maxwell'},
+{j:1887,wer:'Michelson & Morley',was:'Kein Trägermedium',m:'Wenn Licht eine Welle ist – worin schwingt sie? Das genaueste Experiment der Zeit findet keinen Äther. Ein Nullresultat mit gewaltigen Folgen.',ziel:'e_michelson'},
+{j:1900,wer:'Planck',was:'Energie in Portionen',m:'Um die Strahlung glühender Körper zu erklären, muss Energie in Häppchen E = h·f abgegeben werden. Planck hält es selbst für einen Notbehelf.',ziel:'q_planck'},
+{j:1905,wer:'Einstein',was:'Lichtquanten',m:'Beim Photoeffekt verhält sich Licht wie ein Strom von Teilchen: Die Farbe entscheidet, nicht die Helligkeit. Die Teilchenvorstellung kehrt zurück – aber anders.',ziel:'q_photoeffekt'},
+{j:1905,wer:'Einstein',was:'c als absolute Grenze',m:'Die Lichtgeschwindigkeit ist für jeden Beobachter gleich. Aus einer Eigenschaft des Lichts wird eine Eigenschaft von Raum und Zeit selbst.',ziel:'r_srt'},
+{j:1924,wer:'de Broglie',was:'Welle-Teilchen-Dualismus für alles',m:'Wenn Licht beides sein kann, dann auch Materie. Der Doppelspalt funktioniert später auch mit Elektronen – und mit ganzen Molekülen.',ziel:'q_debroglie'},
+{j:1948,wer:'Feynman u. a.',was:'Quantenelektrodynamik',m:'Licht und Materie wechselwirken über Photonen. Die Theorie sagt Messwerte auf zwölf Stellen genau voraus – die präziseste Übereinstimmung der Wissenschaftsgeschichte.',ziel:'q_qed'},
+{j:1960,wer:'Maiman',was:'Der Laser',m:'Einsteins Idee der stimulierten Emission von 1917 wird Gerät: Licht in gleicher Phase, Farbe und Richtung. Vom Barcode bis zur Gravitationswellenmessung.',ziel:'e_laser'},
+{j:2015,wer:'LIGO',was:'Licht misst die Raumzeit',m:'Zwei Laserstrahlen in 4 km langen Armen registrieren eine Längenänderung von 1/10000 Protondurchmesser. Das Werkzeug ist dasselbe wie bei Michelson – nur milliardenfach verfeinert.',ziel:'r_gravwellen'}
+];
+
+const ENERGIE_CHRONIK = [
+{j:-250,wer:'Archimedes',was:'Die goldene Regel der Mechanik',m:'Am Hebel gilt: Was man an Kraft spart, muss man an Weg zusetzen. Die Erhaltungsidee steckt schon darin – als Bilanz von Kraft mal Weg, lange bevor es das Wort Energie gibt.',ziel:'p_archimedes'},
+{j:1590,wer:'Stevin',was:'Kein Perpetuum mobile',m:'Mit einer Kette über zwei schiefen Ebenen argumentiert Stevin: Läuft sie von selbst, läuft sie ewig – unmöglich. Ein Beweis aus dem Unmöglichen, ein Denkmuster mit großer Zukunft.',ziel:'p_stevin'},
+{j:1638,wer:'Galilei',was:'Das Pendel kehrt zurück',m:'Eine Pendelkugel steigt genau bis zur Ausgangshöhe, gleichgültig auf welchem Weg. Der Austausch von Höhe gegen Geschwindigkeit ist beobachtbar – ohne dass jemand ihn Energieumwandlung nennt.',ziel:'p_galilei'},
+{j:1668,wer:'Huygens & Wallis',was:'Impuls- und Wuchterhaltung beim Stoß',m:'Beim elastischen Stoß bleiben zwei Größen konstant: m·v in Summe und m·v² in Summe. Man hat die Erhaltungssätze, ohne ihre Bedeutung zu ahnen.',ziel:'p_huygens'},
+{j:1686,wer:'Leibniz gegen Descartes',was:'Streit um die „wahre Kraft“',m:'Ist m·v oder m·v² das Maß der Bewegung? Der jahrzehntelange Streit endet erst mit der Einsicht, dass beide Größen erhalten bleiben – Impuls und Energie sind verschiedene Dinge.',ziel:'p_analytmech'},
+{j:1798,wer:'Rumford',was:'Wärme aus Reibung',m:'Beim Bohren von Kanonenrohren entsteht scheinbar unbegrenzt Wärme. Ein erhaltener Wärmestoff kann das nicht erklären – Wärme muss mit Bewegung zu tun haben.',ziel:'w_rumford'},
+{j:1824,wer:'Carnot',was:'Nicht alles ist umwandelbar',m:'Der Wirkungsgrad hat eine prinzipielle Obergrenze, die nur von den Temperaturen abhängt. Das erste Verbot der Physik – noch formuliert in der Sprache des Wärmestoffs.',ziel:'w_carnot'},
+{j:1842,wer:'Julius Robert Mayer',was:'Ein Maß für alle Formen',m:'Der Schiffsarzt bemerkt in den Tropen die hellere Farbe venösen Blutes und schließt auf einen Zusammenhang von Wärme und Arbeit. Sein Aufsatz wird zunächst abgelehnt, seine Priorität erst spät anerkannt.',ziel:'w_energie'},
+{j:1843,wer:'Joule',was:'Das mechanische Wärmeäquivalent',m:'Ein fallendes Gewicht treibt ein Rührwerk und erwärmt Wasser um Bruchteile eines Grades. Präzisionsmessung liefert die Zahl, die Mayers These bestätigt.',ziel:'w_energie'},
+{j:1847,wer:'Helmholtz',was:'„Über die Erhaltung der Kraft“',m:'Er fasst Mechanik, Wärme, Elektrizität, Magnetismus und Physiologie unter einem Prinzip zusammen und begründet es mit der Unmöglichkeit des Perpetuum mobile. Die Energie wird zum universellen Buchhaltungsposten der Natur.',ziel:'w_energie'},
+{j:1850,wer:'Clausius',was:'Der zweite Hauptsatz',m:'Energie bleibt erhalten – aber ihre Nutzbarkeit nicht. Wärme geht von selbst nur von warm nach kalt. Erhaltung und Entwertung gelten gleichzeitig.',ziel:'w_entropie'},
+{j:1865,wer:'Clausius',was:'Entropie bekommt einen Namen',m:'Eine Größe, die nie abnimmt und der Zeit eine Richtung gibt. „Die Energie der Welt ist konstant, die Entropie strebt einem Maximum zu.“',ziel:'w_entropie'},
+{j:1877,wer:'Boltzmann',was:'Statistische Deutung',m:'S = k·log W: Entropie zählt Mikrozustände. Der zweite Hauptsatz gilt nicht absolut, sondern mit überwältigender Wahrscheinlichkeit.',ziel:'w_boltzmann'},
+{j:1905,wer:'Einstein',was:'E = mc²',m:'Masse ist eine Form von Energie. Zwei bis dahin getrennte Erhaltungssätze – Masse und Energie – verschmelzen zu einem einzigen.',ziel:'r_emc2'},
+{j:1918,wer:'Emmy Noether',was:'Warum es Erhaltungssätze gibt',m:'Zu jeder kontinuierlichen Symmetrie gehört eine Erhaltungsgröße: Zeitverschiebung → Energie, Ortsverschiebung → Impuls, Drehung → Drehimpuls. Die Erhaltungssätze sind keine Zufallsbefunde, sondern folgen aus der Struktur der Naturgesetze.',ziel:'a_noether'},
+{j:1930,wer:'Pauli',was:'Erhaltung erzwingt ein neues Teilchen',m:'Beim Betazerfall scheint Energie zu fehlen. Statt den Satz aufzugeben, postuliert Pauli ein unsichtbares Teilchen – das Neutrino, nachgewiesen erst 1956. Vertrauen in die Erhaltung als Forschungswerkzeug.',ziel:'q_chadwick'},
+{j:1957,wer:'Kosmologie',was:'Energie im gekrümmten Raum',m:'Im expandierenden Universum verliert Licht Energie – wohin? In der Allgemeinen Relativitätstheorie lässt sich Gesamtenergie nicht mehr allgemein definieren. Der scheinbar sicherste Satz der Physik hat Grenzen.',ziel:'r_art'},
+{j:2012,wer:'Teilchenphysik',was:'Erhaltung als Bauprinzip',m:'Ladung, Impuls, Drehimpuls, Baryonenzahl: Welche Reaktionen überhaupt möglich sind, entscheiden Erhaltungssätze – und damit, nach Noether, Symmetrien.',ziel:'q_standard'}
+];
+
+const ELEKTRO_CHRONIK = [
+{j:-600,wer:'Thales',was:'Geriebener Bernstein zieht an',m:'Bernstein hei\u00dft griechisch elektron – aus diesem Wort wird 2500 Jahre sp\u00e4ter der Name der Elektrizit\u00e4t. Erkl\u00e4rt wird zun\u00e4chst nichts, aber das Ph\u00e4nomen bleibt in Erinnerung.',ziel:'e_bernstein'},
+{j:1600,wer:'Gilbert',was:'Elektrisch und magnetisch getrennt',m:'Der Leibarzt der englischen K\u00f6nigin unterscheidet erstmals systematisch die Anziehung durch Reibung von der des Magneteisensteins – und pr\u00e4gt das Wort „elektrisch“.',ziel:'e_gilbert'},
+{j:1663,wer:'Guericke',was:'Die erste Elektrisiermaschine',m:'Eine rotierende Schwefelkugel erzeugt auf Knopfdruck Ladung. Elektrizit\u00e4t wird herstellbar statt zuf\u00e4llig – und f\u00fcr ein Jahrhundert zur Attraktion auf F\u00fcrstenh\u00f6fen und Jahrm\u00e4rkten.'},
+{j:1745,wer:'Leidener Flasche',was:'Ladung l\u00e4sst sich speichern',m:'In Leiden und Pommern fast gleichzeitig entdeckt: Ein Glas mit Metallbelag speichert so viel Ladung, dass eine Kette von Menschen gemeinsam zusammenzuckt. Der erste Kondensator.'},
+{j:1752,wer:'Franklin',was:'Blitze sind elektrisch',m:'Der Drachenversuch verbindet Himmelsph\u00e4nomen und Laborfunke. Praktische Folge: der Blitzableiter – eine der ersten Erfindungen, die unmittelbar aus Grundlagenforschung folgt.'},
+{j:1785,wer:'Coulomb',was:'Das Kraftgesetz der Ladungen',m:'Mit einer Drehwaage misst er: Die Kraft f\u00e4llt mit dem Quadrat des Abstands – genau wie bei der Gravitation. Elektrizit\u00e4t wird rechenbar.',ziel:'e_coulomb'},
+{j:1791,wer:'Galvani',was:'Zuckende Froschschenkel',m:'Ber\u00fchrt man einen pr\u00e4parierten Schenkel mit zwei verschiedenen Metallen, zuckt er. Galvani deutet es als „tierische Elektrizit\u00e4t“ im Gewebe – ein Irrtum mit gro\u00dfer Wirkung.',ziel:'e_volta'},
+{j:1800,wer:'Volta',was:'Die Batterie',m:'Volta widerspricht: Nicht das Tier, die Metallpaarung erzeugt die Spannung. Sein Beweis ist die Voltasche S\u00e4ule aus Zink, Kupfer und S\u00e4ure – die erste Quelle f\u00fcr dauerhaften Strom. Damit beginnt die eigentliche Elektrizit\u00e4tsforschung.',ziel:'e_volta'},
+{j:1820,wer:'Oersted',was:'Strom bewegt die Kompassnadel',m:'W\u00e4hrend einer Vorlesung bemerkt Oersted die Ablenkung. Zwei getrennte Wissensgebiete – Elektrizit\u00e4t und Magnetismus – erweisen sich als eines. In Europa entsteht binnen Monaten ein neues Forschungsfeld.',ziel:'e_oersted'},
+{j:1820,wer:'Amp\u00e8re',was:'Str\u00f6me \u00fcben Kr\u00e4fte aufeinander aus',m:'Innerhalb weniger Wochen nach Oersteds Befund misst und formuliert Amp\u00e8re die Kraft zwischen Leitern und erkennt: Magnetismus ist bewegte Ladung. Die Spule wird zum Magneten – die Einheit der Stromst\u00e4rke tr\u00e4gt seinen Namen.',ziel:'e_ampere'},
+{j:1821,wer:'Faraday',was:'Die erste elektromagnetische Drehbewegung',m:'Ein stromdurchflossener Draht kreist um einen Magneten – Faradays „Rotationsapparat“ ist der Urahn jedes Elektromotors. Zehn Jahre vor der Induktion und noch ohne praktischen Nutzen.',ziel:'in_motor'},
+{j:1827,wer:'Ohm',was:'U = R \u00b7 I',m:'Der K\u00f6lner Gymnasiallehrer misst mit selbstgebauten Ger\u00e4ten den Zusammenhang von Spannung, Widerstand und Stromst\u00e4rke. Die Fachwelt ignoriert ihn zun\u00e4chst; erst 1841 wird er in London geehrt.',ziel:'e_ohm'},
+{j:1831,wer:'Faraday',was:'Induktion – Bewegung erzeugt Strom',m:'Die Umkehrung von Oersteds Versuch gelingt nur mit ver\u00e4nderlichem Feld. Aus dieser Einsicht folgen Generator, Transformator und die gesamte Stromversorgung. Faraday denkt dabei in Feldlinien statt in Formeln.',ziel:'e_faraday'},
+{j:1837,wer:'Telegraf',was:'Nachrichten schneller als Menschen',m:'Gau\u00df und Weber verbinden 1833 in G\u00f6ttingen Sternwarte und Labor; Morse macht daraus ein System mit Code. Erstmals in der Geschichte reist Information schneller als der Bote – Handel, Presse und Milit\u00e4r \u00e4ndern sich grundlegend.',ziel:'in_telegraf'},
+{j:1838,wer:'Jacobi',was:'Elektromotor treibt ein Boot an',m:'Auf der Newa bei St. Petersburg f\u00e4hrt ein Boot mit vierzehn Passagieren elektrisch – gespeist aus Batterien, langsam und unwirtschaftlich. Der Beweis, dass es geht, kommt lange vor der brauchbaren Stromquelle.',ziel:'in_motor'},
+{j:1866,wer:'Siemens',was:'Das dynamoelektrische Prinzip',m:'Der Generator erregt sich selbst und braucht keinen Dauermagneten mehr. Elektrische Energie wird in gro\u00dfen Mengen erzeugbar – der Schritt vom Laborger\u00e4t zur Industrie.'},
+{j:1876,wer:'Bell',was:'Das Telefon',m:'Nicht mehr nur Zeichen, sondern Sprache selbst wird \u00fcbertragen. Aus Faradays Induktion wird ein Alltagsgegenstand.',ziel:'in_telegraf'},
+{j:1879,wer:'Edison',was:'Die Gl\u00fchlampe – und das System dahinter',m:'Die Lampe allein gen\u00fcgt nicht: Edison baut Kraftwerk, Leitungsnetz, Fassung, Sicherung und Z\u00e4hler gleich mit. 1882 versorgt seine Station in Manhattan die ersten Kunden. Erfindung hei\u00dft hier: ein ganzes System denken.',ziel:'in_stromnetz'},
+{j:1887,wer:'Hertz',was:'Elektromagnetische Wellen im Labor',m:'In Karlsruhe springt an einem zweiten Funkenkreis ein Funke \u00fcber – Maxwells Vorhersage ist best\u00e4tigt. Nach dem Nutzen gefragt, antwortet Hertz sinngem\u00e4\u00df: keiner.',ziel:'e_hertz'},
+{j:1888,wer:'Tesla & Westinghouse',was:'Drehstrom setzt sich durch',m:'Im „Stromkrieg“ gegen Edisons Gleichstrom gewinnt der Wechselstrom: Er l\u00e4sst sich transformieren und damit \u00fcber weite Strecken transportieren. Der Drehstrommotor macht die Fabrik unabh\u00e4ngig von der Transmissionswelle.'},
+{j:1889,wer:'Dolivo-Dobrowolsky',was:'Der Drehstrom-Asynchronmotor',m:'Ein Motor ohne Kollektor, ohne Schleifkontakte, praktisch wartungsfrei: Das Drehfeld nimmt den L\u00e4ufer einfach mit. Er wird zum meistgebauten Kraftantrieb der Welt – und macht die Transmissionswelle in der Fabrik \u00fcberfl\u00fcssig.',ziel:'in_motor'},
+{j:1897,wer:'Thomson',was:'Das Elektron',m:'Kathodenstrahlen bestehen aus Teilchen, die 2000-mal leichter sind als das leichteste Atom. Nach 100 Jahren erfolgreicher Elektrotechnik wei\u00df man endlich, was da eigentlich flie\u00dft.',ziel:'e_elektron'},
+{j:1901,wer:'Marconi',was:'Funk \u00fcber den Atlantik',m:'Vierzehn Jahre nach Hertz \u00fcberbr\u00fcckt ein Signal 3400 km ohne Draht. Aus dem Hallenversuch wird Weltkommunikation – und ab 1920 mit dem Rundfunk das erste Echtzeit-Massenmedium.',ziel:'in_funk'},
+{j:1904,wer:'Elektronenr\u00f6hre',was:'Verst\u00e4rken und Schalten',m:'Diode und Triode machen schwache Signale gro\u00df und erlauben Schaltungen ohne bewegliche Teile. Radio, Fernsehen und die ersten Computer beruhen darauf.',ziel:'in_vakuumroehre'},
+{j:1941,wer:'Zuse, Turing, ENIAC',was:'Elektrisches Rechnen',m:'Relais, dann R\u00f6hren \u00fcbernehmen das Rechnen. Der ENIAC enth\u00e4lt 18000 R\u00f6hren, verbraucht 150 kW und f\u00e4llt st\u00e4ndig aus – die Grenze der R\u00f6hrentechnik ist erreicht.',ziel:'in_computer'},
+{j:1947,wer:'Bardeen, Brattain, Shockley',was:'Der Transistor',m:'Ein Halbleiterkristall verst\u00e4rkt und schaltet – ohne Heizung, ohne Vakuum, millimeterklein. Quantenmechanik der Festk\u00f6rper wird zur meistgebauten Struktur der Menschheitsgeschichte.',ziel:'e_halbleiter'},
+{j:1958,wer:'Kilby & Noyce',was:'Der integrierte Schaltkreis',m:'Statt einzelner Bauteile ein ganzer Schaltkreis auf einem Pl\u00e4ttchen. Von hier f\u00fchrt ein gerader Weg zu Mikroprozessor, Handy und Solarzelle.',ziel:'e_halbleiter'},
+{j:1969,wer:'Digitale Netze',was:'Rechnen und Kommunikation verschmelzen',m:'Was mit dem Telegrafen begann – Information als elektrisches Signal – und mit dem Computer – Rechnen als elektrischer Vorgang –, f\u00e4llt im Datennetz zusammen. Jede Nachricht ist jetzt eine Rechnung.',ziel:'in_netze'}
+];
+
+const KRAFTWANDLER_CHRONIK = [
+{j:-2600,wer:'\u00c4gypten',was:'Schiefe Ebene, Rampe, Keil',m:'Beim Pyramidenbau wird der Weg verl\u00e4ngert, um die Kraft zu verkleinern. Das Prinzip wird angewandt, lange bevor es jemand formuliert – Technik geht der Theorie um Jahrtausende voraus.',ziel:'ku_aeg'},
+{j:-1500,wer:'Schaduf, Vorderer Orient',was:'Der Hebel als Alltagsger\u00e4t',m:'Ein Balken mit Gegengewicht hebt Wasser aus dem Fluss. Bis heute in Gebrauch – der einfachste Kraftwandler \u00fcberhaupt.',ziel:'ku_meso'},
+{j:-250,wer:'Archimedes',was:'Das Hebelgesetz',m:'Kraft mal Kraftarm gleich Last mal Lastarm – streng bewiesen wie ein Satz der Geometrie. Dazu der Flaschenzug: „Gebt mir einen festen Punkt, und ich hebe die Erde aus den Angeln.“ Erstmals wird Technik zur Wissenschaft.',ziel:'p_archimedes'},
+{j:-200,wer:'Antike Mechanik',was:'Die f\u00fcnf einfachen Maschinen',m:'Hebel, Rolle, Winde, Keil, Schraube. Heron von Alexandria fasst sie zusammen und zeigt: Alle beruhen auf demselben Tausch – weniger Kraft gegen mehr Weg.',ziel:'p_heron'},
+{j:-100,wer:'Zahnrad',was:'\u00dcbersetzung wird berechenbar',m:'Vom Wasserhebewerk bis zum Mechanismus von Antikythera, einem bronzenen Getriebe mit \u00fcber 30 Zahnr\u00e4dern zur Berechnung von Sonnen- und Mondstand. Das Z\u00e4hlen von Z\u00e4hnen macht \u00dcbersetzungen exakt.'},
+{j:-25,wer:'Vitruv',was:'Das Handbuch der Maschinen',m:'In „De architectura“ beschreibt Vitruv Hebezeuge, Winden, Flaschenz\u00fcge, Wasserschnecken und das Wasserrad – die vollst\u00e4ndigste Sammlung antiker Maschinentechnik. 1414 wiederentdeckt, wird sie zum Lehrbuch der Renaissance-Baumeister.',ziel:'p_vitruv'},
+{j:1200,wer:'Mittelalterliche Werkstatt',was:'Kurbel und Nockenwelle',m:'Die Kurbel wandelt Drehung in Hin- und Herbewegung, die Nockenwelle steuert Hammerwerke und S\u00e4gen. Erst damit wird Wasserkraft f\u00fcr fast jedes Handwerk nutzbar.',ziel:'in_wasserrad'},
+{j:1400,wer:'Baustellen der Gotik',was:'Tretrad und Flaschenzug am Bau',m:'Kathedralen entstehen mit Tretr\u00e4dern, Rollen und Seilz\u00fcgen. Die Baumeister beherrschen die Kraft\u00fcbersetzung praktisch – ohne eine einzige Formel.',ziel:'ge_kathedrale'},
+{j:1586,wer:'Stevin',was:'Kr\u00e4fteparallelogramm',m:'Kr\u00e4fte haben Richtung und addieren sich geometrisch. Mit der Kettenbetrachtung an der schiefen Ebene beweist er ihr Gesetz – und nebenbei, dass es kein Perpetuum mobile geben kann.',ziel:'p_stevin'},
+{j:1600,wer:'Galilei',was:'Die goldene Regel wird Prinzip',m:'Was an Kraft gespart wird, muss an Weg zugesetzt werden – Galilei erhebt die Werkstattregel zum allgemeinen Satz der Mechanik. Damit ist klar: Eine Maschine erzeugt nie Arbeit, sie formt sie um.',ziel:'p_galilei'},
+{j:1650,wer:'Pascal',was:'Hydraulik: Druck \u00fcbertr\u00e4gt Kraft',m:'In einer Fl\u00fcssigkeit pflanzt sich Druck nach allen Seiten fort. Kleine Kraft auf kleine Fl\u00e4che ergibt gro\u00dfe Kraft auf gro\u00dfe Fl\u00e4che – der Hebel funktioniert jetzt auch ohne starre Stange.'},
+{j:1784,wer:'Watt',was:'Planetengetriebe und Fliehkraftregler',m:'Um die Hin- und Herbewegung des Kolbens in eine Drehung zu verwandeln, baut Watt eigene Getriebe; der Fliehkraftregler h\u00e4lt die Drehzahl konstant. Der erste selbstt\u00e4tige Regelkreis der Technikgeschichte.',ziel:'w_watt'},
+{j:1795,wer:'Bramah',was:'Die hydraulische Presse',m:'Pascals Prinzip wird Maschine. Kr\u00e4fte, die kein Hebel je \u00fcbertragen k\u00f6nnte, werden beherrschbar – Grundlage von Presse, Bremse, Bagger und Hebeb\u00fchne.'},
+{j:1832,wer:'Coriolis',was:'Der Begriff „Arbeit“',m:'Kraft mal Weg bekommt einen Namen und eine Einheit. Was Maschinen leisten, wird vergleichbar und berechenbar – die Sprache f\u00fcr Kraftwandler ist endlich fertig.',ziel:'w_energie'},
+{j:1869,wer:'Fahrrad',was:'Kette, Ritzel, Gangschaltung',m:'Die Kette \u00fcbertr\u00e4gt Kraft \u00fcber Abstand ohne Schlupf, wechselnde Ritzelgr\u00f6\u00dfen passen die \u00dcbersetzung an die Steigung an. Der effizienteste Kraftwandler des Alltags – \u00fcber 90 % Wirkungsgrad.'},
+{j:1890,wer:'Elektromotor',was:'Kraft an jedem beliebigen Ort',m:'Der Einzelantrieb l\u00f6st Riemen und Deckenwelle ab. Erstmals wird die Kraftquelle so klein und beweglich, dass sie zur Maschine kommt statt umgekehrt – von der Werkstatt bis zur Z\u00e4hnb\u00fcrste.',ziel:'in_motor'},
+{j:1900,wer:'Maschinenbau',was:'Zahnradgetriebe im Fahrzeug',m:'Differential, Schneckengetriebe, Planetengetriebe: Drehzahl und Drehmoment werden gezielt getauscht. Der Motor l\u00e4uft im g\u00fcnstigen Bereich, das Rad bekommt, was es braucht.'},
+{j:1970,wer:'Robotik & Feinwerktechnik',was:'Kraftwandler im Kleinen',m:'Harmonic-Drive-Getriebe, Piezoaktoren, Servomotoren: Vom Nanometer bis zur Tonne gilt dieselbe Regel wie beim Schaduf – Kraft gegen Weg.'}
+];
+
+const TRANSPORT_CHRONIK = [
+{j:-2000,wer:'Bew\u00e4sserungskan\u00e4le',was:'Energie flie\u00dft mit dem Wasser',m:'Der erste gro\u00dfe Energietransport der Menschheit nutzt das Gef\u00e4lle: Wasser tr\u00e4gt seine Lageenergie kilometerweit ins Feld. Kanalbau erzwingt Organisation – Technik erzeugt Staat.',ziel:'ku_meso'},
+{j:-250,wer:'Aqu\u00e4dukte',was:'Druckleitungen und Gef\u00e4lle',m:'R\u00f6mische Ingenieure halten \u00fcber 50 km ein Gef\u00e4lle von wenigen Zentimetern je hundert Meter ein und nutzen Druckleitungen \u00fcber T\u00e4ler. Energietransport als Vermessungsleistung.',ziel:'g_groma'},
+{j:100,wer:'Wasserrad',was:'Von der Str\u00f6mung zur Welle',m:'Die Energie des Flusses wird auf eine drehende Welle \u00fcbertragen – aber nur wenige Meter weit. Wer Kraft braucht, muss zum Wasser ziehen: Die Standortfrage der Wirtschaft ist f\u00fcr 1700 Jahre entschieden.',ziel:'in_wasserrad'},
+{j:1500,wer:'Bergbau',was:'Stangenkunst',m:'Im Harz und im Erzgebirge \u00fcbertragen kilometerlange Gest\u00e4nge aus Holz die Kraft eines Wasserrads bis zu den Pumpen im Schacht. Ein h\u00f6rbar knarrendes, erstaunlich weit reichendes Getriebe – der erste echte Fernenergietransport.'},
+{j:1780,wer:'Fabrik',was:'Transmission: Wellen und Riemen',m:'Eine zentrale Dampfmaschine treibt eine Deckenwelle, von der Lederriemen zu jeder Maschine f\u00fchren. Die gesamte Halle steht still, wenn die Welle steht – und die Anordnung der Arbeitspl\u00e4tze richtet sich nach der Mechanik, nicht nach dem Menschen.',ziel:'in_transmission'},
+{j:1820,wer:'Drahtseil & Kette',was:'Kraft \u00fcber T\u00e4ler',m:'Drahtseilbahnen und Kettentriebe \u00fcberbr\u00fccken Strecken, die kein Gest\u00e4nge schafft. Kette und Zahnrad bleiben bis heute unschlagbar, wo es auf Schlupffreiheit ankommt.'},
+{j:1850,wer:'Druckluft & Hydraulik',was:'Energie in Rohren',m:'London und Paris bauen st\u00e4dtische Hochdruck-Wassernetze; Pariser Druckluftleitungen treiben Aufz\u00fcge und Uhren. Kurzzeitig sieht es so aus, als w\u00fcrde Energie k\u00fcnftig in Rohren verteilt.'},
+{j:1866,wer:'Siemens',was:'Der Generator macht Strom verf\u00fcgbar',m:'Mit dem dynamoelektrischen Prinzip l\u00e4sst sich mechanische Energie in gro\u00dfem Ma\u00dfstab in elektrische umwandeln – und elektrische flie\u00dft durch einen Draht, nicht durch ein Getriebe.',ziel:'e_faraday'},
+{j:1882,wer:'Edison',was:'Gleichstromnetz mit engem Radius',m:'Das erste \u00f6ffentliche Kraftwerk versorgt Manhattan – aber nur im Umkreis von gut einem Kilometer. Bei niedriger Spannung sind die Verluste im Kabel zu gro\u00df.',ziel:'in_stromnetz'},
+{j:1885,wer:'Transformator',was:'Der Schl\u00fcssel: Spannung hoch, Strom klein',m:'Die Verlustleistung w\u00e4chst mit dem Quadrat der Stromst\u00e4rke. Wer die Spannung verhundertfacht, senkt die Verluste auf ein Zehntausendstel. Nur Wechselstrom l\u00e4sst sich so transformieren – das entscheidet den Stromkrieg.'},
+{j:1891,wer:'Lauffen–Frankfurt',was:'176 km Drehstrom\u00fcbertragung',m:'Zur Frankfurter Ausstellung wird Strom aus einem Neckarkraftwerk quer durch S\u00fcddeutschland geleitet und bringt dort 1000 Gl\u00fchlampen zum Leuchten. Der Beweis: Energie ist vom Erzeugungsort l\u00f6sbar. Die Fabrik darf nun stehen, wo Menschen wohnen.'},
+{j:1900,wer:'Einzelantrieb',was:'Das Ende der Transmission',m:'Solange Kraft mechanisch verteilt wurde, musste jede Maschine an der Welle h\u00e4ngen. Mit dem Elektromotor endet die Bindung: Energie kommt im Draht, die Umwandlung geschieht erst dort, wo sie gebraucht wird.',ziel:'in_motor'},
+{j:1920,wer:'Verbundnetz',was:'Kraftwerke werden vernetzt',m:'Statt vieler Inselnetze ein gemeinsames Netz mit einheitlicher Frequenz. Ausf\u00e4lle werden aufgefangen, Lastspitzen verteilt – Energie wird zur Ware mit eigenem Markt.'},
+{j:1954,wer:'HG\u00dc',was:'Hochspannungs-Gleichstrom-\u00dcbertragung',m:'\u00dcber sehr weite Strecken und in Seekabeln schl\u00e4gt Gleichstrom den Wechselstrom erneut – nun mit Leistungselektronik statt mechanischer Umformer. Heute verbindet HG\u00dc Windparks und Kontinente.',ziel:'e_halbleiter'},
+{j:1990,wer:'Erneuerbare Energien',was:'Das Netz wird zum Speicherproblem',m:'Wind und Sonne liefern nicht dann, wenn Bedarf besteht. Der Transport in der Zeit – Speicher – wird ebenso wichtig wie der Transport im Raum. Das \u00e4lteste Verfahren dabei ist wieder das Wasser: Pumpspeicher.',ziel:'w_klima'},
+{j:2010,wer:'Intelligente Netze',was:'Energie folgt Information',m:'Erzeugung, Verbrauch und Speicher werden datentechnisch geregelt. Das Stromnetz wird zu einem gesteuerten System – der Kreis zur Elektrizit\u00e4tschronik schlie\u00dft sich.',ziel:'in_netze'}
+];
+
+const QUELLEN_CHRONIK = [
+{j:-400000,wer:'Feuer',was:'Die erste genutzte Energiequelle',m:'Holz liefert W\u00e4rme, Licht, Schutz und gekochte Nahrung. Die dichtere Energie im Essen erm\u00f6glicht einen gr\u00f6\u00dferen Stoffwechsel des Gehirns – die Nutzung von Energie ver\u00e4ndert die Art selbst.'},
+{j:-8000,wer:'Landwirtschaft',was:'Sonnenenergie planm\u00e4\u00dfig ernten',m:'Ackerbau ist nichts anderes als organisierte Photosynthese: Man reserviert Fl\u00e4che, um Sonnenlicht in essbare Energie zu verwandeln. Der \u00dcberschuss ern\u00e4hrt erstmals Menschen, die nicht selbst Nahrung erzeugen.',ziel:'ku_meso'},
+{j:-4000,wer:'Zugtiere',was:'Muskelkraft auf Vorrat',m:'Ochse und Pferd wandeln Gras in Zugkraft – Energie, die der Mensch nicht selbst aufbringen muss. Bis ins 19. Jahrhundert bleibt die Muskelkraft von Mensch und Tier die wichtigste Antriebsquelle \u00fcberhaupt.'},
+{j:-3000,wer:'Segel',was:'Wind treibt Schiffe',m:'Die erste Nutzung einer Kraft, die weder Muskel noch Feuer ist. Sie macht Fernhandel m\u00f6glich – und damit den Austausch von Waren, Schrift und Wissen \u00fcber Meere hinweg.',ziel:'ku_meso'},
+{j:100,wer:'Wasserrad',was:'Strom des Flusses als Dauerkraft',m:'Die erste Quelle, die Tag und Nacht ohne Ermüdung liefert. Ein einziges Rad ersetzt die Arbeit von Dutzenden Menschen – aber nur dort, wo das Wasser flie\u00dft.',ziel:'in_wasserrad'},
+{j:900,wer:'Windm\u00fchle',was:'Wind auch an Land',m:'Aus Persien kommend, in den Niederlanden perfektioniert: M\u00fchlen mahlen, s\u00e4gen und pumpen ganze Landstriche trocken. Der Nachteil ist derselbe wie heute – der Wind kommt, wann er will.'},
+{j:1600,wer:'Holzkrise',was:'Eine Energiequelle geht zur Neige',m:'Bergbau, Salinen und Schiffbau entwalden ganze Regionen. England weicht notgedrungen auf Steinkohle aus – eine Mangellage wird zum Ausgangspunkt der Industrialisierung.'},
+{j:1712,wer:'Newcomen',was:'Kohle wird zur Kraftquelle',m:'Die Dampfmaschine pumpt zun\u00e4chst nur Wasser aus Kohlebergwerken – Kohle f\u00f6rdert Kohle. Ihr Wirkungsgrad liegt unter einem Prozent, aber sie l\u00e4uft unabh\u00e4ngig von Wind, Wasser und Jahreszeit.',ziel:'in_dampf'},
+{j:1769,wer:'Watt',was:'Fossile Energie wird wirtschaftlich',m:'Separater Kondensator und Fliehkraftregler vervierfachen den Wirkungsgrad. Erstmals in der Geschichte h\u00e4ngt die verf\u00fcgbare Leistung nicht mehr an Fl\u00e4che, Wetter oder Muskeln – sondern nur am gef\u00f6rderten Brennstoff.',ziel:'w_watt'},
+{j:1859,wer:'Erd\u00f6l',was:'Der erste Bohrturm',m:'In Pennsylvania wird \u00d6l gezielt erbohrt, zun\u00e4chst f\u00fcr Lampenpetroleum. Fl\u00fcssig, energiedicht und pumpbar – die Eigenschaften, die es im 20. Jahrhundert zum wichtigsten Rohstoff der Weltwirtschaft machen.'},
+{j:1882,wer:'Wasserkraftwerk',was:'Erneuerbare Energie wird elektrisch',m:'In Appleton, Wisconsin, treibt ein Flusslauf einen Generator. Die \u00e4lteste Dauerkraftquelle der Menschheit bekommt eine neue Ausgangsform – Strom statt Drehwelle.',ziel:'in_stromnetz'},
+{j:1896,wer:'Becquerel & Curie',was:'Energie, die aus dem Nichts zu kommen scheint',m:'Radioaktive Pr\u00e4parate geben jahrelang W\u00e4rme ab, ohne kleiner zu werden. Woher die Energie stammt, ist v\u00f6llig unklar – ein offener Widerspruch zum Energiesatz, der erst mit E = mc\u00b2 aufgel\u00f6st wird.',ziel:'q_radioaktiv'},
+{j:1897,wer:'Diesel',was:'Verbrennung im Motor selbst',m:'H\u00f6here Verdichtung, h\u00f6herer Wirkungsgrad: Der Motor holt aus demselben Brennstoff mehr heraus. Carnots Grenze von 1824 bleibt dabei unverr\u00fcckbar – man n\u00e4hert sich ihr nur an.',ziel:'w_carnot'},
+{j:1939,wer:'Kernspaltung erkannt',was:'Energie aus dem Atomkern',m:'Aus einem Gramm Uran l\u00e4sst sich etwa so viel Energie gewinnen wie aus drei Tonnen Kohle. Der Massendefekt, den Einstein 1905 beschrieb, wird zur technischen Gr\u00f6\u00dfe.',ziel:'q_spaltung'},
+{j:1939,wer:'Bethe',was:'Woher die Sonne ihre Energie hat',m:'Kernfusion von Wasserstoff zu Helium. Damit ist gekl\u00e4rt, dass fast alle irdischen Energiequellen – Holz, Kohle, \u00d6l, Wind, Wasser – umgewandeltes Sonnenlicht sind. Nur Kernenergie, Geothermie und Gezeiten stammen aus anderen Quellen.',ziel:'as_fusion'},
+{j:1954,wer:'Kernkraftwerk & Solarzelle',was:'Zwei neue Wege im selben Jahr',m:'In Obninsk speist der erste Reaktor Strom ins Netz; bei Bell Labs erreicht die erste brauchbare Siliziumsolarzelle 6 % Wirkungsgrad. Beide beruhen auf Quantenphysik – der eine auf dem Kern, der andere auf der Elektronenh\u00fclle.',ziel:'q_kernenergie'},
+{j:1956,wer:'Hubbert',was:'Endlichkeit wird berechenbar',m:'Ein Geologe sagt das F\u00f6rdermaximum des US-Erd\u00f6ls f\u00fcr etwa 1970 voraus und beh\u00e4lt recht. Erstmals wird eine Energiequelle nicht als unersch\u00f6pflich gedacht.'},
+{j:1979,wer:'Windkraft & Photovoltaik',was:'R\u00fcckkehr der alten Quellen in neuer Form',m:'\u00d6lkrisen f\u00f6rdern Windturbinen und Solarmodule. Es sind dieselben Energiestr\u00f6me wie bei M\u00fchle und Segel – nur wird jetzt Strom daraus, der sich transportieren l\u00e4sst.',ziel:'w_transport'},
+{j:1990,wer:'Klimaforschung',was:'Die Kosten der fossilen Quellen',m:'Was seit Arrhenius 1896 berechnet ist, wird politisch: Die Verbrennung gespeicherter Sonnenenergie aus 300 Millionen Jahren ver\u00e4ndert die Atmosph\u00e4re messbar.',ziel:'w_klima'},
+{j:2025,wer:'Fusionsforschung',was:'Die Quelle der Sterne auf der Erde',m:'ITER und Laserfusion arbeiten daran, den Vorgang nachzubauen, der die Sonne antreibt. Seit den 1950er Jahren gilt der Durchbruch als „noch einige Jahrzehnte entfernt“ – 2022 wurde erstmals im Labor mehr Energie freigesetzt als eingestrahlt.'}
+];
+
+const KAELTE_CHRONIK = [
+{j:-2500,wer:'Mesopotamien & \u00c4gypten',was:'Eisgruben und Verdunstungsk\u00fchlung',m:'Wintereis wird in isolierten Gruben bis in den Sommer gehalten; por\u00f6se Tonkr\u00fcge k\u00fchlen durch Verdunstung. K\u00e4lte ist \u00fcber Jahrtausende etwas, das man aufbewahrt – nicht etwas, das man herstellt.'},
+{j:1600,wer:'Galilei',was:'Das Thermoskop – W\u00e4rme wird messbar',m:'Eine Luftblase in einer R\u00f6hre steigt und f\u00e4llt mit der Temperatur. Ohne Skala und noch vom Luftdruck gest\u00f6rt, aber der Anfang: Warm und kalt werden von Empfindungen zu Messwerten.',ziel:'w_thermo'},
+{j:1643,wer:'Torricelli',was:'Das erste Vakuum',m:'\u00dcber der Quecksilbers\u00e4ule des Barometers bleibt ein leerer Raum. Erst als das Vakuum herstellbar ist, lassen sich Gase kontrolliert untersuchen – die Voraussetzung f\u00fcr jede sp\u00e4tere Gastheorie und Verfl\u00fcssigung.',ziel:'p_torricelli'},
+{j:1665,wer:'Boyle',was:'Gibt es einen „primum frigidum“?',m:'Boyle sammelt Versuche zur K\u00e4lte und stellt die entscheidende Frage: Ist K\u00e4lte ein eigener Stoff oder blo\u00df die Abwesenheit von W\u00e4rme? Die Antwort dauert 150 Jahre.'},
+{j:1702,wer:'Amontons',was:'Es muss eine unterste Grenze geben',m:'Beim Abk\u00fchlen sinkt der Druck eines Gases linear. Extrapoliert man bis zum Druck null, ergibt sich eine tiefste m\u00f6gliche Temperatur. Amontons kommt auf etwa \u2212240 \u00b0C – erstaunlich nah an \u2212273,15 \u00b0C.'},
+{j:1742,wer:'Celsius & Fahrenheit',was:'Vergleichbare Skalen',m:'Fixpunkte aus Eis und siedendem Wasser machen Messwerte zwischen L\u00e4ndern vergleichbar. Erst jetzt kann man \u00fcber Temperaturen streiten, ohne aneinander vorbeizureden.',ziel:'w_thermo'},
+{j:1761,wer:'Black',was:'Latente W\u00e4rme: Schmelzen ohne Erw\u00e4rmung',m:'Eis nimmt beim Schmelzen viel W\u00e4rme auf, ohne w\u00e4rmer zu werden. Diese Entdeckung erkl\u00e4rt, warum Verdunstung k\u00fchlt – und liefert das Prinzip jeder sp\u00e4teren K\u00e4ltemaschine.',ziel:'w_black'},
+{j:1805,wer:'Evans & Perkins',was:'Der Kompressionskreislauf wird gedacht',m:'Ein Gas verdampft und k\u00fchlt dabei, wird verdichtet, gibt W\u00e4rme ab, entspannt sich erneut. Perkins baut 1834 die erste funktionierende Maschine nach diesem Prinzip – dasselbe, das in jedem heutigen K\u00fchlschrank arbeitet.'},
+{j:1824,wer:'Carnot',was:'K\u00e4lte kostet Arbeit',m:'W\u00e4rme flie\u00dft von selbst nur nach unten. Wer sie nach oben pumpen will, muss Arbeit aufwenden – und je gr\u00f6\u00dfer der Temperaturunterschied, desto mehr. K\u00e4lteerzeugung ist damit ein thermodynamisches Problem.',ziel:'w_carnot'},
+{j:1848,wer:'Kelvin',was:'Die absolute Temperaturskala',m:'Aus Carnots \u00dcberlegungen folgt eine Skala, die nicht von einem Stoff abh\u00e4ngt und bei \u2212273,15 \u00b0C ihren Nullpunkt hat. Der absolute Nullpunkt ist keine Extrapolation mehr, sondern eine physikalische Gr\u00f6\u00dfe.',ziel:'w_entropie'},
+{j:1859,wer:'Carr\u00e9 & Linde',was:'K\u00e4lte wird zur Ware',m:'Carl von Linde baut ab 1873 Ammoniak-K\u00e4ltemaschinen zun\u00e4chst f\u00fcr Brauereien: Bier braucht ganzj\u00e4hrig niedrige Temperaturen. Aus einem Brauereiproblem wird eine Industrie – und sp\u00e4ter die weltweite K\u00fchlkette f\u00fcr Lebensmittel und Medikamente.',ziel:'in_kaelte'},
+{j:1877,wer:'Cailletet & Pictet',was:'Sauerstoff wird fl\u00fcssig',m:'Gase, die man f\u00fcr „permanent“ gehalten hatte, lassen sich doch verfl\u00fcssigen – bei \u2212183 \u00b0C. Die Vorstellung, manche Stoffe seien immer gasf\u00f6rmig, f\u00e4llt.'},
+{j:1895,wer:'Linde',was:'Luftverfl\u00fcssigung im gro\u00dfen Ma\u00dfstab',m:'Das Gegenstromverfahren nutzt die schon abgek\u00fchlte Luft, um die nachstr\u00f6mende weiter zu k\u00fchlen. Fl\u00fcssige Luft wird zum Industrieprodukt – und Sauerstoff und Stickstoff werden trennbar.'},
+{j:1906,wer:'Nernst',was:'Der Nullpunkt ist unerreichbar',m:'Je n\u00e4her man ihm kommt, desto mehr Aufwand kostet jeder weitere Schritt. Man kann sich dem absoluten Nullpunkt beliebig n\u00e4hern, ihn aber niemals erreichen – der dritte Hauptsatz.',ziel:'w_nernst'},
+{j:1908,wer:'Kamerlingh Onnes',was:'Helium wird fl\u00fcssig – 4,2 K',m:'Das letzte „permanente“ Gas gibt nach. In Leiden entsteht das k\u00e4lteste Labor der Welt, und mit ihm ein neues Forschungsgebiet: die Physik nahe dem Nullpunkt.',ziel:'w_tieftemp'},
+{j:1911,wer:'Kamerlingh Onnes',was:'Supraleitung entdeckt',m:'Bei 4,2 K verschwindet der elektrische Widerstand von Quecksilber vollst\u00e4ndig – nicht allm\u00e4hlich, sondern sprunghaft. Ein Quanteneffekt, gro\u00df genug, um ihn mit einem Zeigerinstrument zu sehen.',ziel:'w_tieftemp'},
+{j:1937,wer:'Kapitza & Allen',was:'Suprafluides Helium',m:'Unter 2,17 K flie\u00dft Helium ohne jede Reibung, kriecht Gef\u00e4\u00dfw\u00e4nde hinauf und tritt durch feinste Spalten. Quantenverhalten wird mit blo\u00dfem Auge sichtbar.'},
+{j:1957,wer:'BCS-Theorie',was:'Warum Supraleitung funktioniert',m:'Elektronen bilden \u00fcber Gitterschwingungen Paare, die sich wie ein einziges Quantenobjekt verhalten. 46 Jahre nach der Entdeckung ist sie erkl\u00e4rt.',ziel:'q_standard'},
+{j:1986,wer:'Bednorz & M\u00fcller',was:'Hochtemperatur-Supraleiter',m:'Keramiken werden schon bei 35 K, bald bei 92 K supraleitend – oberhalb der Temperatur von fl\u00fcssigem Stickstoff. Damit wird Supraleitung bezahlbar; MRT-Ger\u00e4te und Forschungsmagnete beruhen darauf.'},
+{j:1995,wer:'Cornell, Wieman & Ketterle',was:'Bose-Einstein-Kondensat bei 170 nK',m:'Mit Laserk\u00fchlung und Verdampfungsk\u00fchlung werden Atome so kalt, dass sie in einen gemeinsamen Quantenzustand fallen – 1924 von Einstein vorhergesagt. Materie in einer neuen Form.',ziel:'e_laser'},
+{j:2021,wer:'Labore weltweit',was:'Milliardstel Grad \u00fcber null',m:'Die k\u00e4ltesten Orte des bekannten Universums liegen in irdischen Laboren – der Weltraum ist mit 2,7 K vergleichsweise warm. Auf dieser Grundlage arbeiten Atomuhren und Quantencomputer.',ziel:'q_quantencomp'}
+];
+
+const OPTIK_CHRONIK = [
+{j:-700,wer:'Nimrud-Linse',was:'Geschliffener Bergkristall',m:'Eine flach geschliffene Kristalllinse aus Assyrien – ob Brennglas, Sehhilfe oder Schmuck, ist bis heute umstritten. Vergr\u00f6\u00dfernde Wirkung von Glas und Wasser war jedenfalls bekannt.'},
+{j:-300,wer:'Euklid & Ptolem\u00e4us',was:'Geometrische Optik',m:'Strahlengang, Reflexion, Brechungstabellen: Man kann rechnen, wohin Licht geht – aber niemand baut daraus ein Ger\u00e4t. Theorie und Handwerk bleiben getrennt.',ziel:'e_antikoptik'},
+{j:1020,wer:'Ibn al-Haitham',was:'Camera obscura & Theorie des Sehens',m:'Das Bild entsteht im Auge, nicht durch Sehstrahlen. Seine Lochkamera ist zugleich Beweismittel und erstes optisches Ger\u00e4t. \u00dcber lateinische \u00dcbersetzungen erreicht das Werk die europ\u00e4ischen Werkst\u00e4tten.',ziel:'e_alhazen'},
+{j:1250,wer:'Lesestein',was:'Die halbkugelige Glaslinse',m:'M\u00f6nche legen einen geschliffenen Halbkugelstein auf die Handschrift – die Schrift erscheint gr\u00f6\u00dfer. Roger Bacon beschreibt die Wirkung; die Vorstufe der Brille ist ein Werkzeug der Schreibstuben.'},
+{j:1286,wer:'Oberitalien',was:'Die Brille',m:'Zwei gefasste Konvexlinsen vor den Augen – erfunden vermutlich in Venedig oder Pisa, der Name des Erfinders ist unbekannt. Sie verl\u00e4ngert das Arbeitsleben von Gelehrten und Handwerkern um Jahrzehnte: eine der folgenreichsten und stillsten Erfindungen des Mittelalters.'},
+{j:1450,wer:'Konkavlinsen',was:'Auch Kurzsichtigkeit korrigierbar',m:'Zerstreuungslinsen erg\u00e4nzen die Lesebrille. Die Glasschleiferei in Venedig und N\u00fcrnberg wird zum Hochtechnologie-Handwerk – die Voraussetzung f\u00fcr alles Folgende.'},
+{j:1590,wer:'Janssen (zugeschrieben)',was:'Das zusammengesetzte Mikroskop',m:'Zwei Linsen hintereinander vergr\u00f6\u00dfern st\u00e4rker als eine. Zun\u00e4chst bleibt es eine Kuriosit\u00e4t – es fehlt die Idee, was man damit anschauen sollte.'},
+{j:1608,wer:'Lipperhey',was:'Das Fernrohr als Patentantrag',m:'Ein niederl\u00e4ndischer Brillenmacher meldet ein Rohr mit zwei Linsen an, gedacht f\u00fcr die Seefahrt. Innerhalb eines Jahres ist die Nachricht in ganz Europa.',ziel:'in_fernrohr'},
+{j:1610,wer:'Galilei',was:'Das Fernrohr wird Instrument',m:'Er baut es selbst nach, verbessert es auf 30-fach – und richtet es nach oben. Mondgebirge, Jupitermonde, Venusphasen: Ein Handwerksprodukt entscheidet eine Weltbildfrage.',ziel:'as_galileiteles'},
+{j:1611,wer:'Kepler',was:'Der optische Bauplan',m:'Kepler erkl\u00e4rt in der „Dioptrice“, warum Linsen wirken, und beschreibt ein besseres Fernrohr mit zwei Sammellinsen. Aus Probieren wird Konstruieren.'},
+{j:1668,wer:'Newton',was:'Das Spiegelteleskop',m:'Ein Hohlspiegel statt einer Linse vermeidet Farbfehler – und l\u00e4sst sich beliebig gro\u00df bauen. Alle heutigen Gro\u00dfteleskope folgen diesem Prinzip.',ziel:'e_newtonoptik'},
+{j:1670,wer:'van Leeuwenhoek',was:'Die unsichtbare Lebenswelt',m:'Mit selbst geschliffenen Einzellinsen bis 270-fach entdeckt der Delfter Tuchh\u00e4ndler Bakterien, Spermien und Einzeller. Eine ganze Welt, von der niemand geahnt hatte, dass es sie gibt.',ziel:'in_fernrohr'},
+{j:1733,wer:'Hall & Dollond',was:'Achromatische Linse',m:'Zwei Glassorten kombiniert heben die Farbs\u00e4ume gegenseitig auf. Fernrohre werden kurz, hell und scharf – die Voraussetzung f\u00fcr Pr\u00e4zisionsastronomie.'},
+{j:1814,wer:'Fraunhofer',was:'Optik wird Pr\u00e4zisionsindustrie',m:'In Benediktbeuern verbindet Fraunhofer Glasschmelze, Messtechnik und Serienfertigung. Seine Linien im Sonnenspektrum entdeckt er beim Vermessen von Glas – die Grundlagenforschung f\u00e4llt bei der Qualit\u00e4tskontrolle ab.',ziel:'in_spektro'},
+{j:1873,wer:'Abbe & Zeiss',was:'Mikroskope nach Formel',m:'Seit 1866 rechnet Ernst Abbe f\u00fcr Carl Zeiss die Abbildung, statt sie zu erproben. 1873 formuliert er die Beugungsgrenze: Aufl\u00f6sbar ist bestenfalls etwa die halbe Wellenl\u00e4nge des Lichts. Erstmals wei\u00df man, was ein Ger\u00e4t prinzipiell nicht leisten kann.'},
+{j:1895,wer:'R\u00f6ntgen',was:'Sehen durch feste K\u00f6rper',m:'Ein Ger\u00e4t, das nicht Licht sammelt, sondern eine Strahlung nutzt, die Materie durchdringt. Das Prinzip – Schattenbild statt Abbildung – tr\u00e4gt bis zur heutigen Computertomographie und zur Strukturanalyse von Kristallen.',ziel:'q_roentgen'},
+{j:1932,wer:'Ruska',was:'Das Elektronenmikroskop',m:'Elektronen haben viel k\u00fcrzere Wellenl\u00e4ngen als Licht – damit f\u00e4llt Abbes Grenze. Viren, Zellorganellen und schlie\u00dflich einzelne Atome werden sichtbar. De Broglies Materiewellen von 1924 werden zum Werkzeug.',ziel:'q_debroglie'},
+{j:1932,wer:'Jansky',was:'Der Himmel im Radiobereich',m:'Bei der Suche nach St\u00f6rquellen im Funkverkehr entdeckt Jansky ein Rauschen aus der Milchstra\u00dfe. Zum ersten Mal wird au\u00dferhalb des sichtbaren Lichts beobachtet – das elektromagnetische Spektrum wird zum Fenster.',ziel:'as_radio'},
+{j:1962,wer:'R\u00f6ntgen- & Infrarotastronomie',was:'Beobachten von oberhalb der Atmosph\u00e4re',m:'Raketen und Satelliten tragen Detektoren \u00fcber die Lufth\u00fclle, die genau diese Strahlung abschirmt. Heisse Gase, schwarze L\u00f6cher und Sternentstehung werden zug\u00e4nglich.'},
+{j:1990,wer:'Hubble & JWST',was:'Teleskope im Weltraum',m:'Ohne Luftunruhe und im Infraroten reicht der Blick bis zu den ersten Galaxien. Beobachten wird zur Zeitreise: Je weiter entfernt, desto \u00e4lter das Bild.',ziel:'as_teleskope'},
+{j:2014,wer:'Hell, Betzig, Moerner',was:'Unter die Aufl\u00f6sungsgrenze',m:'Mit fluoreszierenden Molek\u00fclen, die einzeln an- und ausgeschaltet werden, umgeht die Lichtmikroskopie Abbes Grenze von 1873. Man sieht wieder mit Licht, was 80 Jahre lang als unm\u00f6glich galt.'},
+{j:2019,wer:'Event Horizon Telescope',was:'Die Erde als ein Teleskop',m:'Radioteleskope auf vier Kontinenten werden rechnerisch zu einem Instrument von Erddurchmesser verbunden und bilden den Schatten eines Schwarzen Lochs ab.',ziel:'r_bild'}
+];
+
+const ANTRIEB_CHRONIK = [
+{j:-40000,wer:'Muskelkraft',was:'Gehen, Tragen, Paddeln',m:'Der einzige Antrieb der Menschheit \u00fcber Zehntausende von Jahren – begrenzt auf etwa 100 Watt Dauerleistung pro Person. Alles, was mehr braucht, braucht mehr Menschen.'},
+{j:-4000,wer:'Zugtier',was:'Fremde Muskeln',m:'Ochse und Pferd liefern das Mehrfache eines Menschen und fressen daf\u00fcr Gras, das niemand essen kann. Kummet und Hufeisen steigern die Zugleistung im Mittelalter noch einmal deutlich.'},
+{j:-3000,wer:'Segel',was:'Antrieb ohne Muskel',m:'Der erste Antrieb, der weder Mensch noch Tier braucht. Er kann nur nicht steuern, wann er verf\u00fcgbar ist – Rudern bleibt als Reserve n\u00f6tig, Galeeren fahren noch im 18. Jahrhundert.'},
+{j:-700,wer:'Ruderschiff',was:'Muskelkraft im Takt',m:'Die Trireme b\u00fcndelt \u00fcber 170 Ruderer zu einer koordinierten Maschine. Antrieb ist hier ein Organisationsproblem: Rhythmus, Sitzordnung und Verpflegung entscheiden \u00fcber die Leistung.'},
+{j:1712,wer:'Newcomen & Watt',was:'Die Dampfmaschine',m:'Zum ersten Mal wird W\u00e4rme in Bewegung verwandelt. Der Antrieb ist zun\u00e4chst ortsfest und riesig – Bewegung erzeugen und sich selbst bewegen sind noch zweierlei.',ziel:'in_dampf'},
+{j:1783,wer:'Montgolfier & Charles',was:'Auftrieb statt Antrieb',m:'Der Ballon steigt, weil er leichter ist als Luft – aber er f\u00e4hrt dorthin, wohin der Wind will. Fliegen und Steuern erweisen sich als zwei getrennte Probleme.'},
+{j:1804,wer:'Trevithick',was:'Die Maschine bewegt sich selbst',m:'Hochdruckdampf macht den Antrieb leicht genug, um sein eigenes Gewicht zu tragen. Lokomotive und Dampfschiff schrumpfen Entfernungen – und erzwingen einheitliche Uhrzeiten f\u00fcr den Fahrplan.'},
+{j:1836,wer:'Schiffsschraube',was:'Vortrieb im Wasser neu gedacht',m:'Die Schraube ersetzt Schaufelrad und Segel: Sie arbeitet auch bei Seegang, liegt gesch\u00fctzt unter Wasser und ist wirkungsgradst\u00e4rker. Innerhalb von 50 Jahren verschwindet die Segelfracht.'},
+{j:1838,wer:'Jacobi',was:'Elektrisches Boot',m:'Der erste Elektroantrieb in Fahrt – gespeist aus Batterien und deshalb schwach und teuer. Der Antrieb ist da, die Energiequelle fehlt noch: ein Muster, das sich 170 Jahre sp\u00e4ter wiederholt.',ziel:'in_motor'},
+{j:1876,wer:'Otto',was:'Der Viertaktmotor',m:'Ansaugen, Verdichten, Arbeiten, Ausschieben. Die Verbrennung wandert in den Zylinder – der Antrieb wird klein, leicht und sofort startbereit. Ohne Kessel, ohne Vorheizen.',ziel:'in_verbrennung'},
+{j:1886,wer:'Benz & Daimler',was:'Das Automobil',m:'Der leichte Verbrennungsmotor macht individuelle Mobilit\u00e4t m\u00f6glich. Ab 1913 senkt Fords Flie\u00dfband den Preis so weit, dass aus einer Erfindung eine Gesellschaftsform wird.',ziel:'in_verbrennung'},
+{j:1889,wer:'Drehstrommotor',was:'Antrieb aus der Steckdose',m:'Wartungsarm, leise, in jeder Gr\u00f6\u00dfe baubar. Er verdr\u00e4ngt die Transmissionswelle aus den Fabriken und wird zum meistgebauten Kraftantrieb der Welt.',ziel:'in_motor'},
+{j:1892,wer:'Diesel',was:'Patent auf die Selbstz\u00fcndung',m:'Verdichtung allein z\u00fcndet den Kraftstoff, ohne Z\u00fcndkerze. H\u00f6here Temperaturdifferenz bedeutet nach Carnot h\u00f6heren Wirkungsgrad – Theorie als Konstruktionsanleitung. Der erste lauff\u00e4hige Motor entsteht 1897.',ziel:'w_carnot'},
+{j:1903,wer:'Br\u00fcder Wright',was:'Motorflug',m:'Nicht der Motor war das Problem, sondern die Steuerung um drei Achsen. Zw\u00f6lf Sekunden Flug – 66 Jahre sp\u00e4ter stehen Menschen auf dem Mond.'},
+{j:1926,wer:'Goddard',was:'Fl\u00fcssigkeitsrakete',m:'Der einzige Antrieb, der ohne umgebendes Medium funktioniert: R\u00fcckstoß nach Newtons drittem Axiom. Er tr\u00e4gt seinen Sauerstoff selbst mit – und kann deshalb den Weltraum erreichen.',ziel:'p_newton'},
+{j:1939,wer:'Ohain & Whittle',was:'Das Strahltriebwerk',m:'Statt eine Luftschraube zu drehen, beschleunigt die Turbine die Luft direkt. In gro\u00dfer H\u00f6he, wo die Luft d\u00fcnn ist, schl\u00e4gt es den Kolbenmotor deutlich – Fernflug wird m\u00f6glich.'},
+{j:1957,wer:'Sputnik & Apollo',was:'Raketen verlassen die Erde',m:'Mehrstufenprinzip und Fl\u00fcssigtreibstoff bringen erst Satelliten, dann Menschen ins All. Der Systemwettstreit finanziert dabei Grundlagenforschung in gro\u00dfem Stil.',ziel:'in_raumfahrt'},
+{j:1964,wer:'Ionenantrieb',was:'Winziger Schub, endlos lange',m:'Elektrisch beschleunigte Ionen liefern weniger Schub als ein Blatt Papier auf der Hand – aber \u00fcber Jahre. F\u00fcr Sonden im Sonnensystem ist das effizienter als jede chemische Rakete.',ziel:'in_raumfahrt'},
+{j:2010,wer:'Elektromobilit\u00e4t',was:'Die R\u00fcckkehr des Elektroantriebs',m:'Der Motor war nie das Problem – Jacobi hatte ihn 1838. Erst Lithium-Ionen-Akkus l\u00f6sen die Speicherfrage, an der die Elektromobilit\u00e4t zweimal zuvor gescheitert war.',ziel:'in_motor'}
+];
+
+const ZEIT_CHRONIK = [
+{j:-3000,wer:'\u00c4gypten & Mesopotamien',was:'Der Himmel gibt den Takt',m:'Tag, Monat und Jahr sind astronomische Gr\u00f6\u00dfen: Sonnenlauf, Mondphase, Sternaufgang. Jede Zeitmessung der n\u00e4chsten viereinhalb Jahrtausende misst letztlich die Drehung der Erde.',ziel:'as_aegkal'},
+{j:-1500,wer:'Gnomon & Wasseruhr',was:'Zeit im Schatten und im Flie\u00dfen',m:'Die Schattenl\u00e4nge teilt den Tag, die Wasseruhr misst auch nachts und bei Bew\u00f6lkung. Beide haben denselben Mangel: Die Stunden sind nicht gleich lang, sondern werden im Sommer l\u00e4nger und im Winter k\u00fcrzer.',ziel:'in_gnomon'},
+{j:-45,wer:'Julianischer Kalender',was:'Das Jahr wird verordnet',m:'365,25 Tage mit Schaltjahr, berechnet vom Alexandriner Sosigenes. Elf Minuten Fehler pro Jahr scheinen belanglos – bis sie sich \u00fcber 1600 Jahre auf zehn Tage summieren.',ziel:'as_juliankal'},
+{j:1000,wer:'Klosterzeit',was:'Beten nach Plan',m:'Sieben Gebetszeiten t\u00e4glich, auch nachts. Die Notwendigkeit, jemanden rechtzeitig zu wecken, wird zum st\u00e4rksten Antrieb der Uhrmacherei – ein religi\u00f6ses Bed\u00fcrfnis erzeugt eine Schl\u00fcsseltechnologie.',ziel:'gl_kloster'},
+{j:1300,wer:'R\u00e4deruhr mit Hemmung',was:'Die Stunde wird \u00fcberall gleich lang',m:'Ein Gewicht treibt, eine Hemmung portioniert die Bewegung. Erstmals ist die Stunde eine feste Gr\u00f6\u00dfe statt eines Zw\u00f6lftels der jeweiligen Tagesl\u00e4nge. Zeit wird planbar, teilbar – und verkaufbar.',ziel:'in_uhr'},
+{j:1582,wer:'Gregorianische Reform',was:'Zehn Tage werden gestrichen',m:'Auf den 4. Oktober folgt der 15. Oktober. Protestantische L\u00e4nder z\u00f6gern bis 1700, England bis 1752, Russland bis 1918 – ein astronomischer Sachverhalt wird zur Konfessionsfrage.'},
+{j:1656,wer:'Huygens',was:'Die Pendeluhr',m:'Galileis Beobachtung, dass die Schwingungsdauer nur von der L\u00e4nge abh\u00e4ngt, wird Maschine. Die Genauigkeit springt von 15 Minuten auf 15 Sekunden am Tag – erst damit werden physikalische Experimente wirklich quantitativ.',ziel:'in_pendeluhr'},
+{j:1714,wer:'Longitude Act',was:'Zeit ist Ort',m:'Wer auf See die Uhrzeit des Heimathafens kennt, kann daraus die geographische L\u00e4nge berechnen. Das britische Parlament setzt ein enormes Preisgeld aus – die Zeitmessung wird zur Frage von Handel, Marine und Menschenleben.'},
+{j:1761,wer:'Harrison',was:'Der Schiffschronometer H4',m:'Ein Uhrmacher ohne akademische Ausbildung baut eine Uhr, die auf einer Atlantik\u00fcberfahrt nur f\u00fcnf Sekunden falsch geht. Er k\u00e4mpft Jahrzehnte um die Anerkennung gegen eine Kommission von Astronomen, die eine astronomische L\u00f6sung bevorzugt h\u00e4tte.'},
+{j:1840,wer:'Eisenbahnzeit',was:'Der Fahrplan erzwingt Einheitlichkeit',m:'Solange jede Stadt ihre eigene Mittagszeit hat, ist ein Fahrplan nicht schreibbar. Die Eisenbahn setzt eine gemeinsame Zeit durch – Technik ver\u00e4ndert den Alltag tiefer als jede Verordnung.',ziel:'in_transmission'},
+{j:1884,wer:'Meridiankonferenz',was:'Zeitzonen und Nullmeridian',m:'In Washington einigen sich 25 Staaten auf Greenwich als Nullmeridian und 24 Zeitzonen. Zum ersten Mal hat die ganze Erde eine gemeinsame Zeitordnung.'},
+{j:1905,wer:'Einstein',was:'Gleichzeitigkeit ist relativ',m:'Zwei Ereignisse, die f\u00fcr den einen gleichzeitig sind, sind es f\u00fcr den bewegten anderen nicht. Die Frage „Wie sp\u00e4t ist es jetzt dort?“ verliert ihre selbstverst\u00e4ndliche Antwort.',ziel:'r_srt'},
+{j:1915,wer:'Einstein',was:'Uhren gehen im Schwerefeld langsamer',m:'Zeit vergeht auf einem Berg messbar schneller als im Tal. Eine Uhr ist damit kein neutraler Beobachter mehr, sondern Teil der Physik, die sie misst.',ziel:'r_art'},
+{j:1927,wer:'Quarzuhr',was:'Schwingender Kristall statt Pendel',m:'Ein Quarz schwingt zehntausendfach pro Sekunde und ist unempfindlich gegen Ersch\u00fctterung und Lage. Die Genauigkeit steigt um zwei Zehnerpotenzen – und mit ihr die M\u00f6glichkeit, die Erddrehung selbst zu \u00fcberpr\u00fcfen.'},
+{j:1935,wer:'Unregelm\u00e4\u00dfige Erde',was:'Der Taktgeber wackelt',m:'Quarzuhren zeigen: Die Erddrehung schwankt und wird langsamer. Nach 5000 Jahren stellt sich heraus, dass ausgerechnet der Himmel die ungenauere Uhr ist – die Zeitmessung muss sich vom Himmel l\u00f6sen.'},
+{j:1949,wer:'Erste Atomuhr',was:'Der \u00dcbergang im Atom als Takt',m:'Nicht mehr ein K\u00f6rper, der schwingt, sondern ein Quanten\u00fcbergang, der immer und \u00fcberall gleich ist. Kein Verschlei\u00df, keine Temperaturdrift, keine Ortsabh\u00e4ngigkeit.',ziel:'q_qed'},
+{j:1967,wer:'Neudefinition der Sekunde',was:'9 192 631 770 Schwingungen',m:'Die Sekunde ist nicht mehr ein Bruchteil des Tages, sondern eine feste Zahl von Perioden der C\u00e4sium-Strahlung. Die \u00e4lteste Ma\u00dfeinheit der Menschheit l\u00f6st sich endg\u00fcltig von der Astronomie.'},
+{j:1972,wer:'Schaltsekunde',was:'Der Kompromiss mit der Erde',m:'Weil die Erddrehung nachhinkt, wird der Atomzeit gelegentlich eine Sekunde eingef\u00fcgt. 2035 soll damit Schluss sein – die Alltagszeit gibt den Anschluss an den Sonnenstand auf.'},
+{j:1978,wer:'GPS',was:'Zeitmessung als Ortsbestimmung',m:'Satelliten senden nichts als hochgenaue Zeitsignale; der Empf\u00e4nger errechnet daraus seinen Ort. Beide relativistischen Effekte m\u00fcssen laufend korrigiert werden – sonst w\u00e4chst der Fehler t\u00e4glich um Kilometer.',ziel:'r_gps'},
+{j:2010,wer:'Optische Gitteruhr',was:'Eine Sekunde in 30 Milliarden Jahren',m:'Diese Uhren messen den Gang der Zeit so genau, dass sie einen H\u00f6henunterschied von wenigen Zentimetern als Zeitunterschied nachweisen – Relativit\u00e4tstheorie als Vermessungswerkzeug.',ziel:'w_kaelte'}
+];
+
+const ENTFERNUNG_CHRONIK = [
+{j:-270,wer:'Aristarch',was:'Wie weit ist die Sonne?',m:'Bei Halbmond bilden Erde, Mond und Sonne einen rechten Winkel – aus dem gemessenen Winkel folgt das Entfernungsverh\u00e4ltnis. Sein Wert ist um das Zwanzigfache zu klein, weil der Winkel kaum messbar ist. Die Methode ist richtig, das Instrument zu grob.',ziel:'as_aristarch'},
+{j:-240,wer:'Eratosthenes',was:'Der Erdumfang',m:'Zwei Schattenl\u00e4ngen, eine bekannte Karawanenstrecke und ein Winkel von gut 7\u00b0 ergeben rund 40 000 km. Der erste Sprossen auf der Leiter: Ohne ein Ma\u00df f\u00fcr die Erde l\u00e4sst sich nichts dar\u00fcber hinaus messen.',ziel:'as_eratos'},
+{j:-150,wer:'Hipparch',was:'Die Mondentfernung durch Parallaxe',m:'Von zwei weit entfernten Orten erscheint der Mond vor unterschiedlichem Sternhintergrund. Aus dieser Verschiebung folgt seine Entfernung – auf wenige Prozent genau. Das Grundprinzip aller sp\u00e4teren Entfernungsmessung ist gefunden.',ziel:'as_hipparch'},
+{j:1672,wer:'Cassini & Richer',was:'Die Astronomische Einheit',m:'Gleichzeitige Marsbeobachtungen aus Paris und Cayenne liefern die Parallaxe des Mars und damit den Ma\u00dfstab des ganzen Sonnensystems. Kepler kannte alle Bahnverh\u00e4ltnisse – aber keine einzige Entfernung in Kilometern.',ziel:'as_kepler'},
+{j:1761,wer:'Venustransit',was:'Die erste weltweite Messkampagne',m:'Hunderte Astronomen reisen bis Sibirien und Tahiti, um den Durchgang der Venus vor der Sonne von verschiedenen Orten zu messen. Trotz Kriegen, Schiffbr\u00fcchen und Wolken wird der Abstand Erde–Sonne auf wenige Prozent bestimmt. Wissenschaft wird erstmals als internationales Gemeinschaftsprojekt organisiert.'},
+{j:1798,wer:'Cavendish',was:'Absolute Massen statt Verh\u00e4ltnisse',m:'Mit der Gravitationskonstante l\u00e4sst sich aus einer Bahn die Masse eines Himmelsk\u00f6rpers berechnen. Die Entfernungsleiter bekommt eine Schwester: eine Massenleiter, die bis zu Galaxienhaufen reicht.',ziel:'p_cavendish'},
+{j:1838,wer:'Bessel',was:'Die erste Sternentfernung',m:'Nach 300 Jahren vergeblicher Suche misst Bessel bei 61 Cygni eine j\u00e4hrliche Verschiebung von 0,3 Bogensekunden – etwa der Winkel einer Zwei-Euro-M\u00fcnze in 15 km Entfernung. Ergebnis: 11 Lichtjahre. Endlich ist bewiesen, was Kopernikus vorausgesetzt hatte: Die Erde bewegt sich, und die Sterne sind unfassbar weit weg.',ziel:'as_kopernikus'},
+{j:1912,wer:'Henrietta Leavitt',was:'Cepheiden als Standardkerzen',m:'Je langsamer ein solcher Stern pulsiert, desto heller ist er wirklich. Aus Periode und scheinbarer Helligkeit folgt die Entfernung – jetzt auch dort, wo keine Parallaxe mehr messbar ist. Der Schl\u00fcssel zum Universum jenseits der Milchstra\u00dfe.',ziel:'as_leavitt'},
+{j:1924,wer:'Hubble',was:'Andromeda ist eine eigene Galaxie',m:'Mit Leavitts Methode findet Hubble Cepheiden im Andromeda-Nebel und errechnet eine Entfernung weit au\u00dferhalb der Milchstra\u00dfe. Das Universum wird \u00fcber Nacht millionenfach gr\u00f6\u00dfer.',ziel:'as_hubble'},
+{j:1929,wer:'Hubble',was:'Rotverschiebung als Entfernungsma\u00df',m:'Je weiter eine Galaxie entfernt ist, desto st\u00e4rker ist ihr Licht rotverschoben. Aus einer Spektralmessung wird eine Entfernungsangabe – die Sprosse, die bis an den Rand des Beobachtbaren reicht.',ziel:'as_hubble'},
+{j:1952,wer:'Baade',was:'Die Leiter wird korrigiert',m:'Baade erkennt 1944 zwei Sternpopulationen und weist 1952 nach, dass es zwei Sorten Cepheiden mit verschiedener Helligkeit gibt. Die Entfernungsskala des gesamten Universums verdoppelt sich mit einem Schlag – eine Erinnerung daran, dass jede Sprosse auf der darunterliegenden ruht.'},
+{j:1961,wer:'Radarastronomie',was:'Die Astronomische Einheit auf Meter genau',m:'Ein Radarsignal zur Venus und zur\u00fcck – die Laufzeit liefert die Entfernung direkt. Das Fundament der ganzen Leiter steht endlich auf einer Messung statt auf einem Winkel.'},
+{j:1969,wer:'Laserreflektor auf dem Mond',was:'Die Mondentfernung auf Zentimeter',m:'Apollo-Astronauten stellen Spiegel auf; seither wird die Mondentfernung mit Laserpulsen gemessen. Ergebnis: Der Mond entfernt sich um 3,8 cm pro Jahr.',ziel:'e_laser'},
+{j:1989,wer:'Hipparcos',was:'Parallaxen aus dem Weltraum',m:'Ohne st\u00f6rende Atmosph\u00e4re werden Parallaxen von 100 000 Sternen gemessen. Was Bessel f\u00fcr einen Stern gelang, wird zur Serienmessung.'},
+{j:1998,wer:'Supernovae Typ Ia',was:'Standardkerzen f\u00fcr Milliarden Lichtjahre',m:'Diese Explosionen erreichen immer ann\u00e4hernd dieselbe Helligkeit. Sie zeigen: Die entferntesten sind schw\u00e4cher als erwartet – das Universum dehnt sich beschleunigt aus. Eine Entfernungsmessung f\u00fchrt zur dunklen Energie.',ziel:'as_dunkelenergie'},
+{j:2013,wer:'Gaia',was:'Zwei Milliarden Sterne vermessen',m:'Parallaxen mit einer Genauigkeit von Mikrobogensekunden – das entspricht der Dicke eines Haares in 1000 km Entfernung. Die dreidimensionale Karte unserer Galaxie entsteht.',ziel:'as_teleskope'},
+{j:2017,wer:'Standardsirenen',was:'Gravitationswellen als Ma\u00dfstab',m:'Bei der Verschmelzung zweier Neutronensterne l\u00e4sst sich die Entfernung direkt aus der Wellenform ablesen – ohne jede Zwischensprosse. Erstmals seit Eratosthenes eine Entfernungsmessung, die auf keiner Leiter steht.',ziel:'r_gravwellen'},
+];
+
+const GEOMETRIE_CHRONIK = [
+{j:-2700,wer:'\u00c4gypten & Babylon',was:'Raum ist das, was man abmisst',m:'Fl\u00e4chenformeln, rechte Winkel, Rauminhalte – erarbeitet f\u00fcr Felder, Speicher und Bauwerke. Ob eine Regel exakt oder nur brauchbar ist, wird nicht gefragt; entscheidend ist, dass sie funktioniert.',ziel:'g_aegverm'},
+{j:-600,wer:'Thales',was:'Vom Messen zum Beweisen',m:'Eine Aussage gilt nicht, weil man sie hundertmal nachgemessen hat, sondern weil sie aus anderen folgt. Dieser Schritt ist der eigentliche Beginn der Mathematik – und er geschieht in der Geometrie.',ziel:'g_thales'},
+{j:-450,wer:'Die Diagonale',was:'Der Raum enth\u00e4lt Unaussprechliches',m:'Die Diagonale des Einheitsquadrats l\u00e4sst sich durch kein Zahlenverh\u00e4ltnis ausdr\u00fccken. Die Geometrie erweist sich als reicher als die Arithmetik – und wird f\u00fcr 2000 Jahre die f\u00fchrende Disziplin.',ziel:'z_irrat'},
+{j:-300,wer:'Euklid',was:'F\u00fcnf Postulate gen\u00fcgen',m:'Alles Wissen \u00fcber den Raum wird aus wenigen unbewiesenen Grunds\u00e4tzen abgeleitet. Das f\u00fcnfte – das Parallelenpostulat – ist auffallend umst\u00e4ndlich formuliert. Euklid selbst scheint zu z\u00f6gern: Er benutzt es so sp\u00e4t wie m\u00f6glich.',ziel:'g_euklid'},
+{j:-200,wer:'Apollonios',was:'Kurven ohne Zweck',m:'Ellipse, Parabel, Hyperbel werden vollst\u00e4ndig untersucht, ohne dass jemand eine Anwendung im Sinn h\u00e4tte. 1800 Jahre sp\u00e4ter sind es genau die Bahnen der Planeten und der Wurfgeschosse.',ziel:'g_apollon'},
+{j:1000,wer:'Ibn al-Haitham & andere',was:'Der Kampf mit dem f\u00fcnften Postulat',m:'\u00dcber Jahrhunderte versuchen arabische und europ\u00e4ische Gelehrte, das Parallelenpostulat aus den anderen abzuleiten. Jeder Beweis setzt unbemerkt etwas Gleichwertiges voraus – das Scheitern selbst wird zur Erkenntnisquelle.'},
+{j:1420,wer:'Brunelleschi & Alberti',was:'Geometrie des Sehens',m:'Die Zentralperspektive konstruiert, wie der Raum im Auge erscheint. Parallelen treffen sich im Fluchtpunkt – ein Satz, der in Euklids Welt falsch ist und trotzdem stimmt.',ziel:'g_perspektive'},
+{j:1637,wer:'Descartes',was:'Der Raum wird zur Zahlenmenge',m:'Punkte werden Koordinatenpaare, Kurven werden Gleichungen. Die Geometrie verliert ihren Sonderstatus – und gewinnt daf\u00fcr die volle Rechenkraft der Algebra. Erst dadurch kann Physik in Formeln geschrieben werden.',ziel:'g_descartes'},
+{j:1733,wer:'Saccheri',was:'Beweis durch Widerspruch – der beinahe gelingt',m:'Er nimmt das Parallelenpostulat als falsch an und leitet Satz um Satz ab, in der Erwartung, auf einen Widerspruch zu sto\u00dfen. Er findet keinen – und erkl\u00e4rt die Ergebnisse trotzdem f\u00fcr „abstoßend“. Die nichteuklidische Geometrie lag vor ihm und wurde nicht erkannt.'},
+{j:1830,wer:'Bolyai, Lobatschewski, Gau\u00df',was:'Es gibt andere R\u00e4ume',m:'Streicht man das Parallelenpostulat, entsteht keine Widerspr\u00fcchlichkeit, sondern eine zweite, ebenso stimmige Geometrie. Gau\u00df hatte es Jahrzehnte fr\u00fcher erkannt und aus Furcht vor „dem Geschrei der Böotier“ nicht ver\u00f6ffentlicht.',ziel:'g_nichteukl'},
+{j:1854,wer:'Riemann',was:'Kr\u00fcmmung in beliebig vielen Dimensionen',m:'Ein Habilitationsvortrag entwirft Geometrien, in denen die Kr\u00fcmmung von Ort zu Ort wechselt. Riemann fragt am Ende ausdr\u00fccklich, welche Geometrie f\u00fcr den wirklichen Raum gilt – eine Frage, die nur die Physik beantworten kann.',ziel:'g_riemann'},
+{j:1872,wer:'Klein',was:'Geometrie ist das, was invariant bleibt',m:'Im Erlanger Programm ordnet Klein die Geometrien danach, welche Eigenschaften sich unter welchen Abbildungen nicht \u00e4ndern. Aus einer Lehre vom Raum wird eine Lehre von Symmetriegruppen.',ziel:'a_lie'},
+{j:1899,wer:'Hilbert',was:'Punkt, Gerade, Ebene – oder Tisch, Stuhl, Bierseidel',m:'Bedeutung entsteht allein aus den Axiomen; die Anschauung ist entbehrlich. Damit wird die Geometrie endg\u00fcltig zu einem formalen System – und der Raum unserer Erfahrung zu einem Sonderfall unter vielen.',ziel:'g_hilbert_geo'},
+{j:1915,wer:'Einstein',was:'Der Raum ist tats\u00e4chlich gekr\u00fcmmt',m:'Riemanns Frage bekommt eine Antwort: Masse kr\u00fcmmt die Raumzeit, Gravitation ist Geometrie. Die 60 Jahre alte „nutzlose“ Mathematik ist genau die richtige – der eindrucksvollste Fall von Mathematik auf Vorrat.',ziel:'r_art'},
+{j:1919,wer:'Sonnenfinsternis',was:'Die Kr\u00fcmmung wird gemessen',m:'Sternlicht wird am Sonnenrand abgelenkt, wie berechnet. Eine Frage, die 2200 Jahre lang philosophisch schien – welche Geometrie gilt in der Welt? – wird durch eine Fotoplatte entschieden.',ziel:'r_eddington'},
+{j:1975,wer:'Mandelbrot',was:'Gebrochene Dimensionen',m:'K\u00fcstenlinien, Wolken, Farne: Formen, f\u00fcr die weder Euklid noch Riemann Begriffe hatten. Mit dem Computer wird eine Geometrie sichtbar, die zur Natur besser passt als Kugel und Kegel.',ziel:'g_fraktal'}
+];
+
+const STOCHASTIK_CHRONIK = [
+{j:-3000,wer:'Astragale',was:'Der Zufall als G\u00f6tterstimme',m:'Gew\u00fcrfelt wird seit Jahrtausenden – mit Kn\u00f6chelchen, sp\u00e4ter mit W\u00fcrfeln. Der Ausgang gilt aber nicht als zuf\u00e4llig, sondern als Entscheidung h\u00f6herer M\u00e4chte. Was ein Gott bestimmt, rechnet man nicht aus: Das ist die eigentliche Sperre f\u00fcr 4500 Jahre.'},
+{j:-50,wer:'Cicero',was:'Aber die H\u00e4ufigkeiten sind bekannt',m:'Antike Autoren wissen sehr wohl, dass bestimmte Wurfergebnisse h\u00e4ufiger vorkommen. Es fehlt nicht die Beobachtung, sondern der Gedanke, dass man Ungewissheit \u00fcberhaupt in Zahlen fassen d\u00fcrfte.'},
+{j:1564,wer:'Cardano',was:'Ein Spieler rechnet nach',m:'Sein „Buch \u00fcber Gl\u00fccksspiele“ z\u00e4hlt g\u00fcnstige gegen m\u00f6gliche F\u00e4lle – die erste Wahrscheinlichkeitsdefinition. Geschrieben aus Eigeninteresse und erst 100 Jahre nach seinem Tod gedruckt.',ziel:'s_cardano'},
+{j:1654,wer:'Pascal & Fermat',was:'Wie teilt man einen abgebrochenen Einsatz?',m:'Nicht der W\u00fcrfel selbst, sondern eine Gerechtigkeitsfrage bringt den Durchbruch: Man muss \u00fcber m\u00f6gliche Zukunft rechnen, nicht \u00fcber Vergangenes. In einem Briefwechsel entsteht ein neues Gebiet.',ziel:'s_pascalfermat'},
+{j:1662,wer:'Graunt & Halley',was:'Sterbetafeln',m:'Aus Londoner Totenlisten entsteht 1662 die erste Lebenserwartungsrechnung; Halley legt 1693 mit der Breslauer Sterbetafel die Grundlage f\u00fcr faire Rentenpreise. Wahrscheinlichkeit verl\u00e4sst den Spieltisch und wird zur Basis von Versicherung und Staatsfinanz.'},
+{j:1713,wer:'Jakob Bernoulli',was:'Warum Statistik \u00fcberhaupt erlaubt ist',m:'Das Gesetz der gro\u00dfen Zahlen zeigt: Die relative H\u00e4ufigkeit n\u00e4hert sich der Wahrscheinlichkeit beliebig genau an. Erst dieser Satz rechtfertigt, aus Beobachtungen auf Wahrscheinlichkeiten zu schlie\u00dfen.',ziel:'s_bernoulli'},
+{j:1763,wer:'Bayes',was:'R\u00fcckw\u00e4rts schlie\u00dfen',m:'Nicht „wie wahrscheinlich ist dieses Ergebnis“, sondern „was sagt dieses Ergebnis \u00fcber die Ursache“. Erst nach dem Tod des Geistlichen ver\u00f6ffentlicht, 200 Jahre lang umstritten – heute die Grundlage von Diagnostik und maschinellem Lernen.',ziel:'s_bayes'},
+{j:1809,wer:'Gau\u00df',was:'Messfehler werden beherrschbar',m:'Um die verlorene Bahn der Ceres zu rekonstruieren, entwickelt Gau\u00df die Methode der kleinsten Quadrate und die Normalverteilung als Fehlergesetz. Der Zufall wird vom \u00c4rgernis zum berechenbaren Bestandteil jeder Messung.',ziel:'s_gauss'},
+{j:1835,wer:'Quetelet',was:'Der „mittlere Mensch“',m:'K\u00f6rpergr\u00f6\u00dfen, Heiraten, sogar Verbrechen folgen stabilen Verteilungen. Verst\u00f6rend f\u00fcr die Zeitgenossen: Freie Entscheidungen ergeben in der Masse eine erstaunliche Regelm\u00e4\u00dfigkeit.',ziel:'s_quetelet'},
+{j:1860,wer:'Maxwell',was:'Zufall in der Naturbeschreibung',m:'Statt jedes Gasteilchen zu verfolgen, beschreibt Maxwell die Verteilung der Geschwindigkeiten. Wahrscheinlichkeit ist nicht mehr nur ein Behelf bei Unwissen – sie wird zum Werkzeug der Physik selbst.',ziel:'s_maxwellboltz'},
+{j:1877,wer:'Boltzmann',was:'Ein Naturgesetz wird statistisch',m:'Der zweite Hauptsatz gilt nicht absolut, sondern mit \u00fcberw\u00e4ltigender Wahrscheinlichkeit. Dass W\u00e4rme nie von selbst von kalt nach warm flie\u00dft, ist keine Unm\u00f6glichkeit, sondern extreme Unwahrscheinlichkeit.',ziel:'w_boltzmann'},
+{j:1900,wer:'Bachelier',was:'Zufall an der B\u00f6rse',m:'Eine Pariser Dissertation beschreibt Kursbewegungen als Zufallsprozess – f\u00fcnf Jahre bevor Einstein dieselbe Mathematik f\u00fcr die Brownsche Bewegung verwendet. Sie bleibt 60 Jahre unbeachtet.'},
+{j:1905,wer:'Einstein',was:'Brownsche Bewegung beweist Atome',m:'Das Zittern von Pollen im Wasser wird quantitativ vorhergesagt. Eine Wahrscheinlichkeitsrechnung entscheidet die Frage, ob es Atome gibt – die letzten Zweifler geben auf.',ziel:'q_dalton'},
+{j:1925,wer:'Fisher',was:'Wie viel Beleg ist genug?',m:'Versuchsplanung, Signifikanz, Nullhypothese – entstanden in der Agrarforschung an Feldversuchen. Diese Werkzeuge entscheiden heute \u00fcber die Zulassung von Medikamenten.',ziel:'s_fisher'},
+{j:1926,wer:'Born',was:'Der Zufall im Fundament',m:'Das Betragsquadrat der Wellenfunktion ist eine Wahrscheinlichkeit. Der Zufall ist damit keine L\u00fccke im Wissen mehr, sondern Bestandteil der Natur. Einstein widerspricht bis zuletzt.',ziel:'q_born'},
+{j:1933,wer:'Kolmogorow',was:'Endlich Axiome',m:'Wahrscheinlichkeit wird als Ma\u00df auf einer Ereignismenge definiert. 280 Jahre nach Pascal ist die Stochastik ein vollwertiges Teilgebiet der Mathematik – und ihre Begriffe endlich eindeutig.',ziel:'s_kolmogorow'},
+{j:1946,wer:'Monte Carlo',was:'W\u00fcrfeln als Rechenverfahren',m:'In Los Alamos wird der Zufall zum Werkzeug: Was sich nicht berechnen l\u00e4sst, wird millionenfach simuliert. Aus dem Gegenstand der Theorie wird eine Methode.',ziel:'s_montecarlo'},
+{j:1964,wer:'Bell',was:'Ist der Zufall echt?',m:'Bell zeigt, dass sich experimentell entscheiden l\u00e4sst, ob hinter der Quantenzuf\u00e4lligkeit verborgene Ursachen stecken. Die Experimente sagen: nein. Der Zufall der Quantenmechanik ist nicht auf Unwissen zur\u00fcckf\u00fchrbar.',ziel:'q_bell'},
+{j:2000,wer:'Daten\u00fcberfluss',was:'Wahrscheinlichkeit als Alltagstechnik',m:'Spamfilter, Wettervorhersage, Suchmaschinen, Sprachmodelle: Fast jede moderne Software sch\u00e4tzt Wahrscheinlichkeiten. Zugleich zeigt die Replikationskrise, wie leicht statistische Werkzeuge missverstanden werden.',ziel:'s_ml'}
 ];
 
 /* ============================================================
@@ -1437,14 +1976,17 @@ function waehle(id){
   if (!rein.length && !raus.length){
     h += '<h3>Einordnung</h3><p class="text" style="color:#5b5145">Für dieses Element sind keine direkten Verbindungspfeile hinterlegt – betrachte die Nachbarspuren im selben Zeitraum.</p>';
   }
-  if (id === 'z_pi'){
-    h += '<h3>Eigene Zeittafel</h3><button class="verweis" id="panelPi" style="border-left:4px solid ' +
-         sp.farbe + '">π <b>Vollständige π-Chronik öffnen</b><i>26 Meilensteine von Babylon bis zu den Rechenzentren</i></button>';
+  const chr = CHRONIKEN.find(c => c.anker === id);
+  if (chr){
+    h += '<h3>Vertiefende Zeittafel</h3><button class="verweis" id="panelPi" style="border-left:4px solid ' +
+         sp.farbe + '"><b>' + esc(chr.titel) + ' öffnen</b><i>' + chr.daten.length +
+         ' Meilensteine · ' + esc(fmtJahr(chr.daten[0].j)) + ' bis ' +
+         esc(fmtJahr(chr.daten[chr.daten.length-1].j)) + '</i></button>';
   }
   panelinhalt.innerHTML = h;
   panel.classList.add('offen');
   const pk = document.getElementById('panelPi');
-  if (pk) pk.addEventListener('click', oeffnePi);
+  if (pk) pk.addEventListener('click', () => oeffnePi(chr.id));
   panelinhalt.querySelectorAll('.verweis').forEach(b => {
     b.addEventListener('click', () => springeZu(b.dataset.ziel));
   });
@@ -1652,13 +2194,90 @@ document.addEventListener('pointerdown', e => {
 });
 
 /* ============================================================
-   π-CHRONIK
+   CHRONIKEN
    ============================================================ */
+const CHRONIKEN = [
+  {id:'zahlbereiche', gruppe:'Mathematik', tab:'Zahlbereiche', anker:'z_bereiche',
+   titel:'Chronik der Zahlbereiche',
+   note:'Jede Erweiterung entsteht aus einer Rechnung, die im alten Bereich keine L\u00f6sung hat – und jede kostet eine Eigenschaft. Auffallend: Die Reihenfolge der Anerkennung ist nicht die Reihenfolge des Gebrauchs. Mit negativen Zahlen wurde jahrhundertelang gerechnet, bevor man sie f\u00fcr Zahlen hielt.',
+   daten: ZAHLBEREICH_CHRONIK},
+  {id:'pi', gruppe:'Mathematik', tab:'\u03c0', anker:'z_pi',
+   titel:'\u03c0 – Chronik einer Zahl',
+   note:'Keine andere Zahl verbindet so viele Kulturen und Jahrtausende. An der Jagd nach \u03c0 l\u00e4sst sich die jeweils verf\u00fcgbare Mathematik ablesen: erst Vielecke, dann unendliche Reihen, schlie\u00dflich Rechenmaschinen.',
+   daten: PI_CHRONIK, chart:true},
+  {id:'geometrie', gruppe:'Mathematik', tab:'Geometrie', anker:'g_chronik',
+   titel:'Was ist Raum? – Chronik der Geometrie',
+   note:'Nicht die Ergebnisse stehen hier im Mittelpunkt, sondern eine Leitfrage: Was ist eigentlich der Raum? Der rote Faden ist das Parallelenpostulat – 2200 Jahre Zweifel an einem einzigen Satz, \u00fcber Saccheris beinahe gelungenen Widerspruchsbeweis bis zu Einsteins gekr\u00fcmmter Raumzeit.',
+   daten: GEOMETRIE_CHRONIK},
+  {id:'stochastik', gruppe:'Mathematik', tab:'Wahrscheinlichkeit', anker:'s_chronik',
+   titel:'Chronik der Wahrscheinlichkeitsrechnung',
+   note:'Gew\u00fcrfelt wurde seit Jahrtausenden, gerechnet erst ab 1654. Die Sperre war nicht mathematisch, sondern gedanklich: Was als G\u00f6tterentscheid galt, berechnete man nicht. Danach ging es schnell – vom Spieltisch \u00fcber Versicherung und Messfehler bis ins Fundament der Physik.',
+   daten: STOCHASTIK_CHRONIK},
+  {id:'gleichungen', gruppe:'Mathematik', tab:'Gleichungen', anker:'a_chronik',
+   titel:'Chronik der Gleichungen',
+   note:'Vom Rechenrezept am Einzelbeispiel \u00fcber die geometrische Figur und den eigenst\u00e4ndigen Gegenstand bis zur Frage nach Symmetrie. Jede Stufe dieser Abstraktion ist im heutigen Unterricht noch greifbar.',
+   daten: GLEICHUNG_CHRONIK},
+  {id:'funktion', gruppe:'Mathematik', tab:'Funktionsbegriff', anker:'an_funktion',
+   titel:'Chronik des Funktionsbegriffs',
+   note:'Wertetabelle, Graph, Rechenausdruck, beliebige Zuordnung, Menge von Paaren: F\u00fcnfmal umgebaut – fast immer, weil ein physikalisches Problem die alte Fassung sprengte. Der Weg im Unterricht bildet die Geschichte nach.',
+   daten: FUNKTION_CHRONIK},
+  {id:'licht', gruppe:'Physik', tab:'Licht', anker:'e_licht',
+   titel:'Chronik des Lichts',
+   note:'Sehstrahl, Teilchen, Welle, elektromagnetisches Feld, Quant. Keine physikalische Frage wurde so oft neu beantwortet – und kein Modell war schlicht falsch: Jedes erkl\u00e4rt genau das, was seine Zeit messen konnte.',
+   daten: LICHT_CHRONIK},
+  {id:'energie', gruppe:'Physik', tab:'Energie & Erhaltung', anker:'w_erhaltung',
+   titel:'Chronik des Energiebegriffs',
+   note:'Die Energie war zweihundert Jahre in Einzelteilen bekannt, bevor sie als ein Prinzip erkannt wurde. Noether erkl\u00e4rte 1918 schlie\u00dflich, warum es Erhaltungsgr\u00f6\u00dfen \u00fcberhaupt gibt.',
+   daten: ENERGIE_CHRONIK},
+  {id:'kaelte', gruppe:'Physik', tab:'K\u00e4lte', anker:'w_kaelte',
+   titel:'Chronik der K\u00e4lte und tiefen Temperaturen',
+   note:'K\u00e4lte ist keine Substanz, sondern fehlende W\u00e4rme – bis diese Einsicht sa\u00df, vergingen 150 Jahre. Danach wurde der Weg nach unten zum Pr\u00e4zisionswettlauf, und je n\u00e4her man dem Nullpunkt kam, desto merkw\u00fcrdiger verhielt sich die Materie: Supraleitung, Suprafluidit\u00e4t, Bose-Einstein-Kondensat.',
+   daten: KAELTE_CHRONIK},
+  {id:'optik', gruppe:'Physik', tab:'Optische Ger\u00e4te', anker:'e_optik',
+   titel:'Chronik der optischen Ger\u00e4te',
+   note:'Vom Lesestein zum Weltraumteleskop. Bemerkenswert oft ging das Handwerk der Theorie voraus – die Brille gab es 300 Jahre vor dem Brechungsgesetz –, und fast jedes neue Ger\u00e4t zeigte Dinge, die keine Theorie vorhergesagt hatte.',
+   daten: OPTIK_CHRONIK},
+  {id:'entfernung', gruppe:'Astronomie', tab:'Entfernungen', anker:'as_entfernung',
+   titel:'Chronik der kosmischen Entfernungsleiter',
+   note:'Jede Sprosse ruht auf der darunterliegenden: Erdradius, Mondparallaxe, Astronomische Einheit, Sternparallaxe, Cepheiden, Supernovae, Rotverschiebung. Deshalb ist die Leiter empfindlich – als Baade 1944 eine Sprosse korrigierte, verdoppelte sich die Gr\u00f6\u00dfe des ganzen Universums.',
+   daten: ENTFERNUNG_CHRONIK},
+  {id:'zeit', gruppe:'Astronomie', tab:'Zeitmessung', anker:'in_zeit',
+   titel:'Chronik der Zeitmessung',
+   note:'Viereinhalb Jahrtausende lang misst jede Uhr letztlich die Erddrehung. Erst als Quarzuhren zeigen, dass die Erde selbst ungleichm\u00e4\u00dfig l\u00e4uft, kehrt sich das Verh\u00e4ltnis um: Seit 1967 ist die Sekunde eine feste Zahl von Schwingungen im C\u00e4siumatom – und der Himmel muss sich nach der Uhr richten.',
+   daten: ZEIT_CHRONIK},
+  {id:'antrieb', gruppe:'Technik', tab:'Antriebe', anker:'p_antrieb',
+   titel:'Chronik der Antriebe',
+   note:'Muskel, Zugtier, Segel, Ruder, Dampf, Verbrennung, Elektro, Strahl, Rakete, Ion. Zwei Fragen kehren immer wieder: Woher kommt die Energie – und wogegen st\u00fctzt sich der Antrieb ab? Nur die Rakete beantwortet die zweite mit „gegen nichts“.',
+   daten: ANTRIEB_CHRONIK},
+  {id:'elektrizitaet', gruppe:'Technik', tab:'Elektrizit\u00e4t', anker:'e_chronik',
+   titel:'Chronik der Elektrizit\u00e4tslehre',
+   note:'Zweieinhalb Jahrtausende ein Jahrmarktseffekt, dann in 120 Jahren die Grundlage von Licht, Antrieb, Nachricht und Rechnen. Auff\u00e4llig: Volta, Amp\u00e8re, Ohm und Faraday bauten eine funktionierende Technik auf, ohne zu wissen, was da eigentlich flie\u00dft – das Elektron wurde erst 1897 entdeckt.',
+   daten: ELEKTRO_CHRONIK},
+  {id:'kraftwandler', gruppe:'Technik', tab:'Kraftwandler', anker:'p_kraftwandler',
+   titel:'Chronik der Kraftwandler',
+   note:'Hebel, schiefe Ebene, Flaschenzug, Zahnrad, Hydraulik – alle beruhen auf demselben Tausch: weniger Kraft gegen mehr Weg. Die Technik war Jahrtausende voraus; erst Archimedes bewies das Gesetz, erst Galilei erhob es zum Prinzip.',
+   daten: KRAFTWANDLER_CHRONIK},
+  {id:'quellen', gruppe:'Technik', tab:'Energiequellen', anker:'w_quellen',
+   titel:'Chronik der Energiequellen',
+   note:'Feuer, Muskel, Wind, Wasser, Kohle, \u00d6l, Kern, Sonne. Fast alle sind umgewandeltes Sonnenlicht – nur Kernenergie, Geothermie und Gezeiten stammen aus anderen Quellen. Entscheidend war selten die Menge, sondern die Verf\u00fcgbarkeit: Ein Wasserrad liefert zuverl\u00e4ssig, aber nur am Fluss; Kohle liefert \u00fcberall, aber nicht ewig.',
+   daten: QUELLEN_CHRONIK},
+  {id:'transport', gruppe:'Technik', tab:'Energietransport', anker:'w_transport',
+   titel:'Chronik des Energietransports',
+   note:'Wasser im Kanal, Gest\u00e4nge im Bergwerk, Welle und Riemen in der Fabrik, Strom im Draht. Die Reichweite entschied jahrtausendelang dar\u00fcber, wo gearbeitet wurde – bis der Transformator 1885 das Entfernungsproblem l\u00f6ste.',
+   daten: TRANSPORT_CHRONIK}
+];
+const CHRONIK_VON_ID = {};
+CHRONIKEN.forEach(c => { CHRONIK_VON_ID[c.id] = c; });
+
 const piOverlay = document.getElementById('pi');
 const piliste = document.getElementById('piliste');
 const piChart = document.getElementById('pichart');
+const piTitel = document.getElementById('pititel');
+const piNote = document.getElementById('pinote');
+const piChartUnter = document.getElementById('pichartunter');
+const chroniktabs = document.getElementById('chroniktabs');
 const pctx = piChart.getContext('2d');
-let piGebaut = false;
+let aktiveChronik = null;
 
 function fmtStellen(n){
   if (n >= 1e12) return (n/1e12).toLocaleString('de-DE',{maximumFractionDigits:1}) + ' Billionen Stellen';
@@ -1666,36 +2285,73 @@ function fmtStellen(n){
   if (n >= 1e6)  return (n/1e6 ).toLocaleString('de-DE',{maximumFractionDigits:1}) + ' Millionen Stellen';
   return n.toLocaleString('de-DE') + (n === 1 ? ' gesicherte Stelle' : ' gesicherte Stellen');
 }
-function bauePi(){
-  if (piGebaut) return;
-  piGebaut = true;
+
+function baueTabs(){
+  chroniktabs.innerHTML = '';
+  let letzteGruppe = null;
+  for (const c of CHRONIKEN){
+    if (letzteGruppe !== null && c.gruppe !== letzteGruppe){
+      const tr = document.createElement('span');
+      tr.className = 'trenner';
+      chroniktabs.appendChild(tr);
+    }
+    letzteGruppe = c.gruppe;
+    const b = document.createElement('button');
+    b.textContent = c.tab;
+    b.dataset.chronik = c.id;
+    b.title = c.titel + ' (' + c.gruppe + ')';
+    b.addEventListener('click', () => zeigeChronik(c.id));
+    chroniktabs.appendChild(b);
+  }
+}
+
+function zeigeChronik(id){
+  const c = CHRONIK_VON_ID[id];
+  if (!c) return;
+  aktiveChronik = c;
+  [...chroniktabs.querySelectorAll('button')].forEach(b =>
+    b.classList.toggle('aktiv', b.dataset.chronik === id));
+  piTitel.textContent = c.titel;
+  piNote.textContent = c.note;
+  piChart.style.display = c.chart ? 'block' : 'none';
+  piChartUnter.style.display = c.chart ? 'block' : 'none';
   piliste.innerHTML = '';
-  for (const e of PI_CHRONIK){
+  for (const e of c.daten){
     const b = document.createElement('button');
     b.className = 'pizeile' + (e.ziel ? ' klickbar' : '');
-    b.innerHTML = '<span class="pijahr"' + (e.ziel ? '' : ' style="color:#5b5145"') + '>' + esc(fmtJahr(e.j)) + '</span>' +
-      '<span><span class="piwer">' + esc(e.wer) + '</span>' +
+    b.dataset.jahr = e.j;
+    let rechts = '<span class="piwer">' + esc(e.wer) + '</span>' +
       '<span class="piwas">' + esc(e.was) + '</span>' +
-      '<span class="pim">' + esc(e.m) + '</span>' +
-      (e.st > 0 ? '<span class="pistellen">' + esc(fmtStellen(e.st)) + '</span>' :
-                  '<span class="pistellen">theoretisches Ergebnis</span>') + '</span>';
+      '<span class="pim">' + esc(e.m) + '</span>';
+    if (typeof e.st === 'number'){
+      rechts += '<span class="pistellen">' +
+        (e.st > 0 ? esc(fmtStellen(e.st)) : 'theoretisches Ergebnis') + '</span>';
+    }
+    b.innerHTML = '<span class="pijahr"' + (e.ziel ? '' : ' style="color:#5b5145"') + '>' +
+      esc(fmtJahr(e.j)) + '</span><span>' + rechts + '</span>';
     if (e.ziel) b.addEventListener('click', () => { schliessePi(); springeZu(e.ziel); });
     piliste.appendChild(b);
   }
+  piliste.scrollTop = 0;
+  const box = piliste.closest('.pibox');
+  if (box) box.scrollTop = 0;
+  if (c.chart) requestAnimationFrame(zeichnePiChart);
 }
+
 function zeichnePiChart(){
+  if (!aktiveChronik || !aktiveChronik.chart) return;
   const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
   const W = piChart.clientWidth, H = piChart.clientHeight;
   if (!W) return;
   piChart.width = Math.round(W*dpr); piChart.height = Math.round(H*dpr);
   pctx.setTransform(dpr,0,0,dpr,0,0);
   pctx.clearRect(0,0,W,H);
-  const daten = PI_CHRONIK.filter(e => e.st > 0);
+  const daten = aktiveChronik.daten.filter(e => e.st > 0);
+  if (daten.length < 2) return;
   const li = 34, re = 10, ob = 12, un = 22;
-  const maxL = Math.log10(daten[daten.length-1].st) ;
+  const maxL = Math.log10(daten[daten.length-1].st);
   const px = k => li + (W - li - re) * (k / (daten.length - 1));
   const py = v => H - un - (H - un - ob) * (Math.log10(v) / maxL);
-  // Gitter
   pctx.font = '9.5px -apple-system,Segoe UI,Roboto,sans-serif';
   pctx.textAlign = 'right'; pctx.textBaseline = 'middle';
   for (let p = 0; p <= Math.ceil(maxL); p += 2){
@@ -1705,39 +2361,36 @@ function zeichnePiChart(){
     pctx.fillStyle = '#7a6f5f';
     pctx.fillText(p === 0 ? '1' : '10^' + p, li - 5, y);
   }
-  // Linie
   pctx.beginPath();
   daten.forEach((e,k) => { const x = px(k), y = py(e.st); k ? pctx.lineTo(x,y) : pctx.moveTo(x,y); });
   pctx.strokeStyle = '#16607f'; pctx.lineWidth = 2; pctx.stroke();
-  // Punkte + ausgewählte Beschriftungen
-  pctx.textAlign = 'center'; pctx.textBaseline = 'bottom';
   daten.forEach((e,k) => {
     const x = px(k), y = py(e.st);
     pctx.beginPath(); pctx.arc(x, y, 3.2, 0, Math.PI*2);
     pctx.fillStyle = '#16607f'; pctx.fill();
     pctx.strokeStyle = '#fff'; pctx.lineWidth = 1.2; pctx.stroke();
   });
+  pctx.textAlign = 'center'; pctx.textBaseline = 'bottom';
   pctx.font = '9.5px -apple-system,Segoe UI,Roboto,sans-serif';
   pctx.fillStyle = '#5b5145';
-  const zeigen = [0, 3, 8, 12, daten.length-4, daten.length-1];
-  zeigen.forEach(k => {
+  [0, 3, 8, 12, daten.length-4, daten.length-1].forEach(k => {
     if (k < 0 || k >= daten.length) return;
-    const x = clamp(px(k), li + 14, W - re - 14), y = py(daten[k].st);
-    pctx.fillText(fmtJahr(daten[k].j), x, y - 7);
+    pctx.fillText(fmtJahr(daten[k].j), clamp(px(k), li + 14, W - re - 14), py(daten[k].st) - 7);
   });
-  pctx.textAlign = 'left'; pctx.textBaseline = 'bottom';
-  pctx.fillStyle = '#7a6f5f';
+  pctx.textAlign = 'left'; pctx.fillStyle = '#7a6f5f';
   pctx.fillText('Babylon', li, H - 6);
   pctx.textAlign = 'right';
   pctx.fillText('heute', W - re, H - 6);
 }
-function oeffnePi(){
-  bauePi();
+
+let tabsGebaut = false;
+function oeffnePi(id){
+  if (!tabsGebaut){ baueTabs(); tabsGebaut = true; }
+  zeigeChronik(id || (aktiveChronik ? aktiveChronik.id : 'zahlbereiche'));
   piOverlay.classList.add('offen');
-  requestAnimationFrame(zeichnePiChart);
 }
 function schliessePi(){ piOverlay.classList.remove('offen'); }
-document.getElementById('btnPi').addEventListener('click', oeffnePi);
+document.getElementById('btnPi').addEventListener('click', () => oeffnePi());
 document.getElementById('pizu').addEventListener('click', schliessePi);
 piOverlay.addEventListener('click', e => { if (e.target.id === 'pi') schliessePi(); });
 
@@ -1746,8 +2399,9 @@ state.z = zMin();
 state.x0 = MIN_JAHR;
 begrenze();
 render();
-window.__zl = {state, ITEMS, LINKS, SPUREN, GRUPPEN, PI_CHRONIK, render, waehle, geheZu,
-  ITEM_VON_ID, suchen, oeffnePi, schliessePi, schrittPaar, normal};
+window.__zl = {state, ITEMS, LINKS, SPUREN, GRUPPEN, CHRONIKEN, CHRONIK_VON_ID,
+  render, waehle, geheZu, ITEM_VON_ID, suchen, oeffnePi, schliessePi, zeigeChronik,
+  schrittPaar, normal};
 </script>
 </body>
 </html>
