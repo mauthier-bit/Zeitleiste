@@ -32,6 +32,10 @@
     display:inline-flex;align-items:center;gap:5px;user-select:none;
     transition:background .12s,border-color .12s,transform .06s}
   button:active{transform:scale(.96)}
+  /* Listenzeilen: kein Druckeffekt, damit Wischen nicht flackert */
+  .pizeile:active,.suchtreffer:active,.verweis:active{transform:none}
+  /* Senkrechtes Wischen bleibt Sache des Browsers, nicht der Schaltfläche */
+  .pizeile,.suchtreffer,.verweis{touch-action:pan-y}
   button.aktiv{background:var(--ink);color:#fff;border-color:var(--ink)}
   .icon{font-size:13px;line-height:1}
 
@@ -52,12 +56,14 @@
     padding:4px 7px;font-size:14px;color:var(--ink2);display:none}
   .suchbox.gefuellt #suchleeren{display:block}
   #suchliste{position:absolute;top:calc(100% + 5px);left:0;width:330px;max-width:88vw;max-height:52vh;
-    overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
     box-shadow:var(--schatten);z-index:60;display:none;padding:5px}
   #suchliste.offen{display:block}
   .suchtreffer{display:flex;width:100%;text-align:left;align-items:flex-start;gap:7px;
     border:none;background:none;border-radius:8px;padding:7px 8px;font-size:12.5px;line-height:1.3}
-  .suchtreffer:hover,.suchtreffer.markiert{background:var(--bg2)}
+  @media (hover:hover){ .suchtreffer:hover{background:var(--bg2)} }
+  .suchtreffer.markiert{background:var(--bg2)}
   .suchtreffer .punkt{width:9px;height:9px;border-radius:3px;margin-top:3px;flex:0 0 auto}
   .suchtreffer i{font-style:normal;color:var(--ink2);font-size:11.5px;display:block;margin-top:1px}
   .suchleer{padding:9px 10px;font-size:12.5px;color:var(--ink2)}
@@ -66,7 +72,8 @@
     align-items:center;justify-content:center;padding:14px}
   #pi.offen{display:flex}
   .pibox{background:var(--panel);border-radius:16px;max-width:720px;width:100%;max-height:92%;
-    overflow:auto;padding:18px 20px 24px;box-shadow:var(--schatten);position:relative}
+    overflow-y:auto;overflow-x:hidden;padding:18px 20px 24px;box-shadow:var(--schatten);position:relative;
+    -webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
   .pibox h2{margin:0 0 4px;font-size:20px}
   .pibox .pinote{font-size:13px;line-height:1.5;color:var(--ink2);margin:0 0 12px}
   .chroniktabs{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 12px;align-items:center}
@@ -77,8 +84,10 @@
   .pichartunter{font-size:11px;color:var(--ink2);margin:5px 0 14px;text-align:center}
   .pizeile{display:grid;grid-template-columns:82px 1fr;gap:10px;padding:9px 6px;border-top:1px solid var(--line);
     text-align:left;width:100%;background:none;border-left:none;border-right:none;border-bottom:none;border-radius:0}
-  .pizeile:hover{background:var(--bg2)}
+  @media (hover:hover){ .pizeile:hover{background:var(--bg2)} }
+  .pizeile.aktivwisch{background:transparent}
   .pizeile.klickbar{cursor:pointer}
+  .pizeile.gefunden{background:#fdf3d6;box-shadow:inset 3px 0 0 #d69e14}
   .pijahr{font-variant-numeric:tabular-nums;font-weight:600;font-size:12.5px;color:var(--akzent);padding-top:1px}
   .piwer{display:block;font-size:13.5px;font-weight:600;line-height:1.3}
   .piwas{display:block;font-size:13px;color:#3a3228;margin-top:2px;line-height:1.35}
@@ -96,7 +105,8 @@
   #panel{position:absolute;right:0;top:0;height:100%;width:min(380px,88vw);
     background:var(--panel);border-left:1px solid var(--line);box-shadow:var(--schatten);
     transform:translateX(102%);transition:transform .22s ease;overflow-y:auto;
-    padding:14px 16px 30px;z-index:20;-webkit-overflow-scrolling:touch}
+    padding:14px 16px 30px;z-index:20;-webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;touch-action:pan-y}
   #panel.offen{transform:translateX(0)}
   #panel h2{margin:2px 0 2px;font-size:19px;line-height:1.2}
   .badge{display:inline-block;font-size:11px;padding:3px 8px;border-radius:999px;color:#fff;margin-bottom:6px}
@@ -115,7 +125,8 @@
     align-items:center;justify-content:center;padding:16px}
   #hilfe.offen{display:flex}
   .hilfebox{background:var(--panel);border-radius:16px;max-width:560px;max-height:88%;
-    overflow:auto;padding:20px 22px;box-shadow:var(--schatten)}
+    overflow-y:auto;padding:20px 22px;box-shadow:var(--schatten);
+    -webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
   .hilfebox h2{margin:0 0 10px;font-size:18px}
   .hilfebox h3{font-size:13px;margin:14px 0 4px;color:var(--akzent)}
   .hilfebox ul{margin:0 0 10px;padding-left:20px;font-size:13.5px;line-height:1.55}
@@ -258,6 +269,7 @@ const ITEMS = [
 {i:'z_binaer',s:'ma_zahl',t:'Leibniz: Dualsystem',a:1703,r:2,d:'Nur 0 und 1 – für Leibniz zugleich eine philosophisch-theologische Idee. 240 Jahre später wird daraus die Sprache jedes Computers.'},
 {i:'z_reell',s:'ma_zahl',t:'Konstruktion der reellen Zahlen',a:1872,r:2,d:'Dedekind (Schnitte) und Cantor (Fundamentalfolgen) definieren endlich exakt, was eine reelle Zahl ist – 2300 Jahre nach der Entdeckung der Irrationalität.'},
 {i:'z_transz',s:'ma_zahl',t:'e und π sind transzendent',a:1873,b:1882,r:2,d:'Hermite und Lindemann beweisen: π ist keine Lösung irgendeiner algebraischen Gleichung. Damit ist die Quadratur des Kreises endgültig unmöglich.'},
+{i:'z_primzahlen',s:'ma_zahl',t:'Primzahlen',a:-300,b:2025,r:1,d:'Die Bausteine aller Zahlen – und zugleich das größte ungelöste Rätsel der Mathematik. Im Kleinen wirken sie zufällig verstreut, im Großen folgt ihre Häufigkeit einem klaren Gesetz. Zwei Dinge machen sie besonders: Euklids Beweis ihrer Unendlichkeit gilt vielen als der schönste der Mathematik, und ausgerechnet die als „nutzlos“ gerühmte Zahlentheorie sichert heute jede Banküberweisung. Öffne die Chronik der Primzahlen.'},
 {i:'z_unendlich',s:'ma_zahl',t:'Das Unendliche',a:-450,b:2000,r:1,d:'Von Zenons Warnung über Aristoteles’ Verbot der vollendeten Unendlichkeit und Galileis Ratlosigkeit bis zu Cantors Stufen: 2300 Jahre lang galt das Unendliche als etwas, worüber man nicht rechnen darf. Als man es doch tat, zeigte sich, dass es nicht eine Unendlichkeit gibt, sondern unendlich viele – und dass manche Fragen darüber grundsätzlich unentscheidbar sind. Öffne die Chronik des Unendlichen.'},
 {i:'z_cantor',s:'ma_zahl',t:'Cantor: verschiedene Unendlichkeiten',a:1874,r:1,d:'Das Diagonalargument zeigt: Es gibt mehr reelle als natürliche Zahlen. Unendlich ist nicht gleich unendlich – ein Schock, den viele Zeitgenossen ablehnten.'},
 {i:'z_rsa',s:'ma_zahl',t:'Primzahlen & Kryptographie (RSA)',a:1977,r:2,d:'Die „nutzloseste“ Disziplin, die Zahlentheorie, sichert plötzlich jede Banküberweisung: Multiplizieren ist leicht, Faktorisieren schwer.'},
@@ -959,6 +971,15 @@ const LINKS = [
 {a:'z_unendlich',b:'z_cantor',t:'Stufen der Unendlichkeit'},
 {a:'z_unendlich',b:'l_russell',t:'Unbegrenzte Mengenbildung führt in den Widerspruch'},
 {a:'z_unendlich',b:'l_chronik',t:'Unentscheidbare Fragen an der Grenze des Beweisbaren'},
+{a:'g_euklid',b:'z_primzahlen',t:'Unendlichkeitsbeweis und Fundamentalsatz'},
+{a:'z_primzahlen',b:'z_rsa',t:'Faktorisierung als Grundlage der Verschlüsselung'},
+{a:'an_euler',b:'z_primzahlen',t:'Analysis wird auf die Zahlentheorie angewandt'},
+{a:'z_komplex',b:'z_primzahlen',t:'Riemanns Nullstellen liegen in der Zahlenebene'},
+{a:'z_primzahlen',b:'l_hilbert',t:'Riemannsche Vermutung als achtes Problem'},
+{a:'z_primzahlen',b:'l_chronik',t:'Euklids Beweis als Musterfall der Methode'},
+{a:'in_computer',b:'z_primzahlen',t:'Rekordsuche und Primzahltests maschinell'},
+{a:'z_primzahlen',b:'q_quantencomp',t:'Shors Algorithmus bedroht die Faktorisierungsannahme'},
+{a:'z_primzahlen',b:'z_unendlich',t:'Zwei Beweise für dieselbe Unendlichkeit'},
 {a:'l_mengen',b:'l_russell',t:'Widerspruch im Fundament'},
 {a:'l_russell',b:'l_hilbert',t:'Ruf nach einem Widerspruchsfreiheitsbeweis'},
 {a:'l_hilbert',b:'l_goedel',t:'Das Programm wird widerlegt'},
@@ -1481,6 +1502,31 @@ const KONSTANTEN_CHRONIK = [
 {j:1983,wer:'c wird festgesetzt',was:'299 792 458 m/s – exakt',m:'Weil man Zeit genauer messen kann als L\u00e4nge, dreht man den Spie\u00df um: c bekommt einen festen Wert per Definition, und der Meter wird daraus abgeleitet. Seither ist die Lichtgeschwindigkeit keine Messgr\u00f6\u00dfe mehr, sondern eine Festlegung.'},
 {j:2019,wer:'SI-Reform',was:'Alle Einheiten aus Naturkonstanten',m:'h, e, k und N_A erhalten exakte Zahlenwerte; das Urkilogramm wird au\u00dfer Dienst gestellt. Seither ruht das gesamte Ma\u00dfsystem auf Naturkonstanten statt auf Gegenst\u00e4nden – Stoneys Idee von 1874, 145 Jahre sp\u00e4ter umgesetzt.',ziel:'q_konstanten'},
 {j:2025,wer:'Offene Fragen',was:'Warum diese Werte?',m:'Rund 25 Zahlen muss man messen und in die Theorien einsetzen; keine folgt aus ihnen. W\u00e4re \u03b1 wenige Prozent anders, g\u00e4be es keinen Kohlenstoff und keine Sterne wie unsere Sonne. Ob das Zufall, Notwendigkeit oder Auswahl ist, geh\u00f6rt zu den gr\u00f6\u00dften offenen Fragen der Physik.',ziel:'as_dunkelenergie'}
+];
+
+const PRIMZAHL_CHRONIK = [
+{j:-1650,wer:'Papyrus Rhind',was:'Eine Ahnung von Unteilbarkeit',m:'Die \u00e4gyptischen Bruchzerlegungen behandeln Nenner mit Teilern anders als solche ohne. Ein Begriff der Primzahl fehlt, aber der Unterschied ist in der Rechenpraxis bereits sichtbar.',ziel:'z_aegbruch'},
+{j:-300,wer:'Euklid',was:'Es gibt unendlich viele',m:'Nimm an, es g\u00e4be nur endlich viele; multipliziere sie alle und addiere 1. Die neue Zahl ist durch keine davon teilbar. Der Beweis ist so kurz, so zwingend und so elegant, dass er nach 2300 Jahren unver\u00e4ndert im Unterricht steht – f\u00fcr viele der sch\u00f6nste Beweis der Mathematik.',ziel:'g_euklid'},
+{j:-300,wer:'Euklid',was:'Der Fundamentalsatz der Arithmetik',m:'Jede nat\u00fcrliche Zahl zerf\u00e4llt eindeutig in Primfaktoren. Damit sind Primzahlen nicht irgendeine Sorte Zahlen, sondern die Bausteine aller \u00fcbrigen – das Periodensystem der Arithmetik.',ziel:'g_euklid'},
+{j:-240,wer:'Eratosthenes',was:'Das Sieb',m:'Streiche alle Vielfachen von 2, dann von 3, dann von 5 – was \u00fcbrig bleibt, ist prim. Ein Verfahren ohne jede Theorie, das bis heute in jedem Informatikkurs programmiert wird und f\u00fcr kleine Zahlen unschlagbar bleibt.',ziel:'as_eratos'},
+{j:1202,wer:'Fibonacci',was:'Primzahltest durch Probedivision',m:'Es gen\u00fcgt, bis zur Wurzel der Zahl zu pr\u00fcfen. Eine einfache Beobachtung mit gro\u00dfer Wirkung: Der Aufwand sinkt drastisch – und doch bleibt er f\u00fcr gro\u00dfe Zahlen hoffnungslos.',ziel:'z_fibo'},
+{j:1640,wer:'Fermat',was:'Der kleine Satz von Fermat',m:'Ist p prim, so ist a^p \u2212 a stets durch p teilbar. Damit l\u00e4sst sich pr\u00fcfen, ob eine Zahl zusammengesetzt ist, ohne sie zu zerlegen – die Grundlage aller schnellen Primzahltests bis heute.',ziel:'a_diophant'},
+{j:1644,wer:'Mersenne',was:'Primzahlen der Form 2\u207f \u2212 1',m:'Der M\u00f6nch Marin Mersenne stellt eine Liste auf – mit zwei Fehlern, die erst 250 Jahre sp\u00e4ter gefunden werden. Seine Zahlen lassen sich besonders schnell testen und halten deshalb bis heute jeden Gr\u00f6\u00dfenrekord.'},
+{j:1737,wer:'Euler',was:'Analysis trifft Primzahlen',m:'Euler zeigt, dass die Summe der Kehrwerte aller Primzahlen unendlich gro\u00df wird – ein zweiter, ganz anderer Beweis f\u00fcr ihre Unendlichkeit. Vor allem aber verbindet sein Produktformel-Trick die Primzahlen mit einer stetigen Funktion. Die Zahlentheorie bekommt Werkzeuge der Analysis.',ziel:'an_euler'},
+{j:1796,wer:'Gau\u00df & Legendre',was:'Wie viele sind es bis n?',m:'Der 15-j\u00e4hrige Gau\u00df studiert Primzahltafeln und vermutet: Die Anzahl bis n w\u00e4chst wie n/ln(n). Die einzelnen Primzahlen erscheinen zuf\u00e4llig verstreut, ihre H\u00e4ufigkeit folgt aber einem klaren Gesetz – Ordnung im Gro\u00dfen, Chaos im Kleinen.',ziel:'s_gauss'},
+{j:1801,wer:'Gau\u00df',was:'Disquisitiones Arithmeticae',m:'Mit 24 Jahren ordnet Gau\u00df die gesamte Zahlentheorie neu und f\u00fchrt die Kongruenzrechnung ein. „Die Mathematik ist die K\u00f6nigin der Wissenschaften, und die Zahlentheorie ist die K\u00f6nigin der Mathematik.“',ziel:'a_fundamental'},
+{j:1837,wer:'Dirichlet',was:'Primzahlen in Folgen',m:'In jeder arithmetischen Folge a, a+d, a+2d, … mit teilerfremdem a und d liegen unendlich viele Primzahlen. Der Beweis nutzt Analysis f\u00fcr eine rein zahlentheoretische Aussage – ein Br\u00fcckenschlag, der ein ganzes Gebiet begr\u00fcndet.'},
+{j:1859,wer:'Riemann',was:'Die Riemannsche Vermutung',m:'In einer neunseitigen Arbeit verbindet Riemann die Verteilung der Primzahlen mit den Nullstellen einer komplexen Funktion und vermutet, dass alle nichttrivialen auf einer Geraden liegen. Bis heute unbewiesen – das ber\u00fchmteste offene Problem der Mathematik und eines der Millennium-Probleme.',ziel:'z_komplex'},
+{j:1896,wer:'Hadamard & de la Vall\u00e9e Poussin',was:'Der Primzahlsatz ist bewiesen',m:'Unabh\u00e4ngig voneinander beweisen beide Gau\u00df\u2019 Vermutung von 1796 – mit den Mitteln der komplexen Analysis. Hundert Jahre lagen zwischen Beobachtung und Beweis.',ziel:'an_cauchy'},
+{j:1900,wer:'Hilbert',was:'Primzahlen in der Agenda des Jahrhunderts',m:'Riemanns Vermutung ist Hilberts achtes Problem. Er soll gesagt haben, seine erste Frage nach tausendj\u00e4hrigem Schlaf w\u00e4re, ob sie inzwischen bewiesen sei.',ziel:'l_hilbert'},
+{j:1938,wer:'Hardy',was:'„Nutzlos“ – und stolz darauf',m:'In seiner Apologie r\u00fchmt G. H. Hardy die Zahlentheorie ausdr\u00fccklich daf\u00fcr, dass sie niemals einem kriegerischen oder praktischen Zweck dienen werde. Vierzig Jahre sp\u00e4ter sichert genau sie den weltweiten Datenverkehr.'},
+{j:1952,wer:'Computer',was:'Die Suche wird maschinell',m:'Der erste Rechner findet f\u00fcnf neue Mersenne-Primzahlen an einem Tag – mehr als 75 Jahre Handrechnung zuvor. Seither ist die gr\u00f6\u00dfte bekannte Primzahl ein Ma\u00df f\u00fcr Rechenleistung.',ziel:'in_computer'},
+{j:1977,wer:'RSA',was:'Multiplizieren ist leicht, Zerlegen schwer',m:'Zwei gro\u00dfe Primzahlen sind schnell multipliziert; das Produkt wieder zu zerlegen, dauert praktisch ewig. Auf dieser Asymmetrie – der Schwierigkeit der Faktorisierung – beruht die Verschl\u00fcsselung jeder Bank\u00fcberweisung. Hardys „nutzlose“ Disziplin wird zur Infrastruktur.',ziel:'z_rsa'},
+{j:1996,wer:'GIMPS',was:'Rekorde durch verteiltes Rechnen',m:'Zehntausende Freiwillige stellen weltweit Rechenzeit zur Verf\u00fcgung. Die gr\u00f6\u00dfte bekannte Primzahl hat heute \u00fcber 41 Millionen Stellen – ausgedruckt f\u00fcllte sie mehrere tausend B\u00fccher.'},
+{j:2002,wer:'Agrawal, Kayal & Saxena',was:'Primtest in polynomialer Zeit',m:'Ein indischer Professor und zwei Studenten finden ein Verfahren, das ohne Zufall und ohne unbewiesene Annahmen in vertretbarer Zeit entscheidet, ob eine Zahl prim ist. Ein jahrzehntealtes offenes Problem, gel\u00f6st in einem zehnseitigen Aufsatz.',ziel:'l_turing'},
+{j:2004,wer:'Green & Tao',was:'Beliebig lange Folgen',m:'In den Primzahlen finden sich arithmetische Folgen jeder gew\u00fcnschten L\u00e4nge. Ein tiefer Ordnungsbefund in einer Menge, die auf den ersten Blick v\u00f6llig unregelm\u00e4\u00dfig wirkt.'},
+{j:2013,wer:'Zhang',was:'Primzahlzwillinge r\u00fccken n\u00e4her',m:'Ein bis dahin unbekannter Dozent beweist, dass es unendlich viele Primzahlpaare mit Abstand h\u00f6chstens 70 Millionen gibt. Innerhalb eines Jahres dr\u00fcckt eine weltweite Gemeinschaftsarbeit die Schranke auf 246. Ob der Abstand 2 erreichbar ist – die Zwillingsvermutung – bleibt offen.'},
+{j:2025,wer:'Postquanten-Kryptographie',was:'Wenn Zerlegen doch leicht wird',m:'Shors Algorithmus k\u00f6nnte auf einem hinreichend gro\u00dfen Quantenrechner gro\u00dfe Zahlen schnell faktorisieren. Weltweit werden Verfahren umgestellt, die nicht mehr auf der Schwierigkeit der Primfaktorzerlegung beruhen.',ziel:'q_quantencomp'}
 ];
 
 /* ============================================================
@@ -2110,6 +2156,39 @@ mk.addEventListener('pointercancel', () => mkZieht = false);
    ============================================================ */
 function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
+/* ------------------------------------------------------------
+   Tippen statt Klicken: löst nur aus, wenn der Finger nicht
+   gewischt hat. Verhindert, dass beim Scrollen in Listen
+   versehentlich ein Eintrag geöffnet wird.
+   ------------------------------------------------------------ */
+const WISCH_SCHWELLE = 12;   // Pixel
+const TIPP_MAXDAUER  = 700;  // ms
+function beiTipp(el, fn){
+  let x0 = 0, y0 = 0, t0 = 0, kandidat = false, zeiger = null;
+  el.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    zeiger = e.pointerId; kandidat = true;
+    x0 = e.clientX; y0 = e.clientY; t0 = performance.now();
+  });
+  el.addEventListener('pointermove', e => {
+    if (!kandidat || e.pointerId !== zeiger) return;
+    if (Math.abs(e.clientY - y0) > WISCH_SCHWELLE ||
+        Math.abs(e.clientX - x0) > WISCH_SCHWELLE) kandidat = false;
+  });
+  el.addEventListener('pointercancel', () => { kandidat = false; });
+  el.addEventListener('pointerleave', () => { kandidat = false; });
+  el.addEventListener('pointerup', e => {
+    if (!kandidat || e.pointerId !== zeiger) return;
+    kandidat = false;
+    if (performance.now() - t0 > TIPP_MAXDAUER) return;
+    fn(e);
+  });
+  // Maus- und Tastaturbedienung (Enter/Leertaste lösen click aus)
+  el.addEventListener('click', e => {
+    if (e.detail === 0) fn(e);   // nur bei Tastatur, sonst hat pointerup schon gefeuert
+  });
+}
+
 function waehle(id){
   state.auswahl = id;
   if (!id){ panel.classList.remove('offen'); render(); return; }
@@ -2143,9 +2222,9 @@ function waehle(id){
   panelinhalt.innerHTML = h;
   panel.classList.add('offen');
   const pk = document.getElementById('panelPi');
-  if (pk) pk.addEventListener('click', () => oeffnePi(chr.id));
+  if (pk) beiTipp(pk, () => oeffnePi(chr.id));
   panelinhalt.querySelectorAll('.verweis').forEach(b => {
-    b.addEventListener('click', () => springeZu(b.dataset.ziel));
+    if (b.dataset.ziel) beiTipp(b, () => springeZu(b.dataset.ziel));
   });
   render();
 }
@@ -2276,6 +2355,22 @@ function normal(s){
 const SUCHINDEX = ITEMS.map(o => ({
   o, tt: normal(o.t), dd: normal(o.t + ' ' + (o.d||'') + ' ' + SPUR_VON_ID[o.s].name)
 }));
+// Chronikeinträge werden erst beim ersten Suchen indiziert
+let CHRONIKINDEX = null;
+function baueChronikIndex(){
+  if (CHRONIKINDEX) return CHRONIKINDEX;
+  CHRONIKINDEX = [];
+  for (const c of CHRONIKEN){
+    for (const e of c.daten){
+      CHRONIKINDEX.push({
+        c, e,
+        tt: normal(e.wer + ' ' + e.was),
+        dd: normal(e.wer + ' ' + e.was + ' ' + e.m + ' ' + c.titel)
+      });
+    }
+  }
+  return CHRONIKINDEX;
+}
 
 function sucheAus(){
   suchliste.classList.remove('offen');
@@ -2296,26 +2391,53 @@ function suchen(){
     return a.o.a - b.o.a;
   });
   state.suchTreffer = new Set(tr.map(e => e.o.i));
+  const ctr = baueChronikIndex().filter(e => e.dd.indexOf(q) >= 0);
+  ctr.sort((a,b) => {
+    const at = a.tt.indexOf(q) >= 0 ? 0 : 1, bt = b.tt.indexOf(q) >= 0 ? 0 : 1;
+    if (at !== bt) return at - bt;
+    return a.e.j - b.e.j;
+  });
   suchliste.innerHTML = '';
   suchListeIds = [];
-  if (!tr.length){
+  if (!tr.length && !ctr.length){
     suchliste.innerHTML = '<div class="suchleer">Kein Treffer für „' + esc(roh) + '“.</div>';
-  } else {
+  }
+  if (tr.length){
     const kopf = document.createElement('div');
     kopf.className = 'suchleer';
-    kopf.textContent = tr.length + (tr.length === 1 ? ' Treffer' : ' Treffer') +
-      (tr.length > 12 ? ' – die ersten 12:' : '');
+    kopf.textContent = 'Zeitleiste – ' + tr.length + ' Treffer' + (tr.length > 10 ? ', die ersten 10:' : ':');
     suchliste.appendChild(kopf);
-    tr.slice(0, 12).forEach(e => {
+    tr.slice(0, 10).forEach(e => {
       const sp = SPUR_VON_ID[e.o.s];
       const b = document.createElement('button');
       b.className = 'suchtreffer';
       b.dataset.ziel = e.o.i;
       b.innerHTML = '<span class="punkt" style="background:' + sp.farbe + '"></span><span><b>' +
         esc(e.o.t) + '</b><i>' + esc(fmtZeitraum(e.o)) + ' · ' + esc(sp.name) + '</i></span>';
-      b.addEventListener('click', () => { springeZu(e.o.i); sucheAus(); sucheFeld.blur(); });
+      beiTipp(b, () => { springeZu(e.o.i); sucheAus(); sucheFeld.blur(); });
       suchliste.appendChild(b);
-      suchListeIds.push(e.o.i);
+      suchListeIds.push({typ:'item', id:e.o.i});
+    });
+  }
+  if (ctr.length){
+    const kopf = document.createElement('div');
+    kopf.className = 'suchleer';
+    kopf.textContent = 'Chroniken – ' + ctr.length + ' Treffer' + (ctr.length > 8 ? ', die ersten 8:' : ':');
+    suchliste.appendChild(kopf);
+    ctr.slice(0, 8).forEach(e => {
+      const b = document.createElement('button');
+      b.className = 'suchtreffer';
+      b.dataset.chronik = e.c.id;
+      b.dataset.jahr = e.e.j;
+      b.innerHTML = '<span class="punkt" style="background:#8a4b2a;border-radius:50%"></span><span><b>' +
+        esc(e.e.wer) + ': ' + esc(e.e.was) + '</b><i>' + esc(fmtJahr(e.e.j)) + ' · ' + esc(e.c.tab) + '</i></span>';
+      beiTipp(b, () => {
+        sucheAus(); sucheFeld.blur();
+        oeffnePi(e.c.id);
+        setTimeout(() => hebeChronikZeileHervor(e.e.j), 60);
+      });
+      suchliste.appendChild(b);
+      suchListeIds.push({typ:'chronik', id:e.c.id, jahr:e.e.j});
     });
   }
   suchIndex = -1;
@@ -2337,7 +2459,13 @@ sucheFeld.addEventListener('keydown', e => {
   } else if (e.key === 'Enter'){
     e.preventDefault();
     const ziel = suchListeIds[suchIndex >= 0 ? suchIndex : 0];
-    if (ziel){ springeZu(ziel); sucheAus(); sucheFeld.blur(); }
+    if (ziel){
+      sucheAus(); sucheFeld.blur();
+      if (ziel.typ === 'chronik'){
+        oeffnePi(ziel.id);
+        setTimeout(() => hebeChronikZeileHervor(ziel.jahr), 60);
+      } else springeZu(ziel.id);
+    }
   } else if (e.key === 'Escape'){
     sucheFeld.value = ''; suchen(); sucheFeld.blur();
   }
@@ -2370,6 +2498,10 @@ const CHRONIKEN = [
    titel:'Chronik der Wahrscheinlichkeitsrechnung',
    note:'Gew\u00fcrfelt wurde seit Jahrtausenden, gerechnet erst ab 1654. Die Sperre war nicht mathematisch, sondern gedanklich: Was als G\u00f6tterentscheid galt, berechnete man nicht. Danach ging es schnell – vom Spieltisch \u00fcber Versicherung und Messfehler bis ins Fundament der Physik.',
    daten: STOCHASTIK_CHRONIK},
+  {id:'primzahlen', gruppe:'Mathematik', tab:'Primzahlen', anker:'z_primzahlen',
+   titel:'Chronik der Primzahlen',
+   note:'Im Kleinen wirken sie zuf\u00e4llig verstreut, im Gro\u00dfen folgt ihre H\u00e4ufigkeit einem klaren Gesetz – dieser Gegensatz tr\u00e4gt die Zahlentheorie seit Gau\u00df. Zwei Str\u00e4nge laufen durch die Chronik: das \u00e4lteste ungel\u00f6ste Problem der Mathematik (Riemann 1859) und der Weg einer als „nutzlos“ ger\u00fchmten Disziplin zur Grundlage des weltweiten Datenverkehrs.',
+   daten: PRIMZAHL_CHRONIK},
   {id:'unendlich', gruppe:'Mathematik', tab:'Unendlichkeit', anker:'z_unendlich',
    titel:'Chronik des Unendlichen',
    note:'2300 Jahre lang galt das Unendliche als etwas, wor\u00fcber man nicht rechnen darf – von Zenons Paradoxon \u00fcber Aristoteles\u2019 Verbot der vollendeten Unendlichkeit bis zu Galileis Ratlosigkeit. Als Cantor es doch tat, zeigte sich: Es gibt nicht eine Unendlichkeit, sondern unendlich viele.',
@@ -2506,7 +2638,7 @@ function zeigeChronik(id){
     }
     b.innerHTML = '<span class="pijahr"' + (e.ziel ? '' : ' style="color:#5b5145"') + '>' +
       esc(fmtJahr(e.j)) + '</span><span>' + rechts + '</span>';
-    if (e.ziel) b.addEventListener('click', () => { schliessePi(); springeZu(e.ziel); });
+    if (e.ziel) beiTipp(b, () => { schliessePi(); springeZu(e.ziel); });
     piliste.appendChild(b);
   }
   piliste.scrollTop = 0;
@@ -2566,17 +2698,33 @@ function oeffnePi(id){
   zeigeChronik(id || (aktiveChronik ? aktiveChronik.id : 'zahlbereiche'));
   piOverlay.classList.add('offen');
 }
+function hebeChronikZeileHervor(jahr){
+  const zeilen = [...piliste.querySelectorAll('.pizeile')];
+  const ziel = zeilen.find(z => Number(z.dataset.jahr) === jahr);
+  if (!ziel) return;
+  zeilen.forEach(z => z.classList.remove('gefunden'));
+  ziel.classList.add('gefunden');
+  ziel.scrollIntoView({block:'center', behavior:'smooth'});
+}
 function schliessePi(){ piOverlay.classList.remove('offen'); }
 document.getElementById('btnPi').addEventListener('click', () => oeffnePi());
 document.getElementById('pizu').addEventListener('click', schliessePi);
-piOverlay.addEventListener('click', e => { if (e.target.id === 'pi') schliessePi(); });
+let piTippY = null;
+piOverlay.addEventListener('pointerdown', e => {
+  piTippY = (e.target.id === 'pi') ? e.clientY : null;
+});
+piOverlay.addEventListener('pointerup', e => {
+  if (piTippY !== null && e.target.id === 'pi' &&
+      Math.abs(e.clientY - piTippY) < WISCH_SCHWELLE) schliessePi();
+  piTippY = null;
+});
 
 /* Start */
 state.z = zMin();
 state.x0 = MIN_JAHR;
 begrenze();
 render();
-window.__zl = {state, ITEMS, LINKS, SPUREN, GRUPPEN, CHRONIKEN, CHRONIK_VON_ID,
+window.__zl = {state, ITEMS, LINKS, SPUREN, GRUPPEN, CHRONIKEN, CHRONIK_VON_ID, baueChronikIndex,
   render, waehle, geheZu, ITEM_VON_ID, suchen, oeffnePi, schliessePi, zeigeChronik,
   schrittPaar, normal};
 </script>
