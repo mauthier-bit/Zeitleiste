@@ -59,6 +59,7 @@
   .unterleiste.zeigt-spuren .spurzeile{display:flex}
   .unterleiste.zeigt-epochen .sprungzeile{display:flex}
   .navknopf{font-size:16px;line-height:1;padding:5px 10px;font-weight:700}
+  .symbolknopf{font-size:15px;line-height:1;padding:6px 11px;min-width:36px;justify-content:center}
   .navknopf:disabled{opacity:.32;cursor:default}
   .spurzeile::-webkit-scrollbar,.sprungzeile::-webkit-scrollbar{height:5px}
   .spurzeile::-webkit-scrollbar-thumb,.sprungzeile::-webkit-scrollbar-thumb{
@@ -228,9 +229,9 @@
         <button id="suchleeren" title="Suche leeren">✕</button>
         <div id="suchliste"></div>
       </div>
-      <button id="btnEinfluss"><span class="icon">⇄</span>Einflüsse</button>
-      <button id="btnReset"><span class="icon">⟲</span>Gesamt</button>
-      <button id="btnHilfe"><span class="icon">?</span></button>
+      <button id="btnEinfluss" class="symbolknopf" title="Einflusspfeile ein- und ausblenden" aria-label="Einflüsse">⇄</button>
+      <button id="btnReset" class="symbolknopf" title="Gesamtansicht – alles anzeigen" aria-label="Gesamtansicht">⟲</button>
+      <button id="btnHilfe" class="symbolknopf" title="Hilfe und Bedienung" aria-label="Hilfe">?</button>
     </div>
   </div>
   <div class="unterleiste">
