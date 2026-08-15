@@ -110,6 +110,44 @@
   .suchtreffer i{font-style:normal;color:var(--ink2);font-size:11.5px;display:block;margin-top:1px}
   .suchleer{padding:9px 10px;font-size:12.5px;color:var(--ink2)}
 
+  /* Kartenansicht */
+  #karte{position:absolute;inset:0;background:#dfe7ec;z-index:11;display:none}
+  #karte.offen{display:block}
+  #kcv{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+  #kcv.zieht{cursor:grabbing}
+  #kartenregler{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10px;
+    padding:8px 14px;background:rgba(255,253,248,.94);border-top:1px solid var(--line)}
+  #kZeit{flex:1 1 auto;accent-color:var(--akzent);height:26px}
+  #kJahr{font-variant-numeric:tabular-nums;font-weight:600;font-size:13px;min-width:88px;text-align:right;color:var(--akzent)}
+  .kschalter{font-size:11.5px;color:var(--ink2);display:flex;align-items:center;gap:4px;white-space:nowrap}
+  #karteninfo{position:absolute;top:10px;left:12px;max-width:min(320px,52vw);background:rgba(255,253,248,.95);
+    border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:var(--schatten);
+    font-size:12.5px;line-height:1.4;display:none}
+  #karteninfo.an{display:block}
+
+  /* Laufende Meldungen beim Verschieben der Zeit */
+  #kartenmeldungen{position:absolute;right:12px;bottom:58px;width:min(300px,44vw);
+    display:flex;flex-direction:column-reverse;gap:6px;pointer-events:none}
+  .kmeldung{pointer-events:auto;background:rgba(255,253,248,.96);border:1px solid var(--line);
+    border-left-width:4px;border-radius:10px;padding:8px 11px;box-shadow:var(--schatten);
+    font-size:12px;line-height:1.35;cursor:pointer;
+    animation:kein .28s ease both;transition:opacity .5s ease,transform .5s ease}
+  .kmeldung.geht{opacity:0;transform:translateX(14px)}
+  .kmeldung b{display:block;font-size:12.5px}
+  .kmeldung i{font-style:normal;display:block;color:var(--ink2);font-size:11px;margin-top:2px}
+  .kmeldung .art{display:inline-block;font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;
+    color:var(--ink2);margin-bottom:2px}
+  @keyframes kein{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+
+  /* Epochenband über dem Zeitregler */
+  #kepoche{position:absolute;left:0;right:0;bottom:46px;height:22px;display:flex;
+    align-items:center;padding:0 14px;font-size:11px;color:var(--ink2);
+    background:linear-gradient(180deg,rgba(255,253,248,0),rgba(255,253,248,.9));pointer-events:none}
+  #kepoche b{color:var(--akzent);font-weight:700;margin-right:6px}
+  #karteninfo b{display:block;font-size:13.5px;margin-bottom:2px}
+  #karteninfo i{font-style:normal;color:var(--ink2);font-size:11.5px;display:block;margin-top:3px}
+  #karteninfo .zumelement{margin-top:8px;font-size:11.5px;padding:5px 9px}
+
   /* Chronikansicht – erscheint anstelle der Zeitleiste, kein Overlay */
   #pi{position:absolute;inset:0;background:var(--bg);z-index:12;display:none}
   #pi.offen{display:block}
@@ -149,6 +187,12 @@
   @media (hover:hover){ .pizeile:hover{background:var(--bg2)} }
   .pizeile.aktivwisch{background:transparent}
   .pizeile.klickbar{cursor:pointer}
+  .ortknopf{display:inline-flex;align-items:center;font-size:10.5px;padding:3px 9px;margin-top:6px;
+    border:1px solid #2b3a7a;color:#2b3a7a;background:rgba(43,58,122,.07);border-radius:999px;
+    font-weight:600;letter-spacing:.2px}
+  .ortknopf:active{transform:none}
+  @media (hover:hover){ .ortknopf:hover{background:#2b3a7a;color:#fff} }
+  .verweis.zurkarte{margin-top:4px}
   .pizeile.gefunden{background:#fdf3d6;box-shadow:inset 3px 0 0 #d69e14}
   .pijahr{font-variant-numeric:tabular-nums;font-weight:600;font-size:12.5px;color:var(--akzent);padding-top:1px}
   .piwer{display:block;font-size:13.5px;font-weight:600;line-height:1.3}
@@ -219,6 +263,7 @@
     <div class="umschalter" id="umschalter">
       <button id="btnAnsichtZeit" class="ansichtknopf aktiv">Zeitleiste</button>
       <button id="btnAnsichtChronik" class="ansichtknopf">Chroniken</button>
+      <button id="btnAnsichtKarte" class="ansichtknopf">Karte</button>
     </div>
     <div class="gruppe" id="gruppentabs"></div>
     <div class="kopfrechts">
@@ -255,7 +300,9 @@
         <li><b>Verschieben:</b> mit dem Finger ziehen (waagrecht = Zeit, senkrecht = Spuren).</li>
         <li><b>Zoomen:</b> zwei Finger auseinanderziehen oder Mausrad. Je tiefer der Zoom, desto mehr Details erscheinen.</li>
         <li><b>Details:</b> auf einen Balken oder Punkt tippen – die Erklärung öffnet sich seitlich.</li>
-        <li><b>Ansicht:</b> Der Umschalter ganz links wechselt zwischen <i>Zeitleiste</i> und <i>Chroniken</i>. Die Reiter daneben passen sich an: in der Zeitleiste die Spurgruppen und <i>Epochen</i>, in den Chroniken die Themenbereiche. Darunter erscheinen jeweils die Einzelspuren beziehungsweise die Chroniken der Gruppe; „Alle an/aus“ blendet eine ganze Spurgruppe ein oder aus.</li>
+        <li><b>Ansicht:</b> Der Umschalter ganz links wechselt zwischen <i>Zeitleiste</i>, <i>Chroniken</i> und <i>Karte</i>. Die Reiter daneben passen sich an: in der Zeitleiste die Spurgruppen und <i>Epochen</i>, in den Chroniken die Themenbereiche.</li>
+        <li><b>Karte:</b> Schematische Weltkarte mit Zeitregler – 17 farbige Gebiete, 20 Wege und 84 Orte erscheinen für das eingestellte Jahr. Beim Verschieben der Zeit blenden sich Meldungen zu den Veränderungen ein und wieder aus. ▶ lässt die Zeit ablaufen, zwei Finger zoomen. Beim Hineinzoomen erscheinen zusätzlich Flüsse, Gebirgskämme und regionale Umrisse – bis hinunter zu Isar, Lech und Salzach. Die Linien sind von Hand gezeichnet: für die Orientierung gedacht, nicht als Atlas.</li>
+        <li><b>Zwischen den Ansichten springen:</b> Wo es einen geografischen Bezug gibt, führt „◉ Karte“ dorthin – aus einer Chronikzeile ebenso wie aus dem Seitenpanel der Zeitleiste. Umgekehrt führt jede Karteninfo mit „→“ zurück in die Zeitleiste. Die Pfeile ‹ › oben führen durch alle drei Ansichten.</li>
         <li><b>Wechselwirkungen:</b> <span class="schluessel">⇄ Einflüsse</span> zeigt alle Pfeile. Ein ausgewähltes Element zeigt seine eigenen immer, mit Beschriftung.</li>
         <li><b>Suchen:</b> Reiter <i>Suche</i> (oder Strg/Cmd + F). Durchsucht Zeitleiste <i>und</i> alle Chroniken. Treffer werden auf der Zeitleiste gelb umrandet; ein Tipp springt hin.</li>
         <li><b>Zeitachse:</b> Beim Zoomen verfeinert sich das Raster automatisch bis auf einzelne Jahre. Mit der Maus zeigt eine Hilfslinie das Jahr unter dem Zeiger.</li>
@@ -265,6 +312,18 @@
       <h3>Die Idee</h3>
       <p>Hauptstränge sind <b>Mathematik</b> (Zahlen, Geometrie, Algebra, Analysis, Stochastik, Logik) und <b>Physik</b> (Mechanik, Wärmelehre, Elektrodynamik, Relativität, Quantenphysik) sowie die eigenständige <b>Astronomie</b>. Die Kontextspuren – Kulturräume, Weltbild, Instrumente, Gesellschaft – erklären, <i>warum</i> etwas gerade dort und dann entdeckt wurde.</p>
       <p>Besonders lohnend sind die Pfeile zwischen den Strängen: Kegelschnitte (−200) → Keplerbahnen (1609). Riemanns Geometrie (1854) → Allgemeine Relativitätstheorie (1915). Matrizenrechnung (1858) → Heisenberg (1925). Und umgekehrt: Wärmeleitung → Fourierreihen, Ceres-Bahn → Methode der kleinsten Quadrate.</p>
+    </div>
+  </div>
+  <div id="karte">
+    <canvas id="kcv"></canvas>
+    <div id="karteninfo"></div>
+    <div id="kartenmeldungen"></div>
+    <div id="kepoche"></div>
+    <div id="kartenregler">
+      <button id="kAbspielen" class="symbolknopf" title="Zeitlauf starten" aria-label="Abspielen">▶</button>
+      <input id="kZeit" type="range" min="-3000" max="2025" step="5" value="1500">
+      <span id="kJahr">1500</span>
+      <label class="kschalter"><input type="checkbox" id="kAlle"> alles zeigen</label>
     </div>
   </div>
   <div id="pi">
@@ -2396,6 +2455,364 @@ dampfmaschine: svg(300,150,
 };
 
 /* ============================================================
+   KARTENGRUNDLAGE
+   Schematische Küstenlinien in [Länge, Breite], von Hand
+   gezeichnet – wiedererkennbar, aber nicht kartografisch exakt.
+   Projektion: Plattkarte (equirectangular).
+   ============================================================ */
+const LANDMASSEN = [
+ // --- Europa: Iberien, Frankreich, Nordsee, Skandinavien, Schwarzes Meer, Balkan, Italien ---
+ [[-5.6,36.0],[-6.3,36.8],[-8.9,37.0],[-9.4,38.7],[-8.7,41.1],[-9.3,42.9],[-8.4,43.4],[-5.6,43.6],
+  [-3.0,43.4],[-1.6,43.4],[-1.2,45.6],[-1.2,46.2],[-2.2,47.2],[-4.8,48.4],[-2.9,48.7],[-1.6,49.7],
+  [0.2,49.4],[1.9,51.0],[2.9,51.2],[4.1,52.0],[4.8,52.9],[6.8,53.5],[8.5,53.6],[8.1,55.0],[8.6,57.1],
+  [10.6,57.7],[12.5,56.2],[13.0,55.4],[14.7,55.3],[16.5,54.5],[18.7,54.7],[21.0,55.3],[24.0,56.0],
+  [24.1,57.8],[24.5,59.5],[27.5,60.3],[30.3,60.0],[28.5,62.5],[30.0,65.0],[29.5,67.0],[25.8,71.2],
+  [21.0,70.0],[18.9,69.7],[14.4,67.3],[11.5,64.8],[10.4,63.4],[6.2,62.5],[5.3,60.4],[5.7,59.0],
+  [10.7,59.9],[11.5,58.5],[12.5,56.2],[10.0,54.5],[12.5,54.4],[18.0,54.4],[19.6,54.3],[21.0,56.0],
+  [24.0,57.0],[28.0,59.0],[32.0,62.0],[36.0,65.0],[40.5,64.5],[44.0,66.5],[50.0,68.0],[54.0,68.5],
+  [60.0,69.0],[64.0,68.5],[62.0,66.0],[60.0,62.0],[57.0,57.0],[54.0,52.0],[50.0,48.0],[47.5,46.5],
+  [40.0,44.5],[38.5,45.5],[37.0,45.2],[35.0,45.4],[33.5,44.4],[33.0,46.0],[31.0,46.5],[29.7,45.3],
+  [28.5,44.0],[28.0,42.5],[27.5,41.0],[26.2,40.2],[24.0,40.6],[23.0,38.0],[21.0,37.0],[23.0,36.4],
+  [24.5,37.0],[23.5,39.0],[21.0,39.0],[19.5,40.5],[19.0,42.0],[16.5,43.0],[14.5,45.0],[12.3,45.4],
+  [13.6,44.0],[15.0,42.0],[16.0,41.5],[18.5,40.2],[17.0,39.0],[16.5,38.0],[15.6,38.0],[16.0,40.0],
+  [14.0,40.6],[11.0,42.4],[10.0,44.0],[8.0,44.4],[7.0,43.7],[5.0,43.3],[3.0,42.5],[3.3,41.6],
+  [0.5,39.5],[-0.9,37.6],[-2.5,36.7],[-5.6,36.0]],
+
+ // --- Afrika ---
+ [[-5.8,35.9],[-2.0,35.5],[3.0,36.9],[8.0,37.0],[10.5,37.3],[11.5,34.5],[13.2,32.9],[15.5,31.5],
+  [20.0,32.1],[23.0,32.5],[25.5,31.6],[29.9,31.2],[32.5,31.2],[33.5,29.5],[34.5,28.0],[35.5,23.5],
+  [37.0,18.0],[39.0,15.5],[41.0,14.5],[43.0,12.6],[43.5,11.5],[47.0,11.0],[51.3,11.8],[51.0,9.0],
+  [48.0,5.0],[45.3,2.0],[42.0,-1.0],[40.5,-3.5],[39.7,-4.0],[39.3,-6.8],[40.5,-10.5],[40.7,-14.5],
+  [36.5,-18.5],[35.0,-21.0],[32.6,-25.9],[31.0,-29.9],[27.9,-33.0],[24.0,-34.0],[20.0,-34.8],
+  [18.4,-33.9],[17.0,-30.0],[15.0,-26.5],[14.5,-22.9],[13.0,-18.0],[12.0,-15.0],[13.2,-8.8],
+  [12.5,-6.0],[11.9,-4.8],[9.4,0.4],[9.7,4.0],[8.5,4.5],[5.5,4.3],[3.4,6.4],[1.0,6.0],[-0.2,5.5],
+  [-4.0,5.3],[-7.5,4.4],[-10.8,6.3],[-13.2,8.5],[-16.0,12.5],[-17.4,14.7],[-16.0,18.0],[-17.0,21.0],
+  [-15.0,24.0],[-13.0,27.7],[-11.0,29.0],[-9.6,30.4],[-7.6,33.6],[-5.8,35.9]],
+
+ // --- Asien: Nordküste, Pazifik, Indischer Ozean, Arabien, Levante, Anatolien ---
+ [[66.0,70.0],[73.0,73.0],[80.0,74.0],[90.0,76.0],[100.0,77.0],[110.0,76.0],[120.0,74.0],[130.0,73.5],
+  [140.0,73.0],[150.0,72.0],[160.0,70.0],[170.0,69.0],[179.0,66.0],[175.0,63.0],[165.0,60.5],
+  [160.0,58.0],[162.0,55.0],[158.0,52.0],[155.0,50.0],[150.0,46.0],[142.0,45.5],[135.0,43.0],
+  [130.5,42.5],[129.5,38.5],[129.0,35.2],[126.5,34.4],[126.0,37.5],[122.0,39.5],[119.0,37.5],
+  [120.5,34.0],[121.8,31.5],[120.0,28.0],[117.0,24.5],[114.0,22.5],[110.5,21.0],[108.5,19.0],
+  [106.0,16.0],[109.0,13.0],[109.0,11.0],[105.0,9.0],[103.5,4.0],[100.5,6.5],[99.0,9.0],[98.0,13.0],
+  [97.0,16.5],[94.5,18.0],[92.5,21.0],[89.0,22.0],[87.0,21.0],[84.0,19.0],[80.5,15.5],[80.0,13.0],
+  [78.0,8.2],[76.0,9.5],[73.5,15.5],[72.5,20.0],[69.0,22.5],[67.0,25.0],[62.0,25.2],[58.0,25.5],
+  [57.5,22.0],[59.5,22.5],[56.5,26.0],[52.0,27.5],[50.0,29.0],[48.0,30.2],[48.5,28.5],[50.5,26.0],
+  [51.5,24.0],[55.0,23.5],[57.0,20.0],[55.0,17.0],[52.0,15.0],[48.0,14.0],[45.0,12.8],[43.0,12.6],
+  [42.5,15.5],[39.0,21.0],[37.0,25.0],[35.0,28.0],[34.3,31.3],[35.5,33.5],[36.0,36.0],[35.5,36.6],
+  [32.0,36.3],[30.0,36.3],[28.0,36.8],[26.5,38.5],[26.2,40.2],[29.0,41.0],[33.0,42.0],[38.0,41.5],
+  [41.6,41.6],[45.0,40.0],[48.5,41.5],[50.0,44.5],[52.0,47.0],[55.0,50.0],[58.0,55.0],[60.0,60.0],
+  [62.0,65.0],[66.0,70.0]],
+
+ // --- Nordamerika ---
+ [[-168.0,66.0],[-165.0,68.5],[-158.0,71.3],[-148.0,70.2],[-140.0,70.0],[-130.0,70.5],[-120.0,70.0],
+  [-110.0,68.5],[-100.0,69.0],[-95.0,68.0],[-90.0,70.0],[-85.0,70.5],[-80.0,73.0],[-75.0,76.0],
+  [-70.0,73.0],[-68.0,68.0],[-64.0,60.0],[-63.0,55.0],[-58.0,52.5],[-55.5,51.5],[-59.0,47.5],
+  [-64.0,46.0],[-66.0,44.8],[-70.5,43.0],[-72.0,41.0],[-74.0,40.5],[-75.5,38.0],[-76.5,35.0],
+  [-79.0,33.0],[-81.5,31.0],[-80.1,26.0],[-80.4,25.2],[-82.5,27.5],[-84.0,30.0],[-88.0,30.3],
+  [-90.0,29.0],[-93.5,29.7],[-97.0,27.8],[-97.5,25.9],[-95.0,18.7],[-92.0,18.5],[-90.5,21.0],
+  [-87.0,21.5],[-88.5,17.5],[-83.5,15.0],[-83.0,9.0],[-79.5,9.5],[-77.5,8.5],[-80.0,8.0],[-83.0,8.0],
+  [-86.0,11.0],[-90.0,14.0],[-95.0,16.0],[-101.0,17.0],[-105.5,20.5],[-109.5,23.0],[-113.0,27.0],
+  [-114.5,31.0],[-117.2,32.5],[-120.5,34.5],[-122.5,37.5],[-124.0,40.5],[-124.5,46.0],[-123.0,48.5],
+  [-128.0,52.0],[-133.0,56.0],[-137.0,59.0],[-145.0,60.5],[-150.0,59.5],[-155.0,58.0],[-162.0,58.5],
+  [-165.0,62.5],[-168.0,66.0]],
+
+ // --- Südamerika ---
+ [[-77.5,8.5],[-75.0,10.5],[-71.5,12.0],[-68.0,11.0],[-63.5,10.5],[-60.0,8.5],[-58.0,6.5],
+  [-52.0,4.5],[-50.5,1.0],[-48.5,-1.0],[-44.5,-2.5],[-41.0,-3.0],[-38.5,-4.0],[-35.2,-6.0],
+  [-35.5,-9.0],[-37.5,-12.0],[-39.0,-14.0],[-39.5,-18.0],[-41.5,-22.0],[-44.0,-23.0],[-48.5,-25.5],
+  [-51.0,-30.0],[-53.5,-33.5],[-56.0,-36.5],[-57.5,-38.5],[-62.0,-40.5],[-64.0,-42.5],[-65.5,-45.0],
+  [-67.5,-49.0],[-68.5,-52.5],[-70.5,-54.0],[-73.5,-53.0],[-74.5,-49.0],[-73.5,-45.0],[-73.0,-41.0],
+  [-72.0,-37.0],[-71.5,-33.0],[-70.5,-28.0],[-70.4,-23.0],[-70.5,-18.5],[-75.0,-14.5],[-77.0,-12.0],
+  [-79.0,-8.0],[-81.0,-6.0],[-80.5,-3.5],[-80.0,-1.0],[-78.5,1.5],[-77.5,4.0],[-77.0,7.0],[-77.5,8.5]],
+
+ // --- Australien ---
+ [[113.2,-22.0],[113.7,-26.0],[115.0,-30.0],[115.7,-33.0],[118.0,-35.0],[122.0,-34.0],[126.0,-32.3],
+  [131.0,-31.5],[134.0,-33.0],[136.0,-35.0],[138.0,-34.8],[139.5,-37.0],[143.0,-38.8],[146.5,-39.0],
+  [149.0,-37.5],[150.5,-35.5],[153.0,-31.0],[153.5,-28.0],[153.0,-25.5],[151.0,-23.5],[149.0,-21.0],
+  [146.5,-19.0],[145.5,-16.0],[143.5,-14.0],[142.5,-10.7],[141.5,-12.5],[139.0,-17.0],[136.5,-12.5],
+  [133.0,-11.2],[130.5,-12.5],[129.0,-15.0],[126.0,-14.0],[123.5,-16.5],[121.0,-19.5],[117.5,-20.5],
+  [114.5,-21.5],[113.2,-22.0]],
+
+ // --- Grönland ---
+ [[-45.0,60.0],[-50.0,62.5],[-53.5,65.5],[-54.0,69.0],[-56.0,71.5],[-58.5,74.0],[-60.0,76.0],
+  [-55.0,78.5],[-48.0,81.0],[-38.0,83.0],[-28.0,83.5],[-20.0,81.5],[-18.0,78.0],[-21.5,74.5],
+  [-25.0,71.0],[-31.0,68.0],[-38.0,65.0],[-42.0,62.0],[-45.0,60.0]],
+
+ // --- Britische Inseln ---
+ [[-5.2,50.1],[-3.5,50.6],[-1.0,50.7],[1.4,51.0],[1.7,52.8],[0.3,53.6],[-0.1,54.6],[-1.5,55.6],
+  [-2.1,56.7],[-3.0,58.6],[-5.0,58.6],[-5.8,57.5],[-5.6,56.0],[-4.8,54.6],[-3.0,54.1],[-4.2,53.3],
+  [-4.7,52.8],[-5.3,51.7],[-3.4,51.4],[-5.2,50.1]],
+ [[-10.4,51.8],[-8.0,51.6],[-6.0,52.2],[-6.0,53.4],[-6.2,55.2],[-8.0,55.3],[-9.9,54.3],[-10.0,53.0],[-10.4,51.8]],
+
+ // --- Japan ---
+ [[130.2,31.5],[131.5,31.4],[132.0,33.0],[135.0,33.5],[136.9,34.6],[139.8,35.0],[140.9,35.7],
+  [141.0,38.3],[141.5,41.5],[140.5,42.0],[141.0,43.2],[144.4,42.9],[145.8,43.4],[144.0,45.5],
+  [141.6,45.4],[140.0,42.5],[139.5,40.0],[137.0,37.0],[133.0,35.5],[131.0,34.4],[130.2,31.5]],
+
+ // --- weitere Inseln ---
+ [[-24.5,64.4],[-22.0,63.4],[-17.5,63.4],[-14.0,64.8],[-15.0,66.5],[-20.0,66.4],[-23.5,66.0],[-24.5,64.4]],
+ [[43.2,-12.0],[46.5,-15.5],[48.0,-17.0],[50.5,-19.0],[47.5,-24.5],[45.2,-25.6],[43.5,-22.0],[43.2,-16.0],[43.2,-12.0]],
+ [[172.7,-34.4],[176.0,-37.5],[178.5,-38.0],[177.0,-39.5],[175.0,-41.4],[173.0,-41.0],[171.0,-42.5],
+  [168.0,-44.5],[166.5,-45.9],[170.0,-46.0],[172.5,-43.5],[174.0,-41.5],[172.7,-34.4]],
+ // Sumatra, Java, Borneo, Sulawesi, Neuguinea
+ [[95.3,5.6],[98.0,3.5],[101.0,2.0],[104.0,-1.0],[105.8,-5.9],[102.0,-4.5],[98.5,-1.5],[95.3,5.6]],
+ [[105.5,-6.0],[110.0,-6.9],[114.5,-8.2],[112.0,-8.4],[108.0,-7.7],[105.5,-6.0]],
+ [[109.5,2.0],[113.0,3.2],[117.5,4.2],[119.0,1.0],[117.0,-3.5],[114.0,-4.2],[110.0,-2.5],[109.5,2.0]],
+ [[119.8,-5.6],[120.5,-2.5],[123.0,0.8],[125.0,1.5],[124.5,-1.5],[122.0,-3.5],[120.5,-5.5],[119.8,-5.6]],
+ [[131.0,-1.0],[135.0,-2.5],[140.0,-2.5],[145.0,-5.0],[149.5,-9.5],[147.0,-10.0],[143.0,-9.0],
+  [138.0,-8.5],[134.0,-6.0],[131.0,-1.0]],
+ // Philippinen, Sri Lanka, Kuba, Hispaniola, Taiwan
+ [[121.0,18.5],[122.2,17.0],[124.0,13.0],[126.5,9.0],[125.5,6.0],[122.0,7.0],[120.0,12.0],[120.5,16.0],[121.0,18.5]],
+ [[79.8,9.8],[81.2,8.5],[81.9,6.9],[80.2,5.9],[79.7,7.5],[79.8,9.8]],
+ [[-84.9,21.9],[-81.0,23.2],[-77.0,23.0],[-74.2,20.3],[-77.5,19.9],[-82.0,21.5],[-84.9,21.9]],
+ [[-74.5,18.3],[-71.6,19.9],[-68.3,19.0],[-68.5,18.2],[-71.7,17.9],[-74.5,18.3]],
+ [[120.1,25.3],[121.9,25.1],[121.0,22.0],[120.1,23.5],[120.1,25.3]],
+ // Sizilien, Sardinien, Korsika, Kreta, Zypern
+ [[12.4,37.8],[15.1,36.7],[15.6,38.2],[13.4,38.2],[12.4,37.8]],
+ [[8.2,39.1],[9.6,39.2],[9.8,41.0],[8.2,41.1],[8.2,39.1]],
+ [[8.6,41.4],[9.5,41.5],[9.4,43.0],[8.7,42.6],[8.6,41.4]],
+ [[23.6,35.3],[26.2,35.2],[26.3,35.6],[24.0,35.7],[23.6,35.3]],
+ [[32.3,34.6],[34.6,35.1],[33.5,35.4],[32.3,35.1],[32.3,34.6]]
+];
+
+/* Orientierungslinien */
+const GEO_LINIEN = { aequator: 0, wendekreise: [23.44, -23.44], polarkreise: [66.56, -66.56] };
+
+/* ============================================================
+   ORTE – [Länge, Breite]. id verweist auf ein Zeitleisten-Element,
+   a/b geben an, wann der Ort in diesem Zusammenhang bedeutsam war.
+   ============================================================ */
+const ORTE = [
+{n:'Uruk & Babylon',o:[44.4,32.5],a:-3300,b:-300,id:'ku_meso',t:'Schrift, Sexagesimalsystem, 1500 Jahre Himmelsbeobachtung'},
+{n:'Giza',o:[31.13,29.98],a:-2600,b:-2500,id:'g_aegverm',t:'Pyramidenbau: Geometrie und Organisation'},
+{n:'Ninive',o:[43.15,36.36],a:-700,b:-612,id:'as_babtag',t:'Bibliothek mit Keilschrifttafeln'},
+{n:'Knossos',o:[25.16,35.30],a:-2000,b:-1450,id:'ku_grie',t:'Minoische Palastkultur'},
+{n:'Milet',o:[27.28,37.53],a:-600,b:-500,id:'g_thales',t:'Thales und die ersten Naturphilosophen'},
+{n:'Athen',o:[23.73,37.98],a:-500,b:529,id:'ku_grie',t:'Akademie, Lykeion, Demokratie'},
+{n:'Syrakus',o:[15.28,37.07],a:-287,b:-212,id:'p_archimedes',t:'Archimedes – Hebel, Auftrieb, Kriegsmaschinen'},
+{n:'Alexandria',o:[29.92,31.20],a:-300,b:400,id:'ku_alex',t:'Museion und Bibliothek: Euklid, Eratosthenes, Ptolemäus'},
+{n:'Persepolis',o:[52.89,29.94],a:-550,b:-330,id:'ku_grie',t:'Zentrum des Perserreichs'},
+{n:'Rom',o:[12.50,41.90],a:-509,b:476,id:'ku_rom',t:'Recht, Vermessung, Ingenieurbau'},
+{n:'Pataliputra & Ujjain',o:[75.78,23.18],a:-300,b:1200,id:'ku_indien',t:'Stellenwertsystem, Null, Aryabhata'},
+{n:'Chang’an',o:[108.94,34.34],a:-200,b:900,id:'ku_china',t:'Himmelschroniken, Papier, Druck'},
+{n:'Bagdad',o:[44.40,33.31],a:762,b:1258,id:'er_bagdad',t:'Haus der Weisheit: Übersetzung und Algebra'},
+{n:'Córdoba',o:[-4.78,37.89],a:900,b:1236,id:'ku_islam',t:'Bibliotheken und Astronomie in al-Andalus'},
+{n:'Toledo',o:[-4.02,39.86],a:1085,b:1270,id:'er_reconquista',t:'Übersetzerschulen: Arabisch → Latein'},
+{n:'Samarkand',o:[66.97,39.65],a:1409,b:1449,id:'as_observ',t:'Ulug Begs Observatorium, al-Kaschi'},
+{n:'Kairo',o:[31.24,30.04],a:1000,b:1040,id:'e_alhazen',t:'Ibn al-Haitham: Optik und Experiment'},
+{n:'Bologna',o:[11.34,44.49],a:1088,b:1500,id:'ku_uni',t:'Älteste Universität Europas'},
+{n:'Paris',o:[2.35,48.86],a:1150,b:2025,id:'ku_uni',t:'Universität, Académie, École Polytechnique'},
+{n:'Oxford',o:[-1.26,51.75],a:1200,b:1400,id:'p_merton',t:'Merton-Regel: beschleunigte Bewegung'},
+{n:'Chartres & Paris',o:[1.49,48.45],a:1140,b:1300,id:'ka_gotik',t:'Gotische Kathedralen: Statik und Licht'},
+{n:'Mainz',o:[8.27,50.00],a:1450,b:1460,id:'in_druck',t:'Gutenbergs Buchdruck'},
+{n:'Nürnberg',o:[11.08,49.45],a:1471,b:1550,id:'z_fibo',t:'Regiomontanus, Behaims Globus, Feinmechanik'},
+{n:'Florenz',o:[11.26,43.77],a:1400,b:1600,id:'ka_renaissance',t:'Zentralperspektive, Brunelleschi'},
+{n:'Frombork',o:[19.68,54.36],a:1510,b:1543,id:'as_kopernikus',t:'Kopernikus rechnet das heliozentrische System'},
+{n:'Uraniborg (Hven)',o:[12.70,55.91],a:1576,b:1597,id:'as_tycho',t:'Tychos Präzisionsmessungen'},
+{n:'Prag',o:[14.42,50.09],a:1600,b:1612,id:'as_kepler',t:'Kepler als kaiserlicher Hofmathematiker'},
+{n:'Padua & Florenz',o:[11.88,45.41],a:1592,b:1642,id:'as_galileiteles',t:'Galilei: Fernrohr, Fallgesetz, Prozess'},
+{n:'Middelburg',o:[3.61,51.50],a:1608,b:1610,id:'in_fernrohr',t:'Erste Fernrohre der Brillenmacher'},
+{n:'Delft',o:[4.36,52.01],a:1670,b:1700,id:'e_optik',t:'Van Leeuwenhoeks Mikroskope'},
+{n:'Florenz (Torricelli)',o:[11.25,43.78],a:1643,b:1647,id:'p_torricelli',t:'Barometer und erstes Vakuum'},
+{n:'Magdeburg',o:[11.63,52.13],a:1650,b:1663,id:'in_vakuum',t:'Guerickes Halbkugeln und Elektrisiermaschine'},
+{n:'London',o:[-0.13,51.51],a:1660,b:1730,id:'ku_akademien',t:'Royal Society, Newtons Principia'},
+{n:'Cambridge',o:[0.12,52.21],a:1665,b:1700,id:'p_newton',t:'Newton: Gravitation und Infinitesimalrechnung'},
+{n:'Greenwich',o:[0.0,51.48],a:1675,b:1884,id:'in_zeit',t:'Sternwarte, Längengrad, Nullmeridian'},
+{n:'Hannover',o:[9.73,52.37],a:1676,b:1716,id:'an_infinitesimal',t:'Leibniz: Kalkül, Dualsystem, Akademie'},
+{n:'Basel & St. Petersburg',o:[7.59,47.56],a:1700,b:1783,id:'an_euler',t:'Bernoullis und Euler'},
+{n:'Bologna (Galvani)',o:[11.35,44.50],a:1780,b:1800,id:'e_volta',t:'Galvani und Volta: Froschschenkel und Säule'},
+{n:'München',o:[11.58,48.14],a:1789,b:2025,id:'w_rumford',t:'Rumford, Akademie, Sommerfelds Schule'},
+{n:'Benediktbeuern',o:[11.40,47.70],a:1806,b:1826,id:'in_spektro',t:'Fraunhofers Glasschmelze und Spektrallinien'},
+{n:'Kopenhagen',o:[12.57,55.68],a:1820,b:1930,id:'e_oersted',t:'Oersted; später Bohrs Institut'},
+{n:'Erlangen & Köln',o:[11.00,49.60],a:1826,b:1854,id:'e_ohm',t:'Ohm formuliert das Gesetz des Stromkreises'},
+{n:'Göttingen',o:[9.93,51.53],a:1800,b:1933,id:'a_fundamental',t:'Gauß, Riemann, Hilbert, Noether'},
+{n:'Königsberg',o:[20.51,54.71],a:1736,b:1840,id:'g_euler_top',t:'Brückenproblem; Bessels Sternparallaxe'},
+{n:'Paris (Sorbonne)',o:[2.34,48.85],a:1890,b:1910,id:'q_radioaktiv',t:'Becquerel und die Curies: Radioaktivität'},
+{n:'Würzburg',o:[9.93,49.79],a:1895,b:1896,id:'q_roentgen',t:'Röntgen entdeckt eine neue Art von Strahlen'},
+{n:'Bern & Zürich',o:[7.45,46.95],a:1905,b:1915,id:'r_srt',t:'Einsteins Wunderjahr und Relativitätstheorie'},
+{n:'Manchester',o:[-2.24,53.48],a:1908,b:1919,id:'q_rutherford',t:'Rutherfords Streuversuch: der Atomkern'},
+{n:'Berlin',o:[13.40,52.52],a:1900,b:1945,id:'q_planck',t:'Planck, Einstein, Hahn/Meitner: Kernspaltung'},
+{n:'Leiden',o:[4.49,52.16],a:1908,b:1930,id:'w_tieftemp',t:'Kamerlingh Onnes: flüssiges Helium, Supraleitung'},
+{n:'Príncipe & Sobral',o:[7.40,1.61],a:1919,b:1919,id:'r_eddington',t:'Sonnenfinsternis bestätigt die Lichtablenkung'},
+{n:'Bletchley Park',o:[-0.74,51.99],a:1939,b:1945,id:'l_turing',t:'Turing und das Brechen der Enigma'},
+{n:'Peenemünde',o:[13.77,54.14],a:1936,b:1945,id:'in_raumfahrt',t:'Raketenentwicklung – Bau unter KZ-Bedingungen'},
+{n:'Los Alamos',o:[-106.30,35.88],a:1942,b:1945,id:'q_kernenergie',t:'Manhattan-Projekt'},
+{n:'Hiroshima',o:[132.45,34.39],a:1945,b:1945,id:'q_kernenergie',t:'Atombombenabwurf'},
+{n:'Princeton',o:[-74.66,40.35],a:1933,b:1955,id:'ge_wk',t:'Zufluchtsort der Emigranten: Einstein, von Neumann, Gödel'},
+{n:'Bell Labs',o:[-74.40,40.68],a:1947,b:1970,id:'e_halbleiter',t:'Transistor, Solarzelle, Hintergrundstrahlung'},
+{n:'CERN, Genf',o:[6.06,46.23],a:1954,b:2025,id:'ku_gross',t:'Europäische Großforschung, LHC, WWW'},
+{n:'Baikonur',o:[63.34,45.92],a:1957,b:2025,id:'in_raumfahrt',t:'Sputnik und Gagarin'},
+{n:'Cape Canaveral',o:[-80.60,28.39],a:1958,b:2025,id:'in_raumfahrt',t:'Apollo-Programm'},
+{n:'Palo Alto & Stanford',o:[-122.17,37.43],a:1960,b:2025,id:'in_netze',t:'Halbleiter, ARPANET, Digitalindustrie'},
+{n:'Tenochtitlan',o:[-99.13,19.43],a:1325,b:1521,id:'ku_maya',t:'Aztekische Hauptstadt'},
+{n:'Tikal & Chichén Itzá',o:[-89.62,17.22],a:100,b:900,id:'z_maya',t:'Maya: Stellenwertsystem mit Null, Kalenderastronomie'},
+{n:'Cusco',o:[-71.98,-13.52],a:1400,b:1533,id:'ku_maya',t:'Inka-Hauptstadt, Quipu als Knotenschrift'},
+{n:'Potosí',o:[-65.75,-19.58],a:1545,b:1800,id:'er_entdeckungen',t:'Silberberg – Zwangsarbeit finanziert Europa'},
+{n:'Burghausen',o:[12.83,48.17],a:1180,b:2025,id:'gl_kloster',t:'Längste Burganlage Europas; Salzhandel über die Salzach, ab 1629 Jesuitenkolleg mit Mathematikunterricht'},
+{n:'Amberg',o:[11.86,49.44],a:1034,b:1800,id:'in_wasserrad',t:'Eisenerz vom Amberger Erzberg; wasserkraftgetriebene Hammerwerke entlang der Vils – 1387 schließen sich 68 Hämmer zur Großen Hammereinigung zusammen. Später Regierungsstadt der Oberen Pfalz.'},
+{n:'Regensburg',o:[12.10,49.02],a:1630,b:1630,id:'as_kepler',t:'Kepler stirbt hier auf einer Reise, um ausstehenden Lohn einzufordern'},
+{n:'Ingolstadt',o:[11.43,48.76],a:1472,b:1800,id:'ku_uni',t:'Erste bayerische Landesuniversität, später nach Landshut und München verlegt'},
+{n:'Augsburg',o:[10.90,48.37],a:1500,b:1620,id:'er_reformation',t:'Fugger, Religionsfrieden 1555, Feinmechanik und Uhrmacherei'},
+{n:'Passau',o:[13.43,48.57],a:1622,b:1800,id:'gl_kloster',t:'Jesuitenkolleg am Zusammenfluss von Donau, Inn und Ilz'},
+{n:'Landshut',o:[12.15,48.54],a:1800,b:1826,id:'ku_uni',t:'Zwischenstation der Universität auf dem Weg nach München'},
+{n:'Tegernsee',o:[11.76,47.71],a:800,b:1803,id:'gl_kloster',t:'Klosterbibliothek und Schreibstube; Glasmalerei'},
+{n:'Salzburg',o:[13.05,47.80],a:1622,b:1810,id:'ku_uni',t:'Benediktineruniversität, Fürsterzbistum am Salzhandel'},
+{n:'Kelheim & Weltenburg',o:[11.87,48.90],a:-500,b:1803,id:'ku_meso',t:'Keltisches Oppidum an der Donauenge, später Klosteranlage'},
+{n:'Nebra',o:[11.52,51.28],a:-1600,b:-1600,id:'as_megalith',t:'Himmelsscheibe'},
+{n:'Stonehenge',o:[-1.83,51.18],a:-2500,b:-2000,id:'as_megalith',t:'Sonnenwendbeobachtung'},
+{n:'Maragha',o:[46.24,37.39],a:1259,b:1316,id:'as_observ',t:'Observatorium – Tusi-Paare'},
+{n:'Timbuktu',o:[-3.01,16.77],a:1300,b:1600,id:'ku_islam',t:'Handschriftenbibliotheken am Niger'},
+{n:'Nalanda',o:[85.44,25.14],a:427,b:1197,id:'ku_indien',t:'Klosteruniversität mit großer Bibliothek'},
+{n:'Kerala',o:[76.28,10.85],a:1350,b:1500,id:'an_kerala',t:'Madhava: unendliche Reihen'},
+{n:'Wien',o:[16.37,48.21],a:1920,b:1936,id:'l_goedel',t:'Wiener Kreis, Gödels Unvollständigkeitssätze'},
+{n:'Kopenhagen (Bohr)',o:[12.60,55.70],a:1921,b:1940,id:'q_kopenhagen',t:'Bohrs Institut: Deutung der Quantenmechanik'},
+{n:'Chicago',o:[-87.63,41.88],a:1942,b:1942,id:'q_kernenergie',t:'Erster kontrollierter Kettenreaktor'},
+{n:'Obninsk',o:[36.61,55.10],a:1954,b:1954,id:'w_quellen',t:'Erstes Kernkraftwerk am Netz'},
+{n:'Tschernobyl',o:[30.10,51.39],a:1986,b:1986,id:'q_kernenergie',t:'Reaktorkatastrophe'},
+{n:'Lauffen–Frankfurt',o:[9.15,49.07],a:1891,b:1891,id:'w_transport',t:'176 km Drehstromübertragung'},
+{n:'Karlsruhe',o:[8.40,49.01],a:1886,b:1889,id:'e_hertz',t:'Hertz weist elektromagnetische Wellen nach'},
+{n:'Menlo Park',o:[-74.32,40.57],a:1876,b:1887,id:'in_stromnetz',t:'Edisons Erfinderlabor'},
+{n:'Gießen',o:[8.68,50.58],a:1826,b:1852,id:'ku_industrie',t:'Liebigs Laborpraktikum als Lehrform'},
+{n:'Down House',o:[0.05,51.33],a:1842,b:1882,id:'gl_darwin',t:'Darwin schreibt die Entstehung der Arten'},
+{n:'Galápagos',o:[-90.97,-0.75],a:1835,b:1835,id:'gl_darwin',t:'Beagle-Reise: Beobachtungen an Finken und Schildkröten'},
+{n:'Mauna Kea & Atacama',o:[-70.40,-24.63],a:1990,b:2025,id:'as_teleskope',t:'Großobservatorien in Höhe und Trockenheit'},
+{n:'LIGO Hanford',o:[-119.41,46.46],a:2015,b:2015,id:'r_gravwellen',t:'Erster Nachweis von Gravitationswellen'}
+];
+
+/* ============================================================
+   REICHE & KULTURRÄUME – grob umrissene Flächen
+   ============================================================ */
+const REICHE = [
+{n:'Ägypten',a:-3000,b:-30,f:'#cf9d12',id:'ku_aeg',t:'Feldvermessung nach der Nilflut, Sonnenkalender, Monumentalbau',
+ p:[[30,31],[32,30],[33,26],[33,22],[31,22],[30,26],[29,30],[30,31]]},
+{n:'Mesopotamien',a:-3300,b:-300,f:'#b04a2f',id:'ku_meso',t:'Keilschrift, Sexagesimalsystem, 1500 Jahre Himmelstagebücher',
+ p:[[39,37],[46,37],[48,33],[48,30],[44,30],[41,33],[39,35],[39,37]]},
+{n:'Indien',a:-300,b:1500,f:'#8a6f45',id:'ku_indien',t:'Stellenwertsystem mit Null, Sinusfunktion, unendliche Reihen',
+ p:[[68,24],[75,31],[85,27],[92,25],[88,21],[82,17],[80,10],[77,8],[74,15],[70,20],[68,24]]},
+{n:'China',a:-200,b:1400,f:'#b83f74',id:'ku_china',t:'Algorithmische Mathematik, Himmelschroniken, Papier und Druck',
+ p:[[100,40],[110,42],[120,40],[122,32],[119,25],[110,21],[104,23],[100,28],[98,34],[100,40]]},
+{n:'Griechische Welt',a:-800,b:-146,f:'#1f6f92',id:'ku_grie',t:'Vom Rechenrezept zum Beweis – Philosophie, Geometrie, Astronomie',
+ p:[[20,41],[26,41],[28,38],[27,36],[23,36],[20,38],[20,41]]},
+{n:'Alexanderreich',a:-336,b:-323,f:'#4a5fa8',id:'er_alexander',t:'Griechisch wird Wissenschaftssprache von Ägypten bis Baktrien',
+ p:[[21,41],[35,42],[50,40],[62,38],[72,33],[70,27],[60,25],[50,29],[42,31],[31,31],[24,36],[21,41]]},
+{n:'Römisches Reich',a:-27,b:395,f:'#8a4b2a',id:'ku_rom',t:'Recht, Straßen, Vermessung und Beton – Ingenieurskunst statt Grundlagenforschung',
+ p:[[-9,43],[-5,36],[3,37],[11,37],[15,38],[20,40],[26,41],[32,41],[36,37],[36,31],[32,31],[25,31],[15,33],[10,37],[3,37],[-5,36],[-9,37],[-9,43]]},
+{n:'Byzanz',a:395,b:1453,f:'#2b8a8a',id:'er_konstfall',t:'Bewahrt griechische Handschriften tausend Jahre lang',
+ p:[[19,42],[27,45],[35,42],[38,37],[36,33],[30,36],[24,38],[19,42]]},
+{n:'Kalifat (Abbasiden)',a:750,b:1258,f:'#2f8055',id:'ku_islam',t:'Übersetzung und Weiterentwicklung: Algebra, Optik, Trigonometrie',
+ p:[[-6,36],[10,34],[20,32],[32,31],[40,33],[48,36],[58,35],[66,32],[70,27],[60,24],[50,22],[40,20],[30,24],[20,28],[8,32],[-6,36]]},
+{n:'Fränkisches Reich',a:768,b:987,f:'#7a6a8a',id:'gl_kloster',t:'Karls Bildungsreform: Klosterschulen und Textabschriften',
+ p:[[-2,43],[4,43],[10,46],[13,49],[10,53],[4,52],[-1,49],[-2,43]]},
+{n:'Maya',a:250,b:900,f:'#5f7a55',id:'z_maya',t:'Stellenwertsystem mit Null, Kalenderastronomie',
+ p:[[-92,21],[-87,21],[-86,17],[-89,14],[-92,15],[-93,18],[-92,21]]},
+{n:'Inka',a:1400,b:1533,f:'#a05a3a',id:'ku_maya',t:'Quipu als Knotenschrift, Straßennetz über 30 000 km',
+ p:[[-79,-2],[-74,-8],[-70,-15],[-68,-22],[-70,-30],[-72,-33],[-75,-20],[-79,-10],[-80,-4],[-79,-2]]},
+{n:'Mongolisches Reich',a:1206,b:1368,f:'#7a54a3',id:'er_mongolen',t:'Sichert die Seidenstraße – Waren, Wissen und die Pest reisen schneller',
+ p:[[30,55],[50,58],[70,58],[90,55],[110,50],[125,45],[120,38],[105,35],[90,38],[75,35],[60,38],[45,45],[32,48],[30,55]]},
+{n:'Osmanisches Reich',a:1450,b:1918,f:'#c07d10',id:'er_konstfall',t:'1453 fällt Konstantinopel – der Landweg nach Asien wird blockiert',
+ p:[[19,42],[28,46],[38,42],[44,38],[45,33],[38,30],[32,31],[26,36],[22,38],[19,42]]},
+{n:'Heiliges Römisches Reich',a:962,b:1806,f:'#94794f',id:'ku_uni',t:'Viele Landesherren, viele Universitäten – Zersplitterung als Vorteil',
+ p:[[6,47],[13,48],[18,50],[15,54],[9,54],[4,51],[5,48],[6,47]]},
+{n:'Spanisch-portugiesische Reiche',a:1500,b:1800,f:'#cf7a12',id:'er_entdeckungen',t:'Silber, Zucker und Zwangsarbeit finanzieren Europa',
+ p:[[-100,25],[-80,20],[-70,10],[-60,-5],[-45,-10],[-40,-20],[-55,-35],[-70,-40],[-75,-20],[-80,0],[-90,15],[-100,25]]},
+{n:'Britisches Empire (Indien)',a:1800,b:1947,f:'#4d6275',id:'er_entdeckungen',t:'Vermessung Indiens: die Great Trigonometrical Survey misst den Everest',
+ p:[[68,24],[75,32],[85,27],[92,26],[88,21],[80,10],[77,8],[72,20],[68,24]]}
+];
+
+/* ============================================================
+   WEGE – Wanderungen, Fahrten, Wissenstransfer
+   art: wanderung | fahrt | wissen
+   ============================================================ */
+const WEGE = [
+{n:'Zinnhandel der Bronzezeit',a:-1800,b:-1200,art:'wissen',p:[[-5,50],[0,45],[8,44],[15,40],[23,37],[30,32]],t:'Cornwall und Afghanistan liefern Zinn ans Mittelmeer'},
+{n:'Griechische Kolonisation',a:-800,b:-500,art:'wanderung',p:[[23,38],[15,38],[8,44],[3,42],[-2,39]],t:'Von der Ägäis bis Massalia'},
+{n:'Alexanderzug',a:-336,b:-323,art:'wanderung',p:[[23,40],[30,37],[36,36],[35,31],[30,31],[40,33],[47,32],[54,32],[62,34],[70,33],[72,31]],t:'Vom Balkan bis zum Indus'},
+{n:'Seidenstraße',a:-100,b:1400,art:'wissen',p:[[108,34],[95,40],[80,42],[68,40],[58,37],[48,35],[44,33],[36,36],[28,41]],t:'Waren, Papier, Kompass – und die Pest'},
+{n:'Völkerwanderung',a:375,b:568,art:'wanderung',p:[[35,50],[28,48],[20,47],[12,46],[8,44],[0,42],[-5,37],[10,35]],t:'Goten und Vandalen bis Nordafrika'},
+{n:'Arabische Expansion',a:632,b:750,art:'wanderung',p:[[40,22],[33,30],[25,31],[15,33],[5,35],[-5,36],[-4,38]],t:'In hundert Jahren bis Spanien'},
+{n:'Wikingerfahrten',a:793,b:1066,art:'fahrt',p:[[10,59],[-2,57],[-8,54],[-20,64],[-40,62],[-52,60],[-56,52]],t:'Bis Neufundland – 500 Jahre vor Kolumbus'},
+{n:'Wikinger nach Osten',a:850,b:1050,art:'fahrt',p:[[18,59],[28,60],[32,55],[35,50],[38,45],[44,40],[44,33]],t:'Über die Flüsse bis Bagdad'},
+{n:'Übersetzungsweg Bagdad–Toledo',a:800,b:1200,art:'wissen',p:[[44,33],[36,33],[25,32],[13,34],[3,36],[-4,37],[-4,40]],t:'Griechisches Wissen über das Arabische nach Europa'},
+{n:'Zheng He',a:1405,b:1433,art:'fahrt',p:[[121,31],[110,20],[104,2],[95,6],[80,8],[73,17],[55,20],[45,12],[40,-4]],t:'Sieben Flotten bis Ostafrika'},
+{n:'Vasco da Gama',a:1497,b:1499,art:'fahrt',p:[[-9,39],[-17,15],[-5,-5],[10,-25],[18,-35],[32,-30],[40,-20],[43,-5],[55,5],[73,12]],t:'Seeweg nach Indien'},
+{n:'Kolumbus',a:1492,b:1493,art:'fahrt',p:[[-6,37],[-16,28],[-40,25],[-60,22],[-74,21]],t:'Auf der Suche nach dem Seeweg nach Indien'},
+{n:'Magellan & Elcano',a:1519,b:1522,art:'fahrt',p:[[-6,37],[-25,10],[-40,-10],[-55,-35],[-70,-54],[-100,-30],[-140,-10],[-170,5],[160,10],[125,10],[100,0],[60,-10],[20,-35],[-10,20],[-6,37]],t:'Erste Weltumsegelung'},
+{n:'Cook',a:1768,b:1779,art:'fahrt',p:[[-1,50],[-30,0],[-60,-40],[-75,-56],[-120,-40],[-150,-20],[-175,-40],[175,-40],[150,-30],[145,-15],[120,0],[140,40],[180,60],[-150,60]],t:'Vermessungsfahrten im Pazifik'},
+{n:'Humboldt',a:1799,b:1804,art:'fahrt',p:[[-6,37],[-18,28],[-45,15],[-66,11],[-70,4],[-77,-6],[-78,-12],[-79,0],[-84,10],[-99,19],[-95,25],[-75,35]],t:'Fünf Jahre Messreisen in Amerika'},
+{n:'Beagle',a:1831,b:1836,art:'fahrt',p:[[-4,50],[-25,15],[-38,-8],[-58,-35],[-68,-52],[-75,-40],[-79,-10],[-91,-1],[-140,-15],[175,-40],[150,-33],[115,-20],[57,-20],[30,-34],[-10,15],[-4,50]],t:'Vermessungsfahrt, aus der die Evolutionstheorie wuchs'},
+{n:'Transatlantischer Sklavenhandel',a:1600,b:1850,art:'wanderung',p:[[0,6],[-10,4],[-25,0],[-40,-5],[-45,-12],[-55,-5],[-65,10],[-78,20]],t:'Zwölf Millionen verschleppte Menschen'},
+{n:'Europäische Auswanderung',a:1840,b:1920,art:'wanderung',p:[[10,52],[0,50],[-15,48],[-40,44],[-60,42],[-74,41]],t:'55 Millionen verlassen Europa'},
+{n:'Vertreibung 1933–1945',a:1933,b:1945,art:'wanderung',p:[[13,52],[9,51],[2,49],[-4,50],[-30,47],[-60,42],[-74,41],[-88,42]],t:'Emigration verlagert das Zentrum der Physik nach Amerika'},
+{n:'Ostsiedlung',a:1150,b:1350,art:'wanderung',p:[[8,51],[13,52],[18,52],[24,50],[28,48]],t:'Pflugtechnik, Bergbau und Stadtrecht wandern nach Osten'}
+];
+
+/* ============================================================
+   FEINZEICHNUNG – erscheint erst beim Hineinzoomen
+   Flüsse, Gebirgskämme und regionale Umrisse
+   ============================================================ */
+const FLUESSE = [
+{n:'Rhein', ab:3, p:[[9.6,46.5],[8.5,47.6],[7.6,47.6],[8.0,48.6],[8.2,49.0],[8.4,49.5],[8.3,50.0],
+  [7.6,50.4],[7.0,50.8],[6.6,51.2],[6.1,51.8],[5.5,51.9],[4.5,51.9]]},
+{n:'Donau', ab:3, p:[[8.2,48.0],[9.2,48.5],[10.0,48.6],[11.0,48.8],[11.9,48.9],[12.9,48.8],[13.4,48.6],
+  [14.5,48.3],[15.6,48.2],[16.4,48.2],[17.5,47.8],[19.0,47.5],[20.5,46.2],[21.5,45.2],[23.0,44.2],
+  [25.0,43.8],[27.0,44.1],[28.7,45.2]]},
+{n:'Main', ab:7, p:[[11.9,50.1],[10.9,50.1],[9.9,50.0],[9.1,49.9],[8.9,49.9],[8.4,50.0]]},
+{n:'Inn', ab:10, p:[[10.5,46.6],[11.4,47.3],[12.2,47.8],[12.75,48.25],[13.0,48.4],[13.4,48.6]]},
+{n:'Salzach', ab:14, p:[[12.6,47.2],[13.0,47.6],[12.9,47.8],[12.83,48.17],[12.75,48.25]]},
+{n:'Isar', ab:14, p:[[11.4,47.4],[11.5,47.8],[11.6,48.1],[11.9,48.4],[12.3,48.6],[12.9,48.8]]},
+{n:'Lech', ab:16, p:[[10.3,47.3],[10.7,47.8],[10.9,48.4],[10.9,48.7]]},
+{n:'Elbe', ab:4, p:[[15.5,50.7],[14.4,50.1],[13.8,51.0],[12.6,51.9],[12.0,52.1],[11.0,52.8],
+  [10.0,53.4],[9.0,53.9]]},
+{n:'Oder', ab:5, p:[[18.0,49.9],[17.0,50.7],[15.6,51.9],[14.7,52.8],[14.6,53.5]]},
+{n:'Weser', ab:8, p:[[9.4,51.3],[9.2,52.0],[8.8,52.9],[8.5,53.6]]},
+{n:'Seine', ab:7, p:[[4.3,48.3],[3.0,48.6],[2.3,48.9],[1.4,49.3],[0.2,49.5]]},
+{n:'Loire', ab:7, p:[[4.0,45.4],[2.5,47.0],[0.7,47.4],[-1.2,47.2],[-2.2,47.3]]},
+{n:'Themse', ab:8, p:[[-1.5,51.7],[-0.7,51.5],[-0.1,51.5],[0.7,51.5],[1.4,51.4]]},
+{n:'Po', ab:7, p:[[7.7,45.1],[8.6,45.1],[9.7,45.1],[11.0,45.0],[12.3,44.9]]},
+{n:'Rhône', ab:7, p:[[6.1,46.2],[4.8,45.7],[4.8,44.5],[4.7,43.7],[4.8,43.3]]},
+{n:'Ebro', ab:8, p:[[-2.5,42.6],[-0.9,41.6],[0.5,41.2],[0.9,40.7]]},
+{n:'Vils (Oberpfalz)', ab:16, p:[[11.6,49.2],[11.86,49.44],[11.9,49.6],[12.1,49.75]]},
+{n:'Naab', ab:16, p:[[12.2,49.9],[12.05,49.6],[12.1,49.3],[12.0,49.05]]},
+{n:'Weichsel', ab:5, p:[[19.0,49.7],[19.9,50.1],[21.0,51.5],[20.5,52.3],[18.9,53.0],[18.7,54.3]]},
+{n:'Wolga', ab:2, p:[[36.0,57.0],[40.0,57.5],[44.0,56.3],[47.5,54.0],[47.0,51.0],[46.0,48.5],[47.5,46.5]]},
+{n:'Nil', ab:2, p:[[32.5,24.0],[32.9,27.0],[31.2,30.0],[31.0,31.4]]},
+{n:'Euphrat', ab:2, p:[[38.5,37.5],[40.0,35.5],[42.5,33.5],[44.5,32.0],[47.5,30.5]]},
+{n:'Tigris', ab:2, p:[[41.0,37.5],[43.2,36.4],[44.4,33.3],[46.0,31.5],[47.5,30.5]]},
+{n:'Indus', ab:2, p:[[74.5,34.0],[72.0,32.0],[71.5,30.0],[70.0,27.5],[68.0,25.5],[67.5,24.5]]},
+{n:'Ganges', ab:2, p:[[78.5,30.0],[81.0,26.5],[84.0,25.5],[86.5,25.2],[88.5,23.5],[89.5,22.5]]},
+{n:'Gelber Fluss', ab:2, p:[[102.0,36.0],[107.0,38.5],[111.0,39.5],[114.0,36.5],[117.5,37.5],[119.0,37.8]]},
+{n:'Jangtse', ab:2, p:[[104.0,29.0],[108.0,30.5],[112.5,30.3],[117.0,30.8],[120.0,31.5],[121.8,31.5]]}
+];
+
+const GEBIRGE = [
+{n:'Alpen', ab:2, p:[[6.0,45.9],[7.0,45.9],[7.6,46.0],[8.3,46.4],[9.0,46.5],[10.0,46.7],[11.0,46.9],
+  [12.0,47.0],[13.0,47.1],[14.0,47.2],[15.0,47.3],[16.0,47.6]]},
+{n:'Pyrenäen', ab:3, p:[[-1.5,43.1],[0.0,42.8],[1.5,42.6],[3.0,42.5]]},
+{n:'Karpaten', ab:3, p:[[19.0,49.3],[21.0,49.4],[23.0,48.5],[25.0,47.5],[26.0,46.0],[24.5,45.5],[22.5,45.3]]},
+{n:'Apennin', ab:4, p:[[8.5,44.5],[10.5,44.0],[12.5,43.0],[14.0,41.8],[15.5,40.5],[16.3,39.5]]},
+{n:'Ural', ab:2, p:[[60.0,68.0],[59.5,64.0],[59.0,60.0],[58.5,56.0],[59.5,52.0]]},
+{n:'Kaukasus', ab:3, p:[[38.5,44.0],[42.0,43.3],[45.0,42.6],[47.5,41.5]]},
+{n:'Himalaya', ab:2, p:[[73.0,35.5],[77.0,34.0],[81.0,30.5],[85.0,28.5],[88.0,27.8],[92.0,28.0],[95.0,28.5]]},
+{n:'Atlas', ab:3, p:[[-8.0,31.5],[-5.0,32.5],[-1.0,34.5],[3.0,36.0],[7.0,36.3]]}
+];
+
+/* Regionale Umrisse – nur bei starkem Zoom */
+const REGIONEN = [
+{n:'Bayern', ab:14, f:'#4a5fa8', p:[[9.7,47.55],[10.3,47.4],[11.1,47.4],[12.2,47.6],[13.0,47.5],
+  [13.0,47.9],[13.4,48.5],[13.8,48.9],[12.9,49.3],[12.5,49.9],[12.1,50.3],[11.3,50.5],[10.6,50.4],
+  [10.0,50.5],[9.4,50.0],[9.1,49.8],[9.5,49.5],[10.1,49.5],[10.1,48.9],[10.2,48.5],[10.1,48.2],
+  [9.8,47.9],[9.7,47.55]]},
+{n:'Böhmen', ab:14, f:'#2b8a8a', p:[[12.1,50.3],[13.0,50.8],[14.4,51.0],[15.3,50.8],[16.4,50.7],
+  [16.9,50.2],[18.0,49.5],[17.0,48.8],[15.5,48.8],[14.0,48.6],[13.0,49.1],[12.5,49.9],[12.1,50.3]]},
+{n:'Toskana', ab:16, f:'#c07d10', p:[[10.0,44.2],[11.4,44.2],[12.0,43.6],[11.6,43.0],[10.8,42.4],
+  [10.3,42.9],[10.1,43.5],[10.0,44.2]]},
+{n:'Attika & Peloponnes', ab:16, f:'#1f6f92', p:[[21.1,38.3],[22.5,38.4],[23.7,38.2],[24.0,37.7],
+  [23.2,37.4],[22.8,36.8],[22.0,36.7],[21.4,37.2],[21.1,38.3]]}
+];
+
+/* ============================================================
    ZUSTAND & HILFSFUNKTIONEN
    ============================================================ */
 const MIN_JAHR = -3500, MAX_JAHR = 2060;
@@ -3036,6 +3453,10 @@ mk.addEventListener('pointercancel', () => mkZieht = false);
    ============================================================ */
 function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
+/* Zugriff auf die Kartenansicht – erst zur Laufzeit vorhanden */
+function karteKennt(id){ return !!(window.__karte && window.__karte.hatOrt(id)); }
+function karteZeigen(id, jahr){ if (window.__karte) window.__karte.zeigeAufKarte(id, jahr); }
+
 /* ------------------------------------------------------------
    Tippen statt Klicken: löst nur aus, wenn der Finger nicht
    gewischt hat. Verhindert, dass beim Scrollen in Listen
@@ -3067,9 +3488,9 @@ function beiTipp(el, fn){
   });
   // Tastatur (Enter/Leertaste) und Umgebungen ohne Zeigerereignisse:
   // löst nur aus, wenn pointerup nicht ohnehin schon gefeuert hat.
-  el.addEventListener('click', () => {
+  el.addEventListener('click', ev => {
     if (performance.now() - zuletzt < 500) return;
-    fn();
+    fn(ev);
   });
 }
 
@@ -3089,6 +3510,11 @@ function waehle(id, ausVerlauf){
   h += '<p class="zeitraum">' + esc(fmtZeitraum(o)) + '</p>';
   h += '<p class="text">' + esc(o.d || '') + '</p>';
   if (o.bild && GRAFIKEN[o.bild]) h += '<span class="pigrafik">' + GRAFIKEN[o.bild] + '</span>';
+  if (karteKennt(id)){
+    h += '<button class="verweis zurkarte" data-ort="' + id +
+         '" style="border-left:4px solid #2b3a7a">◉ <b>Auf der Karte zeigen</b>' +
+         '<i>Ort und Zeitraum im geografischen Zusammenhang</i></button>';
+  }
   if (rein.length){
     h += '<h3>Beeinflusst von</h3>';
     for (const v of rein) h += verweisHtml(v.a, v.t, '←');
@@ -3115,6 +3541,8 @@ function waehle(id, ausVerlauf){
   panelinhalt.querySelectorAll('.verweis[data-chronik]').forEach(b => {
     beiTipp(b, () => oeffnePi(b.dataset.chronik));
   });
+  const kb = panelinhalt.querySelector('.verweis[data-ort]');
+  if (kb) beiTipp(kb, () => karteZeigen(kb.dataset.ort));
   panelinhalt.querySelectorAll('.verweis').forEach(b => {
     if (b.dataset.ziel) beiTipp(b, () => springeZu(b.dataset.ziel));
   });
@@ -3131,6 +3559,7 @@ function verweisHtml(id, text, pfeil){
 function springeZu(id){
   const o = ITEM_VON_ID[id];
   if (!o) return;
+  if (inKartenAnsicht()) schliesseKarte();
   if (piOverlay.classList.contains('offen')) schliessePi();
   if (!state.aktiv.has(o.s)){ state.aktiv.add(o.s); }
   const sp = SPUR_VON_ID[o.s];
@@ -3150,6 +3579,7 @@ const btnVor = document.getElementById('btnVor');
 
 function stationName(e){
   if (!e) return null;
+  if (e.typ === 'karte') return 'Karte';
   if (e.typ === 'uebersicht') return 'Chronik-Übersicht';
   if (e.typ === 'chronik'){
     const c = CHRONIK_VON_ID[e.id];
@@ -3173,8 +3603,16 @@ function verlaufSpringe(schritt){
   if (ziel < 0 || ziel >= verlauf.liste.length) return;
   verlauf.pos = ziel;
   const eintrag = verlauf.liste[ziel];
+  if (eintrag.typ === 'karte'){
+    verlauf.sperre = true;
+    oeffneKarte();
+    setTimeout(() => { verlauf.sperre = false; aktualisiereNavKnoepfe(); }, 40);
+    aktualisiereNavKnoepfe();
+    return;
+  }
   if (eintrag.typ === 'chronik' || eintrag.typ === 'uebersicht'){
     verlauf.sperre = true;
+    if (inKartenAnsicht()) schliesseKarte();
     if (eintrag.typ === 'chronik') oeffnePi(eintrag.id); else oeffnePi();
     setTimeout(() => { verlauf.sperre = false; aktualisiereNavKnoepfe(); }, 40);
     aktualisiereNavKnoepfe();
@@ -3184,6 +3622,7 @@ function verlaufSpringe(schritt){
   const o = ITEM_VON_ID[id];
   if (!o) { aktualisiereNavKnoepfe(); return; }
   verlauf.sperre = true;
+  if (inKartenAnsicht()) schliesseKarte();
   schliessePi();
   if (!state.aktiv.has(o.s)) state.aktiv.add(o.s);
   const sp = SPUR_VON_ID[o.s];
@@ -3393,7 +3832,8 @@ window.addEventListener('keydown', e => {
 });
 
 window.addEventListener('resize', () => { layoutKey = ''; begrenze(); render();
-  if (piOverlay.classList.contains('offen')) zeichnePiChart(); });
+  if (piOverlay.classList.contains('offen')) zeichnePiChart();
+  if (inKartenAnsicht()){ kAnpassen(); kRender(); } });
 
 /* ============================================================
    SUCHE
@@ -3783,8 +4223,9 @@ function zeigeChronik(id){
   piChartUnter.style.display = c.chart ? 'block' : 'none';
   piliste.innerHTML = '';
   for (const e of c.daten){
-    const b = document.createElement('button');
+    const b = document.createElement('div');
     b.className = 'pizeile' + (e.ziel ? ' klickbar' : '');
+    if (e.ziel){ b.setAttribute('role','button'); b.tabIndex = 0; }
     b.dataset.jahr = e.j;
     let rechts = '<span class="piwer">' + esc(e.wer) + '</span>' +
       '<span class="piwas">' + esc(e.was) + '</span>' +
@@ -3796,9 +4237,28 @@ function zeigeChronik(id){
     if (e.bild && GRAFIKEN[e.bild]){
       rechts += '<span class="pigrafik">' + GRAFIKEN[e.bild] + '</span>';
     }
+    if (e.ziel && karteKennt(e.ziel)){
+      rechts += '<button class="ortknopf" data-ort="' + e.ziel + '" data-jahr="' + e.j +
+                '" title="Diesen Ort auf der Karte zeigen">◉ Karte</button>';
+    }
     b.innerHTML = '<span class="pijahr"' + (e.ziel ? '' : ' style="color:#5b5145"') + '>' +
       esc(fmtJahr(e.j)) + '</span><span>' + rechts + '</span>';
-    if (e.ziel) beiTipp(b, () => { schliessePi(); springeZu(e.ziel); });
+    const ok = b.querySelector('.ortknopf');
+    if (ok){
+      // Der Knopf darf die Zeile darunter nicht mitauslösen
+      ['pointerdown','pointerup','click'].forEach(typ =>
+        ok.addEventListener(typ, ev => ev.stopPropagation()));
+      beiTipp(ok, () => karteZeigen(ok.dataset.ort, Number(ok.dataset.jahr)));
+    }
+    if (e.ziel){
+      beiTipp(b, ev => {
+        if (ev && ev.target && ev.target.closest && ev.target.closest('.ortknopf')) return;
+        schliessePi(); springeZu(e.ziel);
+      });
+      b.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); schliessePi(); springeZu(e.ziel); }
+      });
+    }
     piliste.appendChild(b);
   }
   piliste.scrollTop = 0;
@@ -3856,6 +4316,7 @@ function zeichnePiChart(){
 let tabsGebaut = false;
 function oeffnePi(id){
   if (!tabsGebaut){ baueTabs(); tabsGebaut = true; }
+  if (inKartenAnsicht()) karteEl.classList.remove('offen');
   if (id) zeigeChronik(id); else zeigeUebersicht();
   piOverlay.classList.add('offen');
   aktualisiereAnsichtKnopf();
@@ -3875,8 +4336,13 @@ function schliessePi(){
 }
 const btnAnsichtZeit = document.getElementById('btnAnsichtZeit');
 const btnAnsichtChronik = document.getElementById('btnAnsichtChronik');
-beiTipp(btnAnsichtZeit, () => { if (inChronikAnsicht()) schliessePi(); });
+const btnAnsichtKarte = document.getElementById('btnAnsichtKarte');
+beiTipp(btnAnsichtZeit, () => {
+  if (inKartenAnsicht()) schliesseKarte();
+  if (inChronikAnsicht()) schliessePi();
+});
 beiTipp(btnAnsichtChronik, () => {
+  if (inKartenAnsicht()) schliesseKarte();
   if (!inChronikAnsicht()){
     if (state.chronikGruppe === null) oeffnePi();
     else {
@@ -3885,15 +4351,20 @@ beiTipp(btnAnsichtChronik, () => {
     }
   }
 });
+beiTipp(btnAnsichtKarte, () => { if (!inKartenAnsicht()) oeffneKarte(); });
+
 function aktualisiereAnsichtKnopf(){
-  const inChronik = inChronikAnsicht();
-  btnAnsichtZeit.classList.toggle('aktiv', !inChronik);
-  btnAnsichtChronik.classList.toggle('aktiv', inChronik);
-  unterleiste.classList.toggle('zeigt-spuren', true);
-  unterleiste.classList.toggle('zeigt-epochen', !inChronik && state.gruppe === 'Epochen');
-  if (inChronik) unterleiste.classList.remove('zeigt-epochen');
-  zeichneGruppentabs();
-  zeichneSpurleiste();
+  // Direkt am DOM abgefragt, damit die Ladereihenfolge keine Rolle spielt
+  const karteNode = document.getElementById('karte');
+  const chronik = inChronikAnsicht();
+  const karte = !!karteNode && karteNode.classList.contains('offen');
+  btnAnsichtZeit.classList.toggle('aktiv', !chronik && !karte);
+  btnAnsichtChronik.classList.toggle('aktiv', chronik);
+  btnAnsichtKarte.classList.toggle('aktiv', karte);
+  unterleiste.classList.toggle('zeigt-spuren', !karte);
+  unterleiste.classList.toggle('zeigt-epochen', !chronik && !karte && state.gruppe === 'Epochen');
+  if (!karte){ zeichneGruppentabs(); zeichneSpurleiste(); }
+  else { gruppentabs.innerHTML = ''; spurleiste.innerHTML = ''; }
 }
 beiTipp(document.getElementById('btnChronikUebersicht'), () => zeigeUebersicht());
 // Kein Overlay mehr: Die Chronikansicht ersetzt die Zeitleiste.
@@ -3910,6 +4381,516 @@ window.__zl = {state, ITEMS, LINKS, SPUREN, GRUPPEN, CHRONIKEN, CHRONIK_VON_ID, 
   zeichneGruppentabs, zeichneSpurleiste, waehleReiter, verlauf, verlaufSpringe, zeigeUebersicht,
   render, waehle, geheZu, ITEM_VON_ID, suchen, oeffnePi, schliessePi, zeigeChronik,
   schrittPaar, normal};
+
+/* ============================================================
+   KARTENANSICHT
+   Plattkarte, frei zoom- und verschiebbar, mit Zeitregler.
+   ============================================================ */
+const karteEl = document.getElementById('karte');
+const kcv = document.getElementById('kcv');
+const kctx = kcv.getContext('2d');
+const kZeit = document.getElementById('kZeit');
+const kJahrEl = document.getElementById('kJahr');
+const kAlle = document.getElementById('kAlle');
+const kAbspielen = document.getElementById('kAbspielen');
+const karteninfo = document.getElementById('karteninfo');
+
+const kstate = { jahr: 1500, z: 3, mx: 0, my: 0, gesetzt: false, auswahl: null, reichAuswahl: null, laeuft: false };
+
+function inKartenAnsicht(){
+  const el = document.getElementById('karte');
+  return !!el && el.classList.contains('offen');
+}
+
+function kProj(lon, lat){
+  return { x: kstate.mx + lon * kstate.z, y: kstate.my - lat * kstate.z };
+}
+function kUnproj(x, y){
+  return { lon: (x - kstate.mx) / kstate.z, lat: (kstate.my - y) / kstate.z };
+}
+function kAnpassen(){
+  const W = kcv.clientWidth, H = kcv.clientHeight - 46;
+  kstate.z = Math.max(W / 400, H / 190);
+  kstate.mx = W / 2;
+  kstate.my = H / 2 + 10;
+  kstate.gesetzt = true;
+}
+
+function kSichtbar(o){
+  if (kAlle.checked) return true;
+  const a = o.a, b = (o.b === undefined || o.b === null) ? o.a : o.b;
+  return kstate.jahr >= a && kstate.jahr <= b + (b === a ? 25 : 0);
+}
+
+let kTreffer = [];
+
+function kRender(){
+  if (!kstate.gesetzt) kAnpassen();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  const W = kcv.clientWidth, H = kcv.clientHeight;
+  if (kcv.width !== Math.round(W*dpr) || kcv.height !== Math.round(H*dpr)){
+    kcv.width = Math.round(W*dpr); kcv.height = Math.round(H*dpr);
+  }
+  kctx.setTransform(dpr,0,0,dpr,0,0);
+  kctx.clearRect(0,0,W,H);
+  kTreffer = [];
+
+  // Meer
+  kctx.fillStyle = '#dbe6ec';
+  kctx.fillRect(0,0,W,H);
+
+  // Gitternetz
+  kctx.strokeStyle = 'rgba(120,140,155,.28)'; kctx.lineWidth = 1;
+  for (let lon = -180; lon <= 180; lon += 30){
+    const a = kProj(lon,-90), b = kProj(lon,90);
+    kctx.beginPath(); kctx.moveTo(a.x,a.y); kctx.lineTo(b.x,b.y); kctx.stroke();
+  }
+  for (let lat = -60; lat <= 60; lat += 30){
+    const a = kProj(-180,lat), b = kProj(180,lat);
+    kctx.beginPath(); kctx.moveTo(a.x,a.y); kctx.lineTo(b.x,b.y); kctx.stroke();
+  }
+  // Äquator und Wendekreise
+  kctx.strokeStyle = 'rgba(120,140,155,.5)';
+  [0].forEach(lat => { const a=kProj(-180,lat), b=kProj(180,lat);
+    kctx.beginPath(); kctx.moveTo(a.x,a.y); kctx.lineTo(b.x,b.y); kctx.stroke(); });
+  kctx.save(); kctx.setLineDash([5,4]); kctx.strokeStyle='rgba(120,140,155,.4)';
+  GEO_LINIEN.wendekreise.forEach(lat => { const a=kProj(-180,lat), b=kProj(180,lat);
+    kctx.beginPath(); kctx.moveTo(a.x,a.y); kctx.lineTo(b.x,b.y); kctx.stroke(); });
+  kctx.restore();
+
+  // Land
+  kctx.fillStyle = '#eee6d5'; kctx.strokeStyle = '#b9ab90'; kctx.lineWidth = 1;
+  for (const m of LANDMASSEN){
+    kctx.beginPath();
+    m.forEach(([lo,la],i) => { const p = kProj(lo,la); i ? kctx.lineTo(p.x,p.y) : kctx.moveTo(p.x,p.y); });
+    kctx.closePath(); kctx.fill(); kctx.stroke();
+  }
+
+  // Feinzeichnung: Regionen, Gebirge, Flüsse – gestaffelt nach Zoomstufe
+  for (const reg of REGIONEN){
+    if (kstate.z < reg.ab) continue;
+    kctx.beginPath();
+    reg.p.forEach(([lo,la],i) => { const p = kProj(lo,la); i ? kctx.lineTo(p.x,p.y) : kctx.moveTo(p.x,p.y); });
+    kctx.closePath();
+    kctx.fillStyle = hexRgba(reg.f, .10); kctx.fill();
+    kctx.save(); kctx.setLineDash([6,4]);
+    kctx.strokeStyle = hexRgba(reg.f, .65); kctx.lineWidth = 1.6; kctx.stroke();
+    kctx.restore();
+    let sx=0, sy=0;
+    reg.p.forEach(([lo,la]) => { const p = kProj(lo,la); sx+=p.x; sy+=p.y; });
+    sx/=reg.p.length; sy/=reg.p.length;
+    if (sx>-40 && sx<W+40 && sy>0 && sy<H){
+      kctx.font = '600 10.5px -apple-system,Segoe UI,Roboto,sans-serif';
+      kctx.textAlign='center'; kctx.textBaseline='middle';
+      kctx.fillStyle = hexRgba(reg.f, .85);
+      kctx.fillText(reg.n, sx, sy);
+    }
+  }
+  for (const gb of GEBIRGE){
+    if (kstate.z < gb.ab) continue;
+    kctx.strokeStyle = 'rgba(150,132,105,.75)'; kctx.lineWidth = 3.2; kctx.lineCap = 'round';
+    kctx.beginPath();
+    gb.p.forEach(([lo,la],i) => { const p = kProj(lo,la); i ? kctx.lineTo(p.x,p.y) : kctx.moveTo(p.x,p.y); });
+    kctx.stroke(); kctx.lineCap = 'butt';
+    if (kstate.z >= gb.ab*1.8){
+      const m = gb.p[Math.floor(gb.p.length/2)];
+      const p = kProj(m[0], m[1]);
+      kctx.font = 'italic 10px -apple-system,Segoe UI,Roboto,sans-serif';
+      kctx.textAlign='center'; kctx.textBaseline='bottom';
+      kctx.fillStyle = 'rgba(110,95,72,.9)';
+      kctx.fillText(gb.n, p.x, p.y-5);
+    }
+  }
+  for (const fl of FLUESSE){
+    if (kstate.z < fl.ab) continue;
+    kctx.strokeStyle = 'rgba(86,140,175,.8)';
+    kctx.lineWidth = Math.min(2.2, 0.9 + kstate.z/25);
+    kctx.beginPath();
+    fl.p.forEach(([lo,la],i) => { const p = kProj(lo,la); i ? kctx.lineTo(p.x,p.y) : kctx.moveTo(p.x,p.y); });
+    kctx.stroke();
+    if (kstate.z >= fl.ab*2.2){
+      const m = fl.p[Math.floor(fl.p.length/2)];
+      const p = kProj(m[0], m[1]);
+      kctx.font = 'italic 9.5px -apple-system,Segoe UI,Roboto,sans-serif';
+      kctx.textAlign='left'; kctx.textBaseline='middle';
+      kctx.fillStyle = 'rgba(60,105,140,.95)';
+      kctx.fillText(fl.n, p.x+4, p.y-4);
+    }
+  }
+
+  // Reiche
+  for (const r of REICHE){
+    if (!kSichtbar(r)) continue;
+    kctx.beginPath();
+    r.p.forEach(([lo,la],i) => { const p = kProj(lo,la); i ? kctx.lineTo(p.x,p.y) : kctx.moveTo(p.x,p.y); });
+    kctx.closePath();
+    const alter = kstate.jahr - r.a;
+    const frisch = alter >= 0 && alter <= 60;      // gerade entstanden: kurz betonen
+    const gew = kstate.reichAuswahl === r;
+    kctx.fillStyle = hexRgba(r.f, gew ? .58 : frisch ? .52 : .38); kctx.fill();
+    kctx.strokeStyle = gew ? '#241f18' : hexRgba(r.f, .95);
+    kctx.lineWidth = gew ? 3 : frisch ? 3 : 1.8; kctx.stroke();
+    // Beschriftung im Schwerpunkt
+    let sx=0, sy=0;
+    r.p.forEach(([lo,la]) => { const p = kProj(lo,la); sx+=p.x; sy+=p.y; });
+    sx/=r.p.length; sy/=r.p.length;
+    kTreffer.push({typ:'reich', d:r, x:sx-40, y:sy-12, w:80, h:24});
+    if (sx > -50 && sx < W+50 && sy > 0 && sy < H){
+      kctx.font = '600 11px -apple-system,Segoe UI,Roboto,sans-serif';
+      kctx.textAlign='center'; kctx.textBaseline='middle';
+      const tw = kctx.measureText(r.n).width;
+      kctx.fillStyle = 'rgba(255,253,248,.88)';
+      kctx.fillRect(sx-tw/2-5, sy-8, tw+10, 16);
+      kctx.strokeStyle = hexRgba(r.f, .5); kctx.lineWidth = 1;
+      kctx.strokeRect(sx-tw/2-5.5, sy-8.5, tw+11, 17);
+      kctx.fillStyle = hexRgba(r.f, 1);
+      kctx.fillText(r.n, sx, sy);
+    }
+  }
+
+  // Wege
+  const wegfarbe = { wanderung:'#b04a2f', fahrt:'#1f6f92', wissen:'#2f8055' };
+  for (const wg of WEGE){
+    if (!kSichtbar(wg)) continue;
+    const f = wegfarbe[wg.art] || '#8a4b2a';
+    kctx.strokeStyle = f; kctx.lineWidth = 2.2;
+    if (wg.art === 'wissen') kctx.setLineDash([7,5]);
+    kctx.beginPath();
+    wg.p.forEach(([lo,la],i) => { const p = kProj(lo,la); i ? kctx.lineTo(p.x,p.y) : kctx.moveTo(p.x,p.y); });
+    kctx.stroke(); kctx.setLineDash([]);
+    // Pfeilspitze am Ende
+    const n = wg.p.length;
+    const p1 = kProj(wg.p[n-2][0], wg.p[n-2][1]), p2 = kProj(wg.p[n-1][0], wg.p[n-1][1]);
+    const w1 = Math.atan2(p2.y-p1.y, p2.x-p1.x);
+    kctx.beginPath();
+    kctx.moveTo(p2.x, p2.y);
+    kctx.lineTo(p2.x - 9*Math.cos(w1-.4), p2.y - 9*Math.sin(w1-.4));
+    kctx.lineTo(p2.x - 9*Math.cos(w1+.4), p2.y - 9*Math.sin(w1+.4));
+    kctx.closePath(); kctx.fillStyle = f; kctx.fill();
+    // klickbar entlang der Mitte
+    const pm = kProj(wg.p[Math.floor(n/2)][0], wg.p[Math.floor(n/2)][1]);
+    kTreffer.push({typ:'weg', d:wg, x:pm.x-14, y:pm.y-14, w:28, h:28});
+  }
+
+  // Orte
+  kctx.font = '11px -apple-system,Segoe UI,Roboto,sans-serif';
+  const belegt = [];
+  for (const ort of ORTE){
+    if (!kSichtbar(ort)) continue;
+    const p = kProj(ort.o[0], ort.o[1]);
+    if (p.x < -20 || p.x > W+20 || p.y < -20 || p.y > H+20) continue;
+    const gew = kstate.auswahl === ort;
+    kctx.beginPath(); kctx.arc(p.x, p.y, gew ? 7 : 4.6, 0, Math.PI*2);
+    kctx.fillStyle = gew ? '#8a4b2a' : '#8a4b2a';
+    kctx.globalAlpha = gew ? 1 : .85; kctx.fill(); kctx.globalAlpha = 1;
+    kctx.strokeStyle = '#fffdf8'; kctx.lineWidth = gew ? 2.4 : 1.4; kctx.stroke();
+    kTreffer.push({typ:'ort', d:ort, x:p.x-11, y:p.y-11, w:22, h:22});
+    // Beschriftung, wenn Platz
+    if (kstate.z > 2.2){
+      const tw = kctx.measureText(ort.n).width;
+      const kasten = {x:p.x+8, y:p.y-7, w:tw+6, h:14};
+      const frei = !belegt.some(b => kasten.x < b.x+b.w && kasten.x+kasten.w > b.x &&
+                                     kasten.y < b.y+b.h && kasten.y+kasten.h > b.y);
+      if (frei || gew){
+        belegt.push(kasten);
+        kctx.fillStyle = 'rgba(255,253,248,.82)';
+        kctx.fillRect(kasten.x-2, kasten.y, kasten.w, kasten.h);
+        kctx.fillStyle = '#3a3228';
+        kctx.textAlign = 'left'; kctx.textBaseline = 'middle';
+        if (gew) kctx.font = '600 11px -apple-system,Segoe UI,Roboto,sans-serif';
+        kctx.fillText(ort.n, p.x+9, p.y);
+        kctx.font = '11px -apple-system,Segoe UI,Roboto,sans-serif';
+      }
+    }
+  }
+
+  // Legende
+  const ly = H - 46 - 66;
+  kctx.fillStyle = 'rgba(255,253,248,.9)';
+  kctx.fillRect(W-152, ly, 142, 58);
+  kctx.strokeStyle = 'var(--line)'; kctx.strokeStyle = '#d6cab3'; kctx.lineWidth = 1;
+  kctx.strokeRect(W-152.5, ly+.5, 142, 58);
+  kctx.font = '10.5px -apple-system,Segoe UI,Roboto,sans-serif';
+  kctx.textAlign = 'left'; kctx.textBaseline = 'middle';
+  [['Wanderung','#b04a2f',false],['Fahrt','#1f6f92',false],['Wissenstransfer','#2f8055',true]]
+    .forEach(([txt,f,gestr],i) => {
+      const y = ly + 14 + i*16;
+      kctx.strokeStyle = f; kctx.lineWidth = 2.2;
+      if (gestr) kctx.setLineDash([5,4]);
+      kctx.beginPath(); kctx.moveTo(W-144, y); kctx.lineTo(W-122, y); kctx.stroke();
+      kctx.setLineDash([]);
+      kctx.fillStyle = '#3a3228'; kctx.fillText(txt, W-116, y);
+    });
+}
+
+/* --- Bedienung --- */
+const kzeiger = new Map();
+let kzieht = false, kbewegt = 0, kpinchD = 0, kpinchM = null;
+
+kcv.addEventListener('pointerdown', e => {
+  kcv.setPointerCapture(e.pointerId);
+  kzeiger.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if (kzeiger.size === 1){ kzieht = true; kbewegt = 0; kcv.classList.add('zieht'); }
+  if (kzeiger.size === 2){
+    const p = [...kzeiger.values()];
+    kpinchD = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
+    kpinchM = {x:(p[0].x+p[1].x)/2, y:(p[0].y+p[1].y)/2};
+  }
+});
+kcv.addEventListener('pointermove', e => {
+  const alt = kzeiger.get(e.pointerId);
+  if (!alt) return;
+  const dx = e.clientX-alt.x, dy = e.clientY-alt.y;
+  kzeiger.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  kbewegt += Math.abs(dx)+Math.abs(dy);
+  if (kzeiger.size >= 2){
+    const p = [...kzeiger.values()];
+    const d = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
+    const m = {x:(p[0].x+p[1].x)/2, y:(p[0].y+p[1].y)/2};
+    const r = kcv.getBoundingClientRect();
+    if (kpinchD > 0 && d > 0){
+      const vor = kUnproj(kpinchM.x-r.left, kpinchM.y-r.top);
+      kstate.z = Math.max(0.8, Math.min(90, kstate.z * (d/kpinchD)));
+      kstate.mx = (m.x-r.left) - vor.lon * kstate.z;
+      kstate.my = (m.y-r.top) + vor.lat * kstate.z;
+    }
+    kpinchD = d; kpinchM = m;
+    kRender();
+  } else if (kzieht){
+    kstate.mx += dx; kstate.my += dy; kRender();
+  }
+});
+function kEnde(e){
+  const war = kzeiger.size;
+  kzeiger.delete(e.pointerId);
+  if (kzeiger.size < 2) kpinchD = 0;
+  if (kzeiger.size === 0){
+    kcv.classList.remove('zieht');
+    if (kzieht && war === 1 && kbewegt < 10){
+      const r = kcv.getBoundingClientRect();
+      kKlick(e.clientX-r.left, e.clientY-r.top);
+    }
+    kzieht = false;
+  }
+}
+kcv.addEventListener('pointerup', kEnde);
+kcv.addEventListener('pointercancel', kEnde);
+kcv.addEventListener('wheel', e => {
+  e.preventDefault();
+  const r = kcv.getBoundingClientRect();
+  const mx = e.clientX-r.left, my = e.clientY-r.top;
+  const vor = kUnproj(mx,my);
+  kstate.z = Math.max(0.8, Math.min(90, kstate.z * Math.pow(1.0016, -e.deltaY)));
+  kstate.mx = mx - vor.lon*kstate.z;
+  kstate.my = my + vor.lat*kstate.z;
+  kRender();
+}, {passive:false});
+
+function kKlick(x,y){
+  for (let i = kTreffer.length-1; i >= 0; i--){
+    const t = kTreffer[i];
+    if (x>=t.x && x<=t.x+t.w && y>=t.y && y<=t.y+t.h){ kZeige(t); return; }
+  }
+  kstate.auswahl = null; karteninfo.classList.remove('an'); kRender();
+}
+
+function kZeige(t){
+  const d = t.d;
+  kstate.auswahl = t.typ === 'ort' ? d : null;
+  kstate.reichAuswahl = t.typ === 'reich' ? d : null;
+  let h = '<b>' + esc(d.n) + '</b>' + esc(d.t || '');
+  const von = fmtJahr(d.a), bis = (d.b === d.a) ? null : fmtJahr(d.b);
+  const artname = t.typ==='weg' ? esc(d.art) : t.typ==='reich' ? 'Reich oder Kulturraum' : 'Ort';
+  h += '<i>' + esc(von + (bis ? ' – ' + bis : '')) + ' · ' + artname + '</i>';
+  if (d.id && ITEM_VON_ID[d.id]){
+    h += '<button class="verweis zumelement" data-ziel="' + d.id + '">→ ' +
+         esc(ITEM_VON_ID[d.id].t) + ' in der Zeitleiste</button>';
+  }
+  karteninfo.innerHTML = h;
+  karteninfo.classList.add('an');
+  const b = karteninfo.querySelector('[data-ziel]');
+  if (b) beiTipp(b, () => { schliesseKarte(); springeZu(b.dataset.ziel); });
+  kRender();
+}
+
+/* --- Meldungen bei Veränderungen --- */
+const meldungenEl = document.getElementById('kartenmeldungen');
+const kepocheEl = document.getElementById('kepoche');
+const MELDEDAUER = 5200;
+
+function kAenderungen(von, bis){
+  if (von === bis) return [];
+  const a = Math.min(von,bis), b = Math.max(von,bis);
+  const treffer = [];
+  const drin = j => j > a && j <= b;
+  for (const r of REICHE){
+    if (drin(r.a)) treffer.push({art:'Reich beginnt', n:r.n, j:r.a, f:r.f, d:r, typ:'reich'});
+    if (drin(r.b)) treffer.push({art:'Reich endet', n:r.n, j:r.b, f:r.f, d:r, typ:'reich'});
+  }
+  for (const wg of WEGE){
+    const f = wg.art==='wanderung' ? '#b04a2f' : wg.art==='fahrt' ? '#1f6f92' : '#2f8055';
+    if (drin(wg.a)) treffer.push({art:wg.art, n:wg.n, j:wg.a, f, d:wg, typ:'weg', t:wg.t});
+  }
+  for (const o of ORTE){
+    if (drin(o.a)) treffer.push({art:'Ort', n:o.n, j:o.a, f:'#8a4b2a', d:o, typ:'ort', t:o.t});
+  }
+  const rang = { 'Reich beginnt':0, 'Reich endet':1, wanderung:2, fahrt:2, wissen:2, Ort:3 };
+  const ziel = bis;
+  treffer.sort((x,y) => {
+    const rx = rang[x.art] ?? 3, ry = rang[y.art] ?? 3;
+    if (rx !== ry) return rx - ry;                       // Reiche vor Wegen vor Orten
+    return Math.abs(x.j - ziel) - Math.abs(y.j - ziel);  // näher am Zieljahr zuerst
+  });
+  return treffer;
+}
+
+function kMelde(e){
+  const div = document.createElement('div');
+  div.className = 'kmeldung';
+  div.style.borderLeftColor = e.f;
+  div.innerHTML = '<span class="art">' + esc(e.art) + '</span><b>' + esc(e.n) + '</b>' +
+    (e.t ? esc(e.t) : '') + '<i>' + esc(fmtJahr(e.j)) + '</i>';
+  beiTipp(div, () => {
+    if (e.typ === 'hinweis'){ entferne(); return; }
+    kZeige({typ:e.typ, d:e.d});
+    if (e.typ === 'ort' || e.typ === 'reich'){
+      const p = e.typ === 'ort' ? kProj(e.d.o[0], e.d.o[1]) : null;
+      if (p){
+        const W = kcv.clientWidth, H = kcv.clientHeight - 46;
+        kstate.mx += W/2 - p.x; kstate.my += H/2 - p.y; kRender();
+      }
+    }
+    entferne();
+  });
+  meldungenEl.appendChild(div);
+  let weg = null;
+  function entferne(){
+    if (weg) clearTimeout(weg);
+    div.classList.add('geht');
+    setTimeout(() => div.remove(), 520);
+  }
+  weg = setTimeout(entferne, MELDEDAUER);
+  // höchstens fünf gleichzeitig
+  while (meldungenEl.children.length > 5) meldungenEl.firstChild.remove();
+}
+
+function kEpochenband(){
+  const treffer = ITEMS.filter(o => o.s === 'k_epoche' && o.b != null &&
+                                    kstate.jahr >= o.a && kstate.jahr <= o.b);
+  kepocheEl.innerHTML = treffer.length
+    ? '<b>' + esc(treffer[treffer.length-1].t) + '</b>' +
+      esc(treffer.map(o => o.t).slice(0,-1).join(' · '))
+    : '';
+}
+
+/* --- Zeitregler --- */
+function kSetzeJahr(j, ohneMeldung){
+  const vorher = kstate.jahr;
+  kstate.jahr = j;
+  kJahrEl.textContent = fmtJahr(j);
+  if (!ohneMeldung){
+    const aend = kAenderungen(vorher, j);
+    aend.slice(0, 4).forEach((e,i) => setTimeout(() => kMelde(e), i*140));
+    if (aend.length > 4){
+      setTimeout(() => kMelde({
+        art:'Zeitsprung', f:'#5b5145', typ:'hinweis', d:{n:'',t:''},
+        n: aend.length + ' Veränderungen',
+        t: 'zwischen ' + fmtJahr(Math.min(vorher,j)) + ' und ' + fmtJahr(Math.max(vorher,j)) +
+           ' – kleinere Schritte zeigen mehr.',
+        j: j
+      }), 4*140);
+    }
+  }
+  kEpochenband();
+  kRender();
+}
+kZeit.addEventListener('input', () => kSetzeJahr(Number(kZeit.value)));
+kAlle.addEventListener('change', kRender);
+
+let kTimer = null;
+function kStopp(){
+  if (kTimer){ clearInterval(kTimer); kTimer = null; }
+  kstate.laeuft = false; kAbspielen.textContent = '▶'; kAbspielen.title = 'Zeitlauf starten';
+}
+beiTipp(kAbspielen, () => {
+  if (kstate.laeuft){ kStopp(); return; }
+  kstate.laeuft = true; kAbspielen.textContent = '■'; kAbspielen.title = 'Zeitlauf anhalten';
+  kTimer = setInterval(() => {
+    let j = kstate.jahr + 25;
+    if (j > 2025){ j = -3000; }
+    kZeit.value = j; kSetzeJahr(j);
+  }, 420);
+});
+
+/* --- Ansicht öffnen und schließen --- */
+function oeffneKarte(){
+  if (piOverlay.classList.contains('offen')) piOverlay.classList.remove('offen');
+  karteEl.classList.add('offen');
+  verlaufMerken({typ:'karte', id:'karte'});
+  aktualisiereNavKnoepfe();
+  aktualisiereAnsichtKnopf();
+  requestAnimationFrame(() => { kAnpassen(); kSetzeJahr(kstate.jahr, true); });
+}
+function schliesseKarte(){
+  kStopp();
+  meldungenEl.innerHTML = '';
+  karteEl.classList.remove('offen');
+  aktualisiereAnsichtKnopf();
+  render();
+}
+
+/* ------------------------------------------------------------
+   Verknüpfung Zeitleiste/Chronik → Karte
+   ------------------------------------------------------------ */
+const ORT_ZU_ELEMENT = {};   // Element-ID → Liste von Orten und Gebieten
+(function baueOrtIndex(){
+  const eintragen = (id, eintrag) => {
+    if (!id) return;
+    (ORT_ZU_ELEMENT[id] = ORT_ZU_ELEMENT[id] || []).push(eintrag);
+  };
+  ORTE.forEach(o => eintragen(o.id, {typ:'ort', d:o}));
+  REICHE.forEach(r => eintragen(r.id, {typ:'reich', d:r}));
+})();
+
+function hatOrt(id){ return !!ORT_ZU_ELEMENT[id]; }
+function ortZu(id){ const l = ORT_ZU_ELEMENT[id]; return l ? l[0] : null; }
+
+function zeigeAufKarte(id, jahrWunsch){
+  const eintrag = ortZu(id);
+  if (!eintrag) return false;
+  const d = eintrag.d;
+  oeffneKarte();
+  // Jahr so wählen, dass der Ort sichtbar ist
+  const j = (jahrWunsch !== undefined && jahrWunsch >= d.a && jahrWunsch <= d.b)
+    ? jahrWunsch
+    : (d.b === d.a ? d.a : Math.round(d.a + (d.b - d.a) * 0.35));
+  kZeit.value = Math.max(-3000, Math.min(2025, j));
+  setTimeout(() => {
+    kSetzeJahr(Number(kZeit.value), true);
+    // auf das Ziel zentrieren
+    const W = kcv.clientWidth, H = kcv.clientHeight - 46;
+    let ziel;
+    if (eintrag.typ === 'ort') ziel = kProj(d.o[0], d.o[1]);
+    else {
+      let sx=0, sy=0;
+      d.p.forEach(([lo,la]) => { const p = kProj(lo,la); sx+=p.x; sy+=p.y; });
+      ziel = {x:sx/d.p.length, y:sy/d.p.length};
+    }
+    kstate.mx += W/2 - ziel.x;
+    kstate.my += H/2 - ziel.y;
+    kZeige(eintrag);
+  }, 60);
+  return true;
+}
+
+/* Karten-API nachtragen, sobald alles initialisiert ist */
+Object.assign(window.__zl, {
+  ORTE, REICHE, WEGE, LANDMASSEN, FLUESSE, GEBIRGE, REGIONEN, kstate,
+  oeffneKarte, schliesseKarte, inKartenAnsicht, kSetzeJahr, kRender,
+  hatOrt, ortZu, zeigeAufKarte, ORT_ZU_ELEMENT
+});
+// Der Zeitleiste und den Chroniken bekannt machen
+window.__karte = { hatOrt, zeigeAufKarte };
 </script>
 </body>
 </html>
