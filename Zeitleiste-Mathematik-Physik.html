@@ -18,7 +18,8 @@
     display:flex; flex-direction:column; overflow:hidden; -webkit-text-size-adjust:100%;
   }
   header{flex:0 0 auto;background:linear-gradient(180deg,#fffdf8,#f2ece0);
-         border-bottom:1px solid var(--line);padding:7px 12px 6px}
+         border-bottom:1px solid var(--line);padding:7px 12px 6px;
+         position:relative;z-index:30}
   /* Zeile 1: Ansichtsumschalter | Gruppen-Reiter | Werkzeuge rechts */
   .kopfleiste{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;min-width:0}
   .umschalter{display:flex;gap:0;flex:0 0 auto;border:1px solid var(--line);
@@ -27,9 +28,9 @@
     padding:8px 14px;background:transparent}
   .ansichtknopf.aktiv{background:var(--akzent);color:#fff}
   .ansichtknopf:active{transform:none}
-  .kopfrechts{display:flex;gap:5px;align-items:center;flex:0 0 auto;
-    overflow-x:auto;overflow-y:hidden;max-width:52vw;
-    -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x}
+  /* Nicht scrollbar, sonst würde die Trefferliste der Suche abgeschnitten.
+     Der Platz reicht, weil die Werkzeuge reine Symbolknöpfe sind. */
+  .kopfrechts{display:flex;gap:5px;align-items:center;flex:0 0 auto;position:relative;z-index:40}
   .kopfrechts > *{flex:0 0 auto}
   .gruppe{display:flex;gap:5px;align-items:center}
   .trenner{width:1px;height:22px;background:var(--line);margin:0 3px}
@@ -58,7 +59,7 @@
     touch-action:pan-x;padding-bottom:3px}
   .unterleiste.zeigt-spuren .spurzeile{display:flex}
   .unterleiste.zeigt-epochen .sprungzeile{display:flex}
-  .navknopf{font-size:16px;line-height:1;padding:5px 10px;font-weight:700}
+  .navknopf{font-size:20px;line-height:1;padding:7px 14px;font-weight:700;min-width:42px;justify-content:center}
   .symbolknopf{font-size:15px;line-height:1;padding:6px 11px;min-width:36px;justify-content:center}
   .navknopf:disabled{opacity:.32;cursor:default}
   .spurzeile::-webkit-scrollbar,.sprungzeile::-webkit-scrollbar{height:5px}
@@ -256,7 +257,7 @@
   @media (max-width:640px){
     .kopfleiste{gap:8px}
     #suche{width:110px} #suche:focus{width:140px}
-    .kopfrechts{max-width:58vw}
+    #suchliste{width:min(340px,86vw)}
     #panel{width:100%;top:auto;bottom:0;height:66%;border-left:none;border-top:1px solid var(--line);
            border-radius:16px 16px 0 0;transform:translateY(104%)}
     #panel.offen{transform:translateY(0)}
@@ -280,8 +281,6 @@
         <button id="suchleeren" title="Suche leeren">✕</button>
         <div id="suchliste"></div>
       </div>
-      <button id="btnEinfluss" class="symbolknopf" title="Einflusspfeile ein- und ausblenden" aria-label="Einflüsse">⇄</button>
-      <button id="btnReset" class="symbolknopf" title="Gesamtansicht – alles anzeigen" aria-label="Gesamtansicht">⟲</button>
       <button id="btnHilfe" class="symbolknopf" title="Hilfe und Bedienung" aria-label="Hilfe">?</button>
     </div>
   </div>
@@ -309,7 +308,7 @@
         <li><b>Ansicht:</b> Der Umschalter ganz links wechselt zwischen <i>Zeitleiste</i>, <i>Chroniken</i> und <i>Karte</i>. Die Reiter daneben passen sich an: in der Zeitleiste die Spurgruppen und <i>Epochen</i>, in den Chroniken die Themenbereiche.</li>
         <li><b>Karte:</b> Schematische Weltkarte mit Zeitregler – 17 farbige Gebiete, 21 Wege und 98 Orte erscheinen für das eingestellte Jahr. Die Reiter oben schalten zwischen <i>Reichen</i>, <i>Wegen</i> und <i>Orten</i> um; darunter lässt sich jedes einzeln ein- und ausblenden. Beim Verschieben der Zeit blenden sich Meldungen zu den Veränderungen ein und wieder aus; ▶ lässt die Zeit ablaufen, zwei Finger zoomen. Ein Tipp auf eine Route erklärt, welcher Wissenstransfer über sie lief; ein Tipp auf Ort oder Gebiet führt weiter in die Zeitleiste. Beim Hineinzoomen erscheinen zusätzlich Flüsse, Gebirgskämme und regionale Umrisse – bis hinunter zu Isar, Lech und Salzach. Die Linien sind von Hand gezeichnet: für die Orientierung gedacht, nicht als Atlas.</li>
         <li><b>Zwischen den Ansichten springen:</b> Wo es einen geografischen Bezug gibt, führt „◉ Karte“ dorthin – aus einer Chronikzeile ebenso wie aus dem Seitenpanel der Zeitleiste. Umgekehrt führt jede Karteninfo mit „→“ zurück in die Zeitleiste. Die Pfeile ‹ › oben führen durch alle drei Ansichten.</li>
-        <li><b>Wechselwirkungen:</b> <span class="schluessel">⇄ Einflüsse</span> zeigt alle Pfeile. Ein ausgewähltes Element zeigt seine eigenen immer, mit Beschriftung.</li>
+        <li><b>Wechselwirkungen:</b> Ein ausgewähltes Element zeigt seine Einflusspfeile immer, mit Beschriftung. Die Taste <span class="schluessel">E</span> blendet alle Pfeile der sichtbaren Spuren ein, <span class="schluessel">G</span> setzt auf die Gesamtansicht zurück.</li>
         <li><b>Suchen:</b> Reiter <i>Suche</i> (oder Strg/Cmd + F). Durchsucht Zeitleiste <i>und</i> alle Chroniken. Treffer werden auf der Zeitleiste gelb umrandet; ein Tipp springt hin.</li>
         <li><b>Zeitachse:</b> Beim Zoomen verfeinert sich das Raster automatisch bis auf einzelne Jahre. Mit der Maus zeigt eine Hilfslinie das Jahr unter dem Zeiger.</li>
         <li><b>Chroniken:</b> 40 vertiefende Zeittafeln, geordnet nach Mathematik, Physik, Astronomie, Technik und Kontext. Sie erscheinen anstelle der Zeitleiste; der Umschalter links oben wechselt die Ansicht. Einträge mit farbigem Jahr springen in die Zeitleiste zurück.</li>
@@ -634,13 +633,15 @@ const ITEMS = [
 {i:'as_aryabh',s:'as_astro',t:'Aryabhata: Erdrotation & Finsternisse',a:499,r:2,d:'Er erklärt den täglichen Sternenlauf durch die Drehung der Erde und Finsternisse durch Schattenwurf statt durch Dämonen.'},
 {i:'as_observ',s:'as_astro',t:'Islamische Observatorien',a:1259,b:1449,r:1,d:'In Maragha und Samarkand entstehen staatlich finanzierte Großobservatorien. Ulug Begs Sternkatalog bleibt 200 Jahre der genaueste; die „Tusi-Paare“ tauchen später bei Kopernikus wieder auf.'},
 {i:'as_kopernikus',s:'as_astro',t:'Kopernikus: De revolutionibus',a:1543,r:1,d:'Die Sonne im Zentrum, die Erde ein Planet. Rechnerisch zunächst kaum genauer als Ptolemäus, aber einfacher – und mit Folgen weit über die Astronomie hinaus: Der Mensch steht nicht mehr im Mittelpunkt.'},
-{i:'as_tycho',s:'as_astro',t:'Tycho Brahe: Präzisionsmessungen',a:1572,b:1601,r:1,d:'Die Supernova von 1572 beweist, dass der Himmel veränderlich ist. Mit bloßem Auge, aber riesigen Instrumenten erreicht Tycho eine Genauigkeit von Bogenminuten – die Datengrundlage für Kepler.'},
+{i:'as_tycho',s:'as_astro',t:'Tycho Brahe: Präzisionsmessungen',a:1572,b:1601,r:1,d:'Die Supernova von 1572 beweist, dass der Himmel veränderlich ist. Mit bloßem Auge, aber riesigen Instrumenten erreicht Tycho eine Genauigkeit von Bogenminuten – die Datengrundlage für Kepler. Sein eigenes Weltmodell ist ein Kompromiss: Die Planeten kreisen um die Sonne, diese aber um die ruhende Erde. Rechnerisch ist es von Kopernikus nicht unterscheidbar – Tycho hält an der Erdruhe fest, weil er keine Sternparallaxe messen kann. Sein Einwand war messtechnisch korrekt; die Sterne sind nur viel weiter entfernt, als er für möglich hielt.'},
+{i:'as_aberration',s:'as_astro',t:'Bradley: Aberration des Lichts',a:1728,b:1728,r:1,d:'Bradley sucht die Sternparallaxe und findet etwas anderes: Alle Sterne beschreiben im Jahreslauf eine kleine Ellipse von etwa 20 Bogensekunden – aber im falschen Rhythmus für eine Parallaxe. Die Erklärung ist die endliche Lichtgeschwindigkeit: Wer sich bewegt, muss das Fernrohr leicht nach vorn neigen, wie ein Regenschirm beim Laufen. Damit ist die Erdbewegung erstmals direkt bewiesen – 185 Jahre nach Kopernikus und 110 Jahre vor Bessels Parallaxe. Nebenbei bestätigt der Effekt die Lichtgeschwindigkeit und liefert ihren Wert auf wenige Prozent genau.'},
 {i:'as_kepler',s:'as_astro',t:'Keplers drei Gesetze',a:1609,b:1619,r:1,d:'Ellipsen statt Kreise, Flächensatz, T²~a³. Kepler gibt die 2000 Jahre alte Kreisidee erst auf, nachdem 8 Bogenminuten Abweichung bei Mars nicht wegzurechnen sind – ein Musterfall von Daten gegen Schönheit.',bild:'kepler_ellipse'},
 {i:'as_galileiteles',s:'as_astro',t:'Galilei richtet das Fernrohr zum Himmel',a:1610,r:1,d:'Mondgebirge, Jupitermonde, Venusphasen, Sonnenflecken: Der Himmel ist nicht vollkommen, und nicht alles kreist um die Erde. Ein Instrument entscheidet eine Weltbildfrage.'},
 {i:'as_newtongrav',s:'as_astro',t:'Newton erklärt Keplers Gesetze',a:1687,r:1,d:'Aus dem 1/r²-Gesetz folgen die Ellipsenbahnen mathematisch zwingend. Astronomie wird zum Anwendungsfall der Mechanik – Himmelsmechanik entsteht.'},
 {i:'as_halley',s:'as_astro',t:'Halley: Vorhersage der Kometenwiederkehr',a:1705,b:1758,r:2,d:'Er sagt die Rückkehr für 1758 voraus – 16 Jahre nach seinem Tod erscheint der Komet. Ein spektakulärer Beleg für die Vorhersagekraft der neuen Physik.'},
 {i:'as_herschel',s:'as_astro',t:'Herschel: Uranus & Aufbau der Milchstraße',a:1781,b:1800,r:2,d:'Der erste seit der Antike neu entdeckte Planet – gefunden mit selbstgebauten Spiegelteleskopen. Herschel beginnt, die Struktur unseres Sternsystems zu vermessen.'},
 {i:'as_neptun',s:'as_astro',t:'Neptun – am Schreibtisch entdeckt',a:1846,r:1,d:'Aus Bahnstörungen des Uranus berechnen Le Verrier und Adams die Position eines unbekannten Planeten. Das Teleskop findet ihn in derselben Nacht, 1° neben der Vorhersage – der größte Triumph der Newtonschen Mechanik.'},
+{i:'as_parallaxe',s:'as_astro',t:'Bessel: die erste Sternparallaxe',a:1838,b:1838,r:1,d:'Seit Aristarch war der stärkste Einwand gegen die Erdbewegung, dass sich die Sterne im Jahreslauf nicht verschieben. Bessel misst diese Verschiebung endlich: 0,3 Bogensekunden bei 61 Cygni – der Winkel, unter dem eine Ein-Euro-Münze in 15 Kilometern Entfernung erscheint. Daraus folgt eine Entfernung von elf Lichtjahren. Der antike Einwand war also berechtigt und der Effekt vorhanden; er war nur zweitausend Jahre lang zu klein zum Messen. Zugleich wird damit die erste Sprosse der kosmischen Entfernungsleiter geeicht.'},
 {i:'as_spektral',s:'as_physik',t:'Spektralanalyse: Woraus Sterne bestehen',a:1814,b:1868,r:1,d:'Fraunhofer entdeckt dunkle Linien im Sonnenspektrum, Kirchhoff und Bunsen deuten sie als Fingerabdrücke chemischer Elemente. Was der Philosoph Comte 1835 für ewig unerkennbar erklärte, ist damit messbar.'},
 {i:'as_leavitt',s:'as_astro',t:'Leavitt: Cepheiden als Entfernungsmaß',a:1912,r:2,d:'Aus der Perioden-Leuchtkraft-Beziehung wird der erste zuverlässige Maßstab für kosmische Entfernungen – die Voraussetzung für alles Folgende.'},
 {i:'as_sternnatur',s:'as_physik',t:'Woraus besteht der Himmel?',a:-350,b:1835,r:2,d:'Aristoteles erklärt die Himmelskörper aus einem fünften Element, das weder entsteht noch vergeht – deshalb gilt der Himmel als unveränderlich. Tychos Supernova von 1572 widerlegt das. Der Philosoph Comte erklärt 1835 die stoffliche Zusammensetzung der Sterne für prinzipiell unerforschbar – 24 Jahre bevor die Spektralanalyse sie beantwortet. Die Astrophysik beginnt dort, wo man aufhört, den Himmel für andersartig zu halten.'},
@@ -978,6 +979,18 @@ const LINKS = [
 {a:'in_druck',b:'a_cardano',t:'Gedruckte Rechenbücher machen Verfahren öffentlich'},
 {a:'as_ptolem',b:'as_kopernikus',t:'Modell, an dem sich Kopernikus abarbeitet'},
 {a:'as_observ',b:'as_kopernikus',t:'Rechenmodelle der Maragha-Schule tauchen wieder auf'},
+{a:'as_aberration',b:'as_kopernikus',t:'Erster direkter Beweis der Erdbewegung'},
+{a:'as_aberration',b:'as_parallaxe',t:'Die gesuchte Parallaxe gelingt erst 110 Jahre später'},
+{a:'as_parallaxe',b:'as_entfernung',t:'Erste Sprosse der Entfernungsleiter'},
+{a:'as_parallaxe',b:'as_aristarch',t:'Der antike Einwand war berechtigt – nur zu klein zum Messen'},
+{a:'as_parallaxe',b:'as_tycho',t:'Tychos Messgrenze wird endlich unterschritten'},
+{a:'as_parallaxe',b:'in_spektro',t:'Fraunhofers Heliometer macht die Messung möglich'},
+{a:'as_aberration',b:'e_roemer',t:'Bestätigt die endliche Lichtgeschwindigkeit'},
+{a:'as_aberration',b:'r_srt',t:'Aberration wird später relativistisch gedeutet'},
+{a:'p_foucault',b:'as_kopernikus',t:'Die Erddrehung wird im Hörsaal sichtbar'},
+{a:'as_weltbilder',b:'as_ptolem',t:'Das geozentrische Modell wird rechenfähig'},
+{a:'g_eudoxos',b:'as_ptolem',t:'Sphärenmodelle als Vorläufer der Epizykel'},
+{a:'as_tycho',b:'as_kopernikus',t:'Tychos Zwischenmodell: Planeten um die Sonne, Sonne um die Erde'},
 {a:'as_kopernikus',b:'as_tycho',t:'Streitfrage motiviert Präzisionsmessung'},
 {a:'as_tycho',b:'as_kepler',t:'8 Bogenminuten Abweichung erzwingen die Ellipse'},
 {a:'g_apollon',b:'as_kepler',t:'Kegelschnitte liefern die passende Kurve'},
@@ -2227,6 +2240,29 @@ const GEO_ENTDECKUNG_CHRONIK = [
 {j:1968,wer:'Plattentektonik',was:'Die Erde wird verstanden',m:'Aus Wegeners Idee, Meeresbodenkartierung und Magnetstreifen wird eine Theorie, die Gebirge, Erdbeben und Vulkane gemeinsam erklärt – die Geologie bekommt ihr vereinheitlichendes Prinzip, fast 300 Jahre nach Newton.',ziel:'an_numerik'},
 {j:1972,wer:'Blick von außen',was:'Die Erde als Ganzes',m:'Das Foto der vollständig beleuchteten Erde von Apollo 17 wird zum meistreproduzierten Bild der Geschichte. Die letzte geografische Entdeckung ist die des Planeten als eines endlichen Objekts.',ziel:'in_raumfahrt'},
 {j:2025,wer:'Was bleibt',was:'Kartiert und doch unbekannt',m:'Die Landoberfläche ist zentimetergenau vermessen, aber nur etwa ein Viertel des Meeresbodens in hoher Auflösung. Über die Oberfläche des Mars wissen wir mehr als über die Tiefsee – der unerforschteste Ort liegt auf der Erde.'}
+];
+
+const WELTBILD_CHRONIK = [
+{j:-600,wer:'Anaximander',was:'Die Erde schwebt frei',m:'Sie ruht auf nichts, weil es keinen Grund gibt, in eine bestimmte Richtung zu fallen. Ein Argument aus Symmetrie statt aus Mythos – der erste Schritt zu einem physikalischen Weltbild.',ziel:'as_weltbilder'},
+{j:-370,wer:'Eudoxos & Aristoteles',was:'Sphären aus Kristall',m:'27 ineinandergeschachtelte, gleichförmig rotierende Kugelschalen tragen die Gestirne. Das Modell erklärt die Rückläufigkeit der Planeten und gilt als physikalisch real: unten die vier Elemente, oben ein fünftes, unveränderliches. Aus dieser Zweiteilung folgt, dass am Himmel nichts Neues entstehen kann.',ziel:'g_eudoxos'},
+{j:-270,wer:'Aristarch',was:'Die Sonne im Zentrum',m:'Er stellt die Erde in Bewegung – 1800 Jahre vor Kopernikus. Der Einwand seiner Zeitgenossen ist keineswegs dumm: Bewegte sich die Erde, müssten die Sterne im Jahreslauf ihre Position ändern. Diese Parallaxe wird tatsächlich erst 1838 gemessen. Aristarchs Modell scheitert nicht an Sturheit, sondern an fehlender Messgenauigkeit.',ziel:'as_aristarch'},
+{j:-240,wer:'Eratosthenes',was:'Die Erde ist vermessen',m:'Der Erdumfang wird auf wenige Prozent genau bestimmt. Die Kugelgestalt war in gebildeten Kreisen der Antike unstrittig – die verbreitete Vorstellung, das Mittelalter habe an eine Scheibe geglaubt, ist eine Erfindung des 19. Jahrhunderts.',ziel:'as_eratos'},
+{j:150,wer:'Ptolemäus',was:'Kreise auf Kreisen',m:'Der Almagest liefert ein geozentrisches Rechenwerk aus Epizykeln, Deferenten und Ausgleichspunkten, das Planetenpositionen über Jahrhunderte brauchbar vorhersagt. Genau darin liegt seine Stärke – und die Schwierigkeit seiner Ablösung: Es war kein Aberglaube, sondern gute Wissenschaft.',ziel:'as_ptolem'},
+{j:1000,wer:'Ibn al-Haitham',was:'Zweifel an den Ausgleichspunkten',m:'Islamische Astronomen kritisieren, dass Ptolemäus\u2019 Äquant der Forderung gleichförmiger Kreisbewegung widerspricht. Es ist eine Kritik von innen: Man will das System retten, nicht stürzen.',ziel:'e_alhazen'},
+{j:1259,wer:'Maragha & Samarkand',was:'Neue Modelle, alte Mitte',m:'Tusi entwickelt das nach ihm benannte Paar aus zwei Kreisen, das gleichförmige Kreisbewegung in eine gerade Schwingung übersetzt. Kopernikus verwendet später dieselbe Konstruktion – ob unabhängig oder über vermittelte Handschriften, ist bis heute umstritten.',ziel:'as_observ'},
+{j:1440,wer:'Nikolaus von Kues',was:'Kein Ort ist der Mittelpunkt',m:'Ein Kardinal argumentiert, das Universum habe weder Rand noch Zentrum, und die Erde bewege sich wie alles andere. Der Gedanke bleibt philosophisch, ohne Rechnung – und ohne kirchlichen Widerspruch.'},
+{j:1543,wer:'Kopernikus',was:'Die Sonne ins Zentrum',m:'Der entscheidende Vorteil ist nicht die Genauigkeit – die ist kaum besser –, sondern die Einfachheit: Die Rückläufigkeit der Planeten ergibt sich von selbst aus der Bewegung der Erde. Ein Schönheitsargument, kein Messbeweis. Kopernikus behält Kreise und braucht deshalb weiterhin Epizykel.',ziel:'as_kopernikus'},
+{j:1572,wer:'Tycho Brahe',was:'Ein Kompromiss aus Messgründen',m:'Sein Modell lässt die Planeten um die Sonne und diese um die ruhende Erde kreisen – rechnerisch nicht von Kopernikus unterscheidbar. Tycho hält an der Erdruhe fest, weil er trotz bester Instrumente keine Sternparallaxe findet. Der Einwand ist messtechnisch korrekt; die Sterne sind nur viel weiter weg, als er für möglich hält.',ziel:'as_tycho'},
+{j:1609,wer:'Kepler',was:'Ellipsen statt Kreise',m:'Erst der Verzicht auf die Kreisbewegung macht das heliozentrische Modell den Daten überlegen. Acht Bogenminuten Abweichung bei Mars, die Kepler nicht wegrechnet, kosten die zweitausend Jahre alte Kreisidee.',ziel:'as_kepler'},
+{j:1610,wer:'Galilei',was:'Was das Fernrohr entscheidet – und was nicht',m:'Die Jupitermonde zeigen, dass nicht alles die Erde umkreist. Die Venusphasen sind stärker: Eine volle Phasenreihe ist mit Ptolemäus unvereinbar. Sie ist aber auch mit Tychos Modell vereinbar – das Fernrohr widerlegt das geozentrische System, beweist das heliozentrische jedoch nicht.',ziel:'as_galileiteles'},
+{j:1633,wer:'Prozess gegen Galilei',was:'Ein Streit um Zuständigkeit',m:'Nicht Wissenschaft gegen Religion schlechthin, sondern ein Konflikt über Schriftauslegung, Beweislast und Personen. Galilei behauptete Beweise, wo er Indizien hatte – und verspottete den Papst literarisch.',ziel:'gl_galilei'},
+{j:1687,wer:'Newton',was:'Warum überhaupt Ellipsen?',m:'Aus einem Kraftgesetz folgen Keplers Gesetze zwingend. Damit hat das heliozentrische System erstmals eine physikalische Begründung statt nur eine bessere Beschreibung – der eigentliche Sieg.',ziel:'as_newtongrav'},
+{j:1728,wer:'Bradley',was:'Der erste direkte Beweis',m:'Auf der Suche nach der Parallaxe findet er die Aberration: Alle Sterne beschreiben jährlich eine Ellipse von 20 Bogensekunden, verursacht durch die endliche Lichtgeschwindigkeit und die Bewegung der Erde. 185 Jahre nach Kopernikus ist die Erdbewegung erstmals gemessen.',ziel:'as_aberration'},
+{j:1838,wer:'Bessel',was:'Die Parallaxe wird gefunden',m:'0,3 Bogensekunden bei 61 Cygni – der Winkel, unter dem eine Münze in 15 Kilometern erscheint. Der Einwand aus der Antike ist endgültig ausgeräumt, und der winzige Wert zeigt, warum niemand vorher Erfolg hatte: Der Stern ist elf Lichtjahre entfernt.',ziel:'as_parallaxe'},
+{j:1851,wer:'Foucault',was:'Die Erddrehung im Hörsaal',m:'Ein 67 Meter langes Pendel im Panthéon dreht seine Schwingungsebene sichtbar weiter. Erstmals lässt sich die Erdrotation ohne Blick zum Himmel nachweisen – ein Experiment, das jeder verstehen kann.',ziel:'p_foucault'},
+{j:1918,wer:'Shapley',was:'Auch die Sonne steht nicht im Zentrum',m:'Aus der Verteilung der Kugelsternhaufen folgt: Das Sonnensystem liegt weit außerhalb der Mitte der Milchstraße. Die Verschiebung geht weiter.',ziel:'as_herschel'},
+{j:1925,wer:'Hubble',was:'Und die Milchstraße ist nur eine von vielen',m:'Die Nebel sind eigene Sternsysteme in Millionen Lichtjahren Entfernung. Aus einem Kosmos mit Zentrum wird einer ohne.',ziel:'as_hubble'},
+{j:2025,wer:'Bilanz',was:'Was der Fall lehrt',m:'Das geozentrische System war nicht dumm, sondern gut begründet und messtechnisch bestätigt. Es fiel nicht durch ein einzelnes Experiment, sondern über drei Jahrhunderte: erst Einfachheit (Kopernikus), dann bessere Daten (Kepler), dann eine physikalische Ursache (Newton), zuletzt direkte Messungen (Bradley, Bessel, Foucault). Wer im Unterricht nur „Kopernikus hatte recht“ erzählt, unterschlägt genau das, was Wissenschaft ausmacht.'}
 ];
 
 /* ============================================================
@@ -4292,16 +4328,16 @@ const sprungleiste = document.getElementById('sprungleiste');
   }
 }
 
-const btnEinfluss = document.getElementById('btnEinfluss');
-btnEinfluss.addEventListener('click', () => {
+/* Einflusspfeile und Gesamtansicht haben keine eigenen Knöpfe mehr –
+   erreichbar über die Tasten E und G. Pfeile des gewählten Elements
+   erscheinen ohnehin immer. */
+function alleEinfluesse(){
   state.einfluesse = !state.einfluesse;
-  btnEinfluss.classList.toggle('aktiv', state.einfluesse);
   render();
-});
-// „Nur Hauptstränge“ steckt jetzt im Reiter Kontext („Alle aus“)
-document.getElementById('btnReset').addEventListener('click', () => {
+}
+function gesamtansicht(){
   waehle(null); state.offsetY = 0; geheZu(MIN_JAHR, MAX_JAHR);
-});
+}
 document.getElementById('btnHilfe').addEventListener('click', () => document.getElementById('hilfe').classList.add('offen'));
 document.getElementById('hilfe').addEventListener('click', e => {
   if (e.target.id === 'hilfe') e.currentTarget.classList.remove('offen');
@@ -4320,6 +4356,8 @@ window.addEventListener('keydown', e => {
   }
   else if (e.key === 'ArrowLeft' && e.altKey){ e.preventDefault(); verlaufSpringe(-1); }
   else if (e.key === 'ArrowRight' && e.altKey){ e.preventDefault(); verlaufSpringe(1); }
+  else if (e.key === 'e' || e.key === 'E'){ alleEinfluesse(); }
+  else if (e.key === 'g' || e.key === 'G'){ gesamtansicht(); }
   else if (e.key === 'Escape'){ waehle(null); schliessePi();
     document.getElementById('hilfe').classList.remove('offen'); sucheAus(); }
 });
@@ -4539,6 +4577,10 @@ const CHRONIKEN = [
    titel:'Chronik der optischen Ger\u00e4te',
    note:'Vom Lesestein zum Weltraumteleskop. Bemerkenswert oft ging das Handwerk der Theorie voraus – die Brille gab es 300 Jahre vor dem Brechungsgesetz –, und fast jedes neue Ger\u00e4t zeigte Dinge, die keine Theorie vorhergesagt hatte.',
    daten: OPTIK_CHRONIK},
+  {id:'weltbild', gruppe:'Astronomie', tab:'Weltbilder', anker:'as_kopernikus',
+   titel:'Chronik der Weltbilder: geozentrisch und heliozentrisch',
+   note:'Das geozentrische System war nicht dumm, sondern gut begründet: Es sagte Planetenpositionen brauchbar vorher, und der Haupteinwand gegen die Erdbewegung – die fehlende Sternparallaxe – war messtechnisch korrekt. Es fiel über drei Jahrhunderte: erst Einfachheit (Kopernikus), dann bessere Daten (Kepler), dann eine physikalische Ursache (Newton), zuletzt direkte Messungen (Bradley 1728, Bessel 1838, Foucault 1851).',
+   daten: WELTBILD_CHRONIK},
   {id:'entfernung', gruppe:'Astronomie', tab:'Entfernungen', anker:'as_entfernung',
    titel:'Chronik der kosmischen Entfernungsleiter',
    note:'Jede Sprosse ruht auf der darunterliegenden: Erdradius, Mondparallaxe, Astronomische Einheit, Sternparallaxe, Cepheiden, Supernovae, Rotverschiebung. Deshalb ist die Leiter empfindlich – als Baade 1944 eine Sprosse korrigierte, verdoppelte sich die Gr\u00f6\u00dfe des ganzen Universums.',
@@ -4872,6 +4914,7 @@ state.x0 = MIN_JAHR;
 begrenze();
 render();
 window.__zl = {state, ITEMS, LINKS, SPUREN, GRUPPEN, CHRONIKEN, CHRONIK_VON_ID, baueChronikIndex, GRAFIKEN,
+  alleEinfluesse, gesamtansicht,
   inChronikAnsicht, chronikGruppen,
   zeichneGruppentabs, zeichneSpurleiste, waehleReiter, verlauf, verlaufSpringe, zeigeUebersicht,
   render, waehle, geheZu, ITEM_VON_ID, suchen, oeffnePi, schliessePi, zeigeChronik,
