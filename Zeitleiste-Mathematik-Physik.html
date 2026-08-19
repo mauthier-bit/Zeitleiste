@@ -190,6 +190,17 @@
   .chroniktabs button{font-size:12px}
   .chroniktabs button.aktiv{background:var(--akzent);color:#fff;border-color:var(--akzent)}
   #pichart{display:block;width:100%;height:170px;border:1px solid var(--line);border-radius:10px;background:#fffefb}
+  #skalacanvas{display:block;width:100%;height:190px;border:1px solid var(--line);border-radius:10px;background:#fffefb}
+  .skalasteuer{display:flex;align-items:center;gap:8px;margin:8px 0 4px}
+  .skalasteuer input[type=range]{flex:1 1 auto;min-width:80px;accent-color:var(--akzent)}
+  .skalaexp{font-variant-numeric:tabular-nums;font-weight:700;color:var(--akzent);
+    min-width:88px;text-align:right;font-size:14px}
+  .skalakarte{border:1px solid var(--line);border-radius:10px;background:var(--panel);
+    padding:10px 12px;margin:6px 0 14px}
+  .skalakarte h4{margin:0 0 2px;font-size:15px}
+  .skalakarte .groesse{color:var(--akzent);font-weight:700;font-size:12.5px;display:block;margin-bottom:5px}
+  .skalakarte p{margin:0;font-size:12.5px;line-height:1.5;color:var(--ink2)}
+  .skalakarte button.verweis{margin-top:8px}
   .pichartunter{font-size:11px;color:var(--ink2);margin:5px 0 14px;text-align:center}
   .pizeile{display:grid;grid-template-columns:82px 1fr;gap:10px;padding:9px 6px;border-top:1px solid var(--line);
     text-align:left;width:100%;background:none;border-left:none;border-right:none;border-bottom:none;border-radius:0}
@@ -311,9 +322,9 @@
         <li><b>Karte:</b> Schematische Weltkarte mit Zeitregler – 17 farbige Gebiete, 21 Wege und 98 Orte erscheinen für das eingestellte Jahr. Die Reiter oben schalten zwischen <i>Reichen</i>, <i>Wegen</i> und <i>Orten</i> um; darunter lässt sich jedes einzeln ein- und ausblenden. Beim Verschieben der Zeit blenden sich Meldungen zu den Veränderungen ein und wieder aus; ▶ lässt die Zeit ablaufen, zwei Finger zoomen. Ein Tipp auf eine Route erklärt, welcher Wissenstransfer über sie lief; ein Tipp auf Ort oder Gebiet führt weiter in die Zeitleiste. Beim Hineinzoomen erscheinen zusätzlich Flüsse, Gebirgskämme und regionale Umrisse – bis hinunter zu Isar, Lech und Salzach. Die Linien sind von Hand gezeichnet: für die Orientierung gedacht, nicht als Atlas.</li>
         <li><b>Zwischen den Ansichten springen:</b> Wo es einen geografischen Bezug gibt, führt „◉ Karte“ dorthin – aus einer Chronikzeile ebenso wie aus dem Seitenpanel der Zeitleiste. Umgekehrt führt jede Karteninfo mit „→“ zurück in die Zeitleiste. Die Pfeile ‹ › oben führen durch alle drei Ansichten.</li>
         <li><b>Wechselwirkungen:</b> Ein ausgewähltes Element zeigt seine Einflusspfeile immer, mit Beschriftung. Die Taste <span class="schluessel">E</span> blendet alle Pfeile der sichtbaren Spuren ein, <span class="schluessel">G</span> setzt auf die Gesamtansicht zurück.</li>
-        <li><b>Suchen:</b> Reiter <i>Suche</i> (oder Strg/Cmd + F). Durchsucht Zeitleiste <i>und</i> alle Chroniken. Treffer werden auf der Zeitleiste gelb umrandet; ein Tipp springt hin.</li>
+        <li><b>Suchen:</b> Das Feld rechts oben (oder Strg/Cmd + F) durchsucht alle drei Ansichten: Zeitleiste, Chroniken <i>und</i> die Karte mit ihren Orten, Reichen und Wegen. Die Trefferliste ist nach diesen drei Bereichen gegliedert; ein Tipp springt hin. Treffer der Zeitleiste werden dort zusätzlich gelb umrandet.</li>
         <li><b>Zeitachse:</b> Beim Zoomen verfeinert sich das Raster automatisch bis auf einzelne Jahre. Mit der Maus zeigt eine Hilfslinie das Jahr unter dem Zeiger.</li>
-        <li><b>Chroniken:</b> 43 vertiefende Zeittafeln, geordnet nach Mathematik, Physik, Astronomie, Technik und Kontext. Sie erscheinen anstelle der Zeitleiste; der Umschalter links oben wechselt die Ansicht. Einträge mit farbigem Jahr springen in die Zeitleiste zurück.</li>
+        <li><b>Chroniken:</b> 44 vertiefende Zeittafeln, geordnet nach Mathematik, Physik, Astronomie, Technik und Kontext. Sie erscheinen anstelle der Zeitleiste; der Umschalter links oben wechselt die Ansicht. Einträge mit farbigem Jahr springen in die Zeitleiste zurück.</li>
         <li><b>Zurück und Vorwärts:</b> Die Pfeile links oben führen durch die zuletzt besuchten Stationen – Zeitleisten-Elemente <i>und</i> Chroniken gemeinsam (auch Alt + Pfeiltaste). Beim Springen wird die Ansicht auch senkrecht nachgeführt, damit die Spur des Ziels im Bild liegt.</li>
       </ul>
       <h3>Die Idee</h3>
@@ -342,6 +353,17 @@
       <h2 id="pititel">Chronik</h2>
       <p class="pinote" id="pinote"></p>
       <div id="chronikuebersicht"></div>
+      <div id="skalareise" style="display:none">
+        <canvas id="skalacanvas"></canvas>
+        <div class="skalasteuer">
+          <button id="skalaZurueck" class="symbolknopf" title="Eine Zehnerpotenz kleiner" aria-label="kleiner">‹</button>
+          <button id="skalaLauf" class="symbolknopf" title="Reise starten und anhalten" aria-label="Reise starten">▶</button>
+          <button id="skalaVor" class="symbolknopf" title="Eine Zehnerpotenz größer" aria-label="größer">›</button>
+          <input id="skalaRegler" type="range" min="0" max="19" value="8" step="1" aria-label="Zehnerpotenz wählen">
+          <span id="skalaExp" class="skalaexp">10⁰ m</span>
+        </div>
+        <div id="skalaKarte" class="skalakarte"></div>
+      </div>
       <canvas id="pichart"></canvas>
       <div class="pichartunter" id="pichartunter">Gesicherte Nachkommastellen (logarithmisch) – Meilensteine in zeitlicher Reihenfolge, nicht maßstäblich</div>
       <div id="piliste"></div>
@@ -749,6 +771,7 @@ const ITEMS = [
 {i:'er_konstfall',s:'k_ereignis',t:'Fall Konstantinopels',a:1453,r:1,d:'Byzanz endet. Griechische Gelehrte fliehen mit Handschriften nach Italien und bringen Texte mit, die der Westen nur aus arabischen Übersetzungen kannte. Zugleich blockiert die neue Macht den Landweg nach Asien – die Suche nach dem Seeweg beginnt.'},
 {i:'er_entdeckungen',s:'k_ereignis',t:'Entdeckungsfahrten & Kolonialreiche',a:1492,b:1600,r:1,d:'Ozeanfahrten verlangen Navigation, Kartografie und Zeitmessung – und finanzieren sie. Neue Pflanzen, Tiere und Sternbilder sprengen das antike Weltbild: Die Alten hatten offensichtlich nicht alles gewusst. Für Amerikas Völker beginnt Eroberung und Seuchentod.'},
 {i:'er_reformation',s:'k_ereignis',t:'Reformation & Konfessionsspaltung',a:1517,b:1648,r:1,d:'Weil jeder die Bibel lesen soll, entstehen Schulen und Druckereien in großer Zahl. Zugleich zerfällt Europa in Lager, was die Wissenschaft paradox begünstigt: Wer in einem Land Ärger bekommt, publiziert im nächsten. Die Niederlande werden zum Zufluchtsort für Descartes und Galileis Druckwerke.'},
+{i:'er_habsburger',s:'k_ereignis',t:'Haus Habsburg',a:1273,b:1918,r:1,d:'Sechs Jahrhunderte europäische Politik durch Heirat statt Krieg – „Kriege führen mögen andere, du, glückliches Österreich, heirate.“ Unter Karl V. entsteht 1519 ein Reich, in dem die Sonne nicht untergeht: Spanien mit Amerika, die Niederlande, Österreich, Neapel. Für die Wissenschaft entscheidend sind zwei Höfe: Rudolf II. holt um 1600 Tycho Brahe und Kepler nach Prag – dort entstehen aus Tychos Marsdaten die Ellipsenbahnen. Und Maria Theresia führt 1774 die allgemeine Schulpflicht ein, hundert Jahre bevor sie in den meisten Staaten Europas üblich wird. Das Vielvölkerreich zerfällt 1918.'},
 {i:'er_30jahre',s:'k_ereignis',t:'Dreißigjähriger Krieg',a:1618,b:1648,r:1,d:'Mitteleuropa wird verwüstet, mancherorts stirbt die Hälfte der Bevölkerung. Keplers Mutter wird als Hexe angeklagt, er selbst zieht mehrfach um; Bürgerkrieg und Zerstörung verschieben die Führung in den Wissenschaften nach Frankreich, England und in die Niederlande.'},
 {i:'er_absolutismus',s:'k_ereignis',t:'Absolutismus & Höfe',a:1650,b:1789,r:2,d:'Fürsten finanzieren Akademien, Observatorien und Expeditionen – als Prestige und als Nutzen: Landvermessung, Ballistik, Navigation. Wissenschaft wird zum ersten Mal dauerhaft staatlich bezahlt.'},
 {i:'er_usa',s:'k_ereignis',t:'Amerikanische Unabhängigkeit',a:1776,b:1783,r:2,d:'Menschenrechte und Volkssouveränität werden Staatsprinzip. Franklin, Erfinder des Blitzableiters, ist zugleich Diplomat – Naturforschung und Politik sind noch dieselbe Bildungswelt.'},
@@ -758,6 +781,7 @@ const ITEMS = [
 {i:'er_reichsgruendung',s:'k_ereignis',t:'Deutsche Reichsgründung & Industriemacht',a:1871,b:1914,r:2,d:'Technische Hochschulen erhalten Promotionsrecht, Industrielabore entstehen (BASF, Siemens), die Physikalisch-Technische Reichsanstalt normt Messgrößen – und stellt genau die Strahlungsmessungen an, aus denen Plancks Quantenhypothese folgt. Staatliche Normung führt unbeabsichtigt zur Quantenphysik.'},
 {i:'er_wk1',s:'k_ereignis',t:'Erster Weltkrieg',a:1914,b:1918,r:1,d:'Chemiker entwickeln Giftgas, Physiker Schallmessung und Funkortung; Haber erhält den Nobelpreis und verantwortet den Gaskrieg. Internationale Zusammenarbeit bricht zusammen – dass ausgerechnet ein Brite 1919 Einsteins Theorie bestätigt, gilt als Versöhnungssignal.'},
 {i:'er_wk2',s:'k_ereignis',t:'Zweiter Weltkrieg & Vertreibung',a:1933,b:1945,r:1,d:'Entlassung und Ermordung jüdischer Wissenschaftler zerstören Göttingen als Weltzentrum der Mathematik; Einstein, Meitner, Born, von Neumann und hunderte andere emigrieren. Radar, Raketen, Codeknacken und Kernspaltung werden militärisch beschleunigt. Der Schwerpunkt der Physik wandert dauerhaft nach Amerika.'},
+{i:'er_empire',s:'k_ereignis',t:'Britisches Empire',a:1815,b:1947,r:1,d:'Auf dem Höhepunkt ein Viertel der Landfläche und ein Viertel der Menschheit – „das Reich, in dem die Sonne nie untergeht“. Getragen von Dampfschiff, Telegraf und Seemacht. Für die Wissenschaft folgenreich: Der Greenwich-Meridian wird 1884 Weltstandard, weil drei Viertel aller Seekarten britisch sind; die Great Trigonometrical Survey vermisst Indien über siebzig Jahre und bestimmt die Höhe des Everest; Darwin reist auf einem Vermessungsschiff der Marine. Zugleich beruht der Wohlstand auf Sklavenhandel bis 1833, Opiumkriegen und Hungersnöten in Bengalen mit Millionen Toten. Beides gehört zusammen.'},
 {i:'er_kalterkrieg',s:'k_ereignis',t:'Kalter Krieg & Sputnikschock',a:1947,b:1991,r:1,d:'Zwei Blöcke finanzieren Großforschung in bis dahin unbekanntem Umfang: Kernphysik, Raumfahrt, Rechner, Halbleiter. Der Sputnikschock von 1957 löst im Westen Schulreformen aus – Mathematikunterricht wird zur Frage nationaler Sicherheit.'},
 {i:'er_globalisierung',s:'k_ereignis',t:'Globale Forschungsgemeinschaft',a:1991,b:2025,r:2,d:'CERN, ESA, ITER und weltweite Klimaprogramme werden von Staatenverbünden getragen; zugleich hängt Forschung wieder stärker an politischen Konflikten – Sanktionen und Exportkontrollen betreffen heute auch Rechenleistung und Halbleiter.'},
 {i:'ka_antike',s:'k_kunst',t:'Antike Baukunst',a:-600,b:400,r:2,d:'Der griechische Tempel folgt Zahlenverhältnissen: Säulenabstand, Höhe und Grundriss stehen in festen Proportionen, und selbst die leichte Krümmung der Stufen ist berechnete Korrektur der Sehgewohnheit. Römischer Beton, Bogen und Kuppel machen daraus Bauen für die Masse.'},
@@ -1149,6 +1173,18 @@ const LINKS = [
 {a:'in_verkehr',b:'w_quellen',t:'Die mitführbare Energiedichte begrenzt die Reichweite'},
 {a:'q_kernenergie',b:'in_kernkraft',t:'Vom Reaktor zum Kraftwerk'},
 {a:'in_kernkraft',b:'w_quellen',t:'Grundlast ohne Verbrennung – mit ungelöster Endlagerfrage'},
+{a:'er_empire',b:'ku_industrie',t:'Rohstoffe und Absatzmärkte für die Industrie'},
+{a:'er_empire',b:'in_zeit',t:'Greenwich wird 1884 Nullmeridian der Welt'},
+{a:'er_empire',b:'g_groma',t:'Great Trigonometrical Survey: Indien und der Everest'},
+{a:'er_empire',b:'er_entdeckungen',t:'Darwin reist auf einem Vermessungsschiff der Marine'},
+{a:'er_empire',b:'in_telegraf',t:'Seekabel verbinden das Reich in Minuten'},
+{a:'er_habsburger',b:'as_kepler',t:'Rudolf II. holt Tycho und Kepler nach Prag'},
+{a:'er_habsburger',b:'as_tycho',t:'Kaiserlicher Hofastronom in Prag'},
+{a:'er_habsburger',b:'er_30jahre',t:'Der Prager Fenstersturz löst den Krieg aus'},
+{a:'er_habsburger',b:'ku_uni',t:'Maria Theresias Schulpflicht 1774'},
+{a:'er_habsburger',b:'er_entdeckungen',t:'Karl V. herrscht über Spanien und Amerika'},
+{a:'er_habsburger',b:'er_reformation',t:'Karl V. gegen Luther auf dem Reichstag zu Worms'},
+{a:'er_habsburger',b:'er_wk1',t:'Sarajevo 1914 – das Reich zerbricht'},
 {a:'er_kalterkrieg',b:'in_kernkraft',t:'„Atome für den Frieden“ als Systemwerbung'},
 {a:'q_spaltung',b:'q_kernenergie',t:'Vom Laborbefund zur Waffe und zum Reaktor'},
 {a:'ge_wk',b:'q_kernenergie',t:'Krieg beschleunigt und belastet die Kernphysik'},
@@ -1980,6 +2016,7 @@ const REFORMATION_CHRONIK = [
 {j:1450,wer:'Buchdruck',was:'Die technische Voraussetzung',m:'Ohne billige Flugschriften bliebe ein akademischer Streit akademisch. Von Luthers Schriften erscheinen bis 1525 über drei Millionen Exemplare – die erste Medienkampagne der Geschichte.',ziel:'in_druck'},
 {j:1516,wer:'Erasmus',was:'Zurück zu den Quellen',m:'Seine kritische Ausgabe des griechischen Neuen Testaments zeigt, dass die lateinische Bibel Übersetzungsfehler enthält. Philologische Methode wird zum theologischen Sprengstoff.',ziel:'in_druck'},
 {j:1517,wer:'Luthers Thesen',was:'Ein Streit wird zur Bewegung',m:'Gedacht als akademische Disputation über den Ablass, binnen Wochen in ganz Deutschland bekannt. Der Anlass ist Finanzpolitik: Ablassgelder finanzieren den Petersdom und Schulden eines Erzbischofs.',ziel:'er_reformation'},
+{j:1519,wer:'Karl V.',was:'Ein Reich ohne Sonnenuntergang',m:'Spanien mit Amerika, die Niederlande, Österreich und Neapel in einer Hand – zusammengeheiratet, nicht erobert. Zwei Jahre später steht Luther vor ihm in Worms. Der Habsburger scheitert daran, die Glaubensspaltung zu verhindern, und dankt 1556 ab.',ziel:'er_habsburger'},
 {j:1522,wer:'Bibelübersetzung',was:'Sprache für alle',m:'Luther übersetzt auf der Wartburg in elf Wochen das Neue Testament und schaut dem Volk „aufs Maul“. Die Übersetzung prägt das Neuhochdeutsche stärker als jedes andere Buch.'},
 {j:1524,wer:'Bauernkrieg',was:'Religiöse Hoffnung wird sozial',m:'Aus der Freiheit des Christenmenschen leiten die Bauern politische Forderungen ab. Luther stellt sich scharf gegen sie – die Reformation entscheidet sich für das Bündnis mit den Fürsten.',ziel:'er_reformation'},
 {j:1527,wer:'Schulwesen',was:'Lesen als Glaubenspflicht',m:'Melanchthon, der „Lehrer Deutschlands“, entwirft Schulordnungen und Lehrpläne. Weil jeder die Bibel selbst lesen soll, entstehen Volksschulen und Gymnasien in großer Zahl – mit enormen Langzeitfolgen für die Alphabetisierung.',ziel:'ku_uni'},
@@ -2009,6 +2046,7 @@ const KOLONIAL_CHRONIK = [
 {j:1735,wer:'Wissenschaft reist mit',was:'Expeditionen als Forschungsprogramm',m:'Die französische Gradmessung in Peru und Lappland entscheidet, ob die Erde an den Polen abgeplattet ist – Newton behält recht. Kolonialer Zugang und Grundlagenforschung sind untrennbar verflochten.',ziel:'p_cavendish'},
 {j:1769,wer:'Venustransit',was:'Cook segelt für die Astronomie',m:'Die Vermessung des Venusdurchgangs von Tahiti aus dient der Bestimmung der Sonnenentfernung – und zugleich der Erkundung des Pazifiks. Forschung und Machtpolitik reisen im selben Schiff.',ziel:'as_entfernung'},
 {j:1799,wer:'Humboldt',was:'Ein anderer Blick',m:'Fünf Jahre Amerikareise mit Messinstrumenten für Klima, Magnetfeld und Pflanzenverbreitung. Humboldt kritisiert Sklaverei und Kolonialherrschaft scharf – und begründet die Geografie als Wissenschaft der Zusammenhänge.'},
+{j:1815,wer:'Britisches Empire',was:'Ein Viertel der Erde',m:'Nach 1815 ohne ernsthaften Rivalen zur See. Auf dem Höhepunkt umfasst das Reich ein Viertel der Landfläche und ein Viertel der Menschheit. Dampfschiff, Telegraf und Seekabel machen Verwaltung über solche Entfernungen erst möglich – Nachrichten brauchen Minuten statt Monate.',ziel:'er_empire'},
 {j:1830,wer:'Rohstoffe für die Industrie',was:'Kolonien werden Zulieferer',m:'Baumwolle, Kautschuk, Salpeter, später Erdöl. Die Industrialisierung Europas ist ohne kolonialen Zugriff auf Rohstoffe und Absatzmärkte nicht zu denken.',ziel:'ku_industrie'},
 {j:1884,wer:'Berliner Konferenz',was:'Afrika wird aufgeteilt',m:'Vierzehn Staaten ziehen Grenzen auf Karten, ohne Beteiligte. Telegraf, Dampfschiff, Chinin und Maschinengewehr machen die Durchdringung des Kontinents technisch möglich – Technik als Werkzeug der Herrschaft.',ziel:'in_telegraf'},
 {j:1900,wer:'Wissenschaft und Rassismus',was:'Missbrauch von Messmethoden',m:'Schädelvermessung und „Rassenkunde“ geben Vorurteilen ein wissenschaftliches Gewand. Ein Lehrstück darüber, dass Messen allein noch keine Erkenntnis ist – die Fragestellung entscheidet mit.'},
@@ -2039,6 +2077,7 @@ const WELTKRIEGE_CHRONIK = [
 const KALTERKRIEG_CHRONIK = [
 {j:1946,wer:'Zwei Blöcke',was:'Der Vorhang fällt',m:'Aus Verbündeten werden Gegner. Wissenschaft wird zum Systemwettbewerb: Wer die bessere Physik hat, hat angeblich die bessere Gesellschaftsordnung.'},
 {j:1949,wer:'Sowjetische Atombombe',was:'Das Gleichgewicht des Schreckens',m:'Vier Jahre früher als erwartet – auch durch Spionage. Es beginnt ein Rüstungswettlauf, in dem abschreckende Wirkung von der Fähigkeit zur gegenseitigen Vernichtung abhängt.',ziel:'q_kernenergie'},
+{j:1949,wer:'Zwei Blöcke',was:'NATO und Warschauer Pakt',m:'1949 gründen zwölf Staaten die NATO, 1955 folgt der Warschauer Pakt. Die Trennlinie verläuft mitten durch Deutschland und durch die Wissenschaft: Östliche Ergebnisse erreichen den Westen oft mit Jahren Verzug, Tagungen werden zu Ausnahmeereignissen. Zugleich finanziert der Wettstreit Kernphysik, Rechnerbau und Raumfahrt in bis dahin unbekanntem Umfang.',ziel:'er_kalterkrieg'},
 {j:1950,wer:'McCarthy-Ära',was:'Misstrauen gegen die eigenen Forscher',m:'Oppenheimer verliert 1954 seine Sicherheitsfreigabe, weil er die Wasserstoffbombe kritisch sah. Politische Verlässlichkeit wird zum Kriterium wissenschaftlicher Karrieren.',ziel:'q_kernenergie'},
 {j:1954,wer:'Zivile Kernenergie',was:'Atome für den Frieden',m:'Obninsk speist als erstes Kernkraftwerk Strom ins Netz. Die Technik soll zeigen, dass dieselbe Physik auch aufbauen kann – Werbung und Wirklichkeit gehen dabei weit auseinander.'},
 {j:1954,wer:'CERN',was:'Europa forscht gemeinsam',m:'Zwölf Staaten gründen ein Labor, das keiner allein finanzieren könnte – bewusst zivil und offen. Später arbeiten hier Ost und West zusammen, während die Politik blockiert ist.',ziel:'ku_gross'},
@@ -2077,6 +2116,7 @@ const KARTEN_CHRONIK = [
 {j:1799,wer:'Humboldt',was:'Karten zeigen Zusammenhänge',m:'Er trägt Temperatur, Pflanzenverbreitung und Höhe in Karten ein und erfindet die Isotherme. Aus dem Abbild des Raumes wird ein Werkzeug der Analyse – die thematische Karte.'},
 {j:1854,wer:'John Snow',was:'Eine Karte löst ein Rätsel',m:'Er trägt Cholerafälle in einen Londoner Stadtplan ein; die Häufung um eine Wasserpumpe belegt den Übertragungsweg. Ein früher Beleg dafür, dass Darstellung selbst Erkenntnis erzeugt.',ziel:'s_quetelet'},
 {j:1884,wer:'Nullmeridian',was:'Greenwich wird Weltstandard',m:'25 Staaten einigen sich in Washington – Frankreich enthält sich und rechnet noch Jahrzehnte von Paris aus. Ein Koordinatensystem ist immer auch eine politische Entscheidung.'},
+{j:1884,wer:'Meridiankonferenz',was:'Greenwich wird Nullpunkt',m:'25 Staaten legen den Nullmeridian auf Greenwich fest – nicht aus Physik, sondern aus Praxis: Drei Viertel aller Seekarten waren bereits britisch. Frankreich enthielt sich und rechnete noch bis 1911 nach Paris.',ziel:'er_empire'},
 {j:1972,wer:'Satellitenbilder',was:'Der Blick von außen',m:'Landsat beginnt die dauerhafte Erdbeobachtung; das Foto der ganzen Erde von Apollo 17 wird zum Symbol der Umweltbewegung. Kartierung wird zur laufenden Messung statt zur einmaligen Aufnahme.'},
 {j:1994,wer:'GPS & digitale Karten',was:'Jeder kennt seine Koordinaten',m:'Was Jahrtausende Expeditionen erforderte, liefert heute ein Empfänger in Sekunden – auf Basis relativistisch korrigierter Zeitsignale. Und jede Kartendarstellung bleibt eine Projektion mit bewusst gewählten Verzerrungen.',ziel:'r_gps'}
 ];
@@ -2115,6 +2155,7 @@ const DEUTSCHLAND_CHRONIK = [
 {j:1609,wer:'Kepler',was:'Himmelsmechanik zwischen den Fronten',m:'Kaiserlicher Hofmathematiker in Prag, später in Linz und Regensburg – ständig verschoben durch Konfessionskonflikte. Seine Gesetze entstehen unter denkbar unruhigen Bedingungen.',ziel:'as_kepler'},
 {j:1650,wer:'Guericke in Magdeburg',was:'Die Halbkugeln',m:'Ein Bürgermeister erzeugt das Vakuum und zeigt öffentlich, dass Pferdegespanne die evakuierten Halbkugeln nicht trennen können. Physik als Schauexperiment vor Publikum.',ziel:'in_vakuum'},
 {j:1700,wer:'Leibniz & Akademie',was:'Ein Universalgelehrter organisiert',m:'Dualsystem, Rechenmaschine, Infinitesimalkalkül – und die Gründung der Berliner Sozietät der Wissenschaften. Leibniz denkt Forschung erstmals als staatlich organisierte Aufgabe.',ziel:'an_infinitesimal'},
+{j:1774,wer:'Maria Theresia',was:'Allgemeine Schulpflicht',m:'Sechs Jahre Unterricht für alle Kinder, hundert Jahre bevor das in den meisten Staaten Europas üblich wird. Nicht aus Bildungsidealismus, sondern weil ein moderner Staat rechnende und schreibende Untertanen braucht.',ziel:'er_habsburger'},
 {j:1810,wer:'Humboldtsche Universität',was:'Einheit von Forschung und Lehre',m:'Wilhelm von Humboldts Berliner Modell: Professoren forschen, Studenten arbeiten mit, Bildung ist zweckfrei. Dieses Modell wird weltweit kopiert – amerikanische Forschungsuniversitäten bauen bis heute darauf.'},
 {j:1826,wer:'Justus Liebig',was:'Das Forschungslabor als Lehrform',m:'In Gießen lernen Studenten durch eigenes Experimentieren statt durch Zuhören. Aus diesem Praktikum entsteht die chemische Industrie und ein Ausbildungsmodell, das die Welt übernimmt.'},
 {j:1871,wer:'Reichsgründung',was:'Industrie, Labor, Normung',m:'Technische Hochschulen erhalten Promotionsrecht, Konzerne bauen Forschungslabore, die Physikalisch-Technische Reichsanstalt normt Maße – und liefert die Strahlungsmessungen, aus denen Plancks Quantenhypothese folgt.',ziel:'er_reichsgruendung'},
@@ -2333,6 +2374,31 @@ const VERKEHR_CHRONIK = [
 {j:1970,wer:'Fluchtgeschwindigkeit',was:'11,2 km/s – die harte Grenze',m:'Um die Erde zu verlassen, sind 11,2 km/s nötig, für eine Umlaufbahn 7,9 km/s. Die Raketengrundgleichung koppelt das an das Massenverhältnis: Deshalb bestehen Trägerraketen zu über 90 Prozent aus Treibstoff. Hier stößt Verkehr an eine physikalische, nicht technische Grenze.',ziel:'in_raumfahrt'},
 {j:1991,wer:'Datenverkehr',was:'Information statt Transport',m:'Erstmals ersetzt Übertragung teilweise die Reise. Eine E-Mail legt dieselbe Strecke in Millisekunden zurück, für die ein Eilbote Roms zwei Wochen brauchte – bei einem Millionstel des Energieaufwands.',ziel:'in_netze'},
 {j:2025,wer:'Bilanz',was:'Was Geschwindigkeit kostet',m:'Die Reisegeschwindigkeit stieg in 200 Jahren um den Faktor 100, der Energiebedarf je Personenkilometer aber nicht im gleichen Maß: Fahrrad 0,06, Bahn 1,5, Auto 5, Flugzeug 10 kWh je 100 Personenkilometer. Die Physik erklärt, warum – Widerstand wächst mit v², die nötige Leistung mit v³. Schnelligkeit ist deshalb immer teuer erkauft.',ziel:'w_energie',bild:'energiebedarf'},
+];
+
+/* Zehnerpotenzenreise: Längenskala von der Planck-Länge bis zum beobachtbaren Universum.
+   e = Zehnerpotenz in Metern, n = Objekt, m = Erläuterung, ziel = Sprungmarke. */
+const LAENGEN_SKALA = [
+{e:-35,n:'Planck-Länge',g:'1,6 · 10⁻³⁵ m',m:'Aus den Naturkonstanten G, c und h allein gebildet. Unterhalb dieser Länge verlieren die heutigen Theorien von Raum und Zeit ihre Aussagekraft – nicht weil dort nichts wäre, sondern weil Quantentheorie und Gravitation dort beide gebraucht würden und sich widersprechen.',ziel:'q_konstanten'},
+{e:-18,n:'Quark, Elektron',g:'unter 10⁻¹⁸ m',m:'Bis heute keine Ausdehnung messbar; sie gelten als punktförmig. Die Zahl gibt nur die Auflösungsgrenze der stärksten Beschleuniger an.',ziel:'q_standard'},
+{e:-15,n:'Atomkern',g:'1 fm = 10⁻¹⁵ m',m:'Rutherfords Streuversuch zeigte: Fast die gesamte Masse steckt in einem Kern, der 100 000-mal kleiner ist als das Atom. Wäre das Atom ein Fußballstadion, wäre der Kern eine Erbse im Anstoßkreis.',ziel:'q_rutherford'},
+{e:-10,n:'Atom',g:'0,1 nm = 10⁻¹⁰ m',m:'Der typische Atomdurchmesser. Ein Millimeter enthält zehn Millionen Atome nebeneinander. Erst 1981 wurden einzelne Atome mit dem Rastertunnelmikroskop sichtbar.',ziel:'q_rutherford'},
+{e:-9,n:'DNA-Doppelhelix',g:'2 nm Durchmesser',m:'Die Ganghöhe beträgt 3,4 nm. Sichtbar wurde die Struktur nicht im Mikroskop, sondern über Röntgenbeugung – die Wellenlänge muss zur Größe passen.',ziel:'q_roentgen'},
+{e:-7,n:'Virus, sichtbares Licht',g:'100 nm = 10⁻⁷ m',m:'Hier liegt eine harte Grenze: Sichtbares Licht hat 400 bis 700 nm Wellenlänge. Kleineres lässt sich mit Licht grundsätzlich nicht auflösen – deshalb braucht es Elektronenmikroskope.',ziel:'e_spektrum'},
+{e:-5,n:'Zelle, Haardurchmesser',g:'10–100 µm',m:'Hookes Korkschnitt von 1665 zeigte erstmals Zellen. Ein menschliches Haar misst rund 70 µm – die Grenze dessen, was das bloße Auge noch trennt, liegt bei etwa 100 µm.',ziel:'e_optik'},
+{e:-3,n:'Millimeter',g:'10⁻³ m',m:'Der Bereich der Alltagsmessung. Ein Stecknadelkopf, ein Sandkorn, die Dicke einer Münze.'},
+{e:0,n:'Mensch',g:'1 m',m:'Der Meter war ursprünglich als der zehnmillionste Teil des Erdmeridianquadranten definiert – ein Maß aus der Erdvermessung. Seit 1983 über die Lichtgeschwindigkeit festgelegt.',ziel:'er_frevolution'},
+{e:2,n:'Gebäude',g:'100 m',m:'Die Cheops-Pyramide misst 139 m, der Kölner Dom 157 m. Über Jahrtausende die größten von Menschen gebauten Höhen.',ziel:'g_aegverm'},
+{e:4,n:'Stadt, Berg',g:'10 km',m:'Der Mount Everest ragt 8,8 km auf – gegenüber dem Erdradius ist das weniger als ein Tausendstel. Die Erde ist glatter als eine Billardkugel.'},
+{e:6,n:'Erde',g:'6371 km Radius',m:'Eratosthenes bestimmte den Umfang um −240 auf wenige Prozent genau, allein aus Schattenlängen und einer Streckenmessung.',ziel:'as_eratos'},
+{e:8,n:'Mondbahn',g:'384 000 km',m:'Etwa 1,3 Lichtsekunden. Hipparch schätzte die Monddistanz schon um −130 aus Finsternisbeobachtungen auf rund 60 Erdradien – nahezu korrekt.',ziel:'as_hipparch'},
+{e:11,n:'Erde – Sonne',g:'150 Mio. km = 1 AE',m:'Acht Lichtminuten. Die Astronomische Einheit wurde 1761 und 1769 aus Venusdurchgängen bestimmt – die erste weltweit koordinierte Messkampagne der Wissenschaftsgeschichte.',ziel:'as_entfernung'},
+{e:13,n:'Sonnensystem',g:'bis 30 AE (Neptun)',m:'Voyager 1 ist seit 1977 unterwegs und hat rund 24 Lichtstunden zurückgelegt. Selbst mit 17 km/s bräuchte sie 70 000 Jahre bis zum nächsten Stern.',ziel:'in_raumfahrt'},
+{e:16,n:'Nächster Stern',g:'4,2 Lichtjahre',m:'Proxima Centauri. Bessels Parallaxenmessung von 1838 machte solche Entfernungen erstmals messbar – 0,3 Bogensekunden entsprachen elf Lichtjahren.',ziel:'as_parallaxe'},
+{e:21,n:'Milchstraße',g:'100 000 Lichtjahre',m:'Shapley zeigte 1918 aus der Verteilung der Kugelsternhaufen, dass die Sonne weit außerhalb der Mitte liegt – rund 26 000 Lichtjahre vom Zentrum entfernt.',ziel:'as_herschel'},
+{e:22,n:'Andromeda',g:'2,5 Mio. Lichtjahre',m:'Die nächste große Galaxie – und das fernste Objekt, das mit bloßem Auge sichtbar ist. Bis 1925 hielt man sie für einen Nebel innerhalb der Milchstraße.',ziel:'as_hubble'},
+{e:24,n:'Galaxienhaufen',g:'100 Mio. Lichtjahre',m:'Zwicky schloss 1933 aus den Bewegungen im Coma-Haufen auf unsichtbare Masse – der erste Hinweis auf Dunkle Materie.',ziel:'as_dunkel'},
+{e:26,n:'Beobachtbares Universum',g:'93 Mrd. Lichtjahre',m:'Trotz eines Alters von 13,8 Milliarden Jahren ist der beobachtbare Bereich weiter, weil sich der Raum währenddessen ausdehnte. Die Hintergrundstrahlung von 1965 ist sein Rand.',ziel:'as_cmb'}
 ];
 
 /* ============================================================
@@ -3105,6 +3171,9 @@ const ORTE = [
 {n:'Timbuktu',o:[-3.01,16.77],a:1300,b:1600,id:'ku_islam',t:'Handschriftenbibliotheken am Niger'},
 {n:'Nalanda',o:[85.44,25.14],a:427,b:1197,id:'ku_indien',t:'Klosteruniversität mit großer Bibliothek'},
 {n:'Kerala',o:[76.28,10.85],a:1350,b:1500,id:'an_kerala',t:'Madhava: unendliche Reihen'},
+{n:'Prag (Rudolfinischer Hof)',o:[14.40,50.09],a:1583,b:1612,id:'er_habsburger',t:'Rudolf II. holt Tycho Brahe und Kepler an seinen Hof; aus Tychos Marsdaten entstehen hier die Ellipsengesetze'},
+{n:'Jalta',o:[34.20,44.58],a:1945,b:1945,id:'er_kalterkrieg',t:'Februar 1945: Roosevelt, Churchill und Stalin teilen Europa in Einflusszonen – der Ausgangspunkt der Blockbildung'},
+{n:'Greenwich (Nullmeridian)',o:[0.00,51.45],a:1884,b:1884,id:'er_empire',t:'Die Meridiankonferenz macht Greenwich zum Nullmeridian – weil drei Viertel aller Seekarten britisch sind'},
 {n:'Wien',o:[16.37,48.21],a:1920,b:1936,id:'l_goedel',t:'Wiener Kreis, Gödels Unvollständigkeitssätze'},
 {n:'Kopenhagen (Bohr)',o:[12.60,55.70],a:1921,b:1940,id:'q_kopenhagen',t:'Bohrs Institut: Deutung der Quantenmechanik'},
 {n:'Chicago',o:[-87.63,41.88],a:1942,b:1942,id:'q_kernenergie',t:'Erster kontrollierter Kettenreaktor'},
@@ -3276,6 +3345,69 @@ const REICHE = [
     [44.00,33.50],[43.00,34.00],[42.00,35.00],[41.50,36.50],[41.00,38.00],[41.50,40.00],[42.00,42.00],
     [43.50,43.50],[45.00,45.00],[44.00,46.50],[42.00,48.00],[40.00,49.00],[38.00,50.00],[35.50,51.00],
     [33.00,52.00],[31.00,53.50],[30.00,55.00]]},
+{n:'Habsburgisches Weltreich (Karl V.)',a:1516,b:1556,f:'#7a3f6e',id:'er_habsburger',
+ t:'Spanien mit Amerika, die Niederlande, Österreich, Neapel und Sizilien in einer Hand – ein Reich, in dem die Sonne nicht untergeht. Erreicht durch Heiratspolitik, nicht durch Eroberung.',
+ pp:[[[-9.42,38.70],[-8.90,37.00],[-6.30,36.80],[-5.20,36.30],[-2.50,36.70],[-0.90,37.60],[0.50,39.50],
+    [1.00,40.90],[3.30,41.60],[3.00,42.50],[1.00,42.65],[-0.50,43.00],[-1.80,43.35],[-3.00,43.40],
+    [-5.60,43.60],[-8.40,43.40],[-9.30,42.90],[-8.70,41.10],[-8.87,40.14],[-9.42,38.70]],
+    [[4.10,52.00],[4.80,52.90],[5.60,53.30],[6.80,53.45],[6.60,52.20],[6.20,51.20],[6.10,50.30],
+    [5.20,49.80],[4.00,50.00],[2.90,51.20],[3.80,51.60],[4.10,52.00]],
+    [[9.55,47.55],[10.10,47.40],[11.00,47.00],[12.20,46.80],[13.70,46.50],[15.00,46.60],[16.10,46.70],
+    [16.50,47.00],[17.10,48.00],[16.95,48.80],[15.60,48.90],[14.00,48.60],[13.00,48.30],[12.00,47.70],
+    [10.50,47.55],[9.55,47.55]],
+    [[13.20,41.30],[13.57,41.20],[13.95,40.72],[14.25,40.85],[14.45,40.63],[14.75,40.68],[15.63,40.07],
+    [15.80,39.20],[16.10,38.95],[15.85,38.55],[15.65,38.10],[16.10,37.98],[17.20,38.95],[18.35,39.79],
+    [18.52,40.13],[17.25,40.47],[16.85,41.13],[15.60,41.92],[14.20,42.50],[13.75,42.00],[13.20,41.30]],
+    [[12.40,37.80],[13.40,38.15],[15.20,38.12],[15.42,38.02],[15.10,36.65],[12.40,37.80]]]},
+{n:'Habsburgermonarchie',a:1556,b:1918,f:'#a05a8a',id:'er_habsburger',
+ t:'Das Vielvölkerreich an der Donau: Österreich, Böhmen, Ungarn, später Galizien und die Adriaküste. Am Prager Hof Rudolfs II. arbeiten um 1600 Tycho Brahe und Kepler; Maria Theresia führt 1774 die Schulpflicht ein.',
+ p:[[9.55,47.55],[10.10,47.40],[11.00,47.00],[12.20,46.80],[13.70,46.50],[15.00,46.60],[16.20,45.90],
+    [17.50,45.60],[19.00,45.20],[20.50,44.80],[22.10,44.60],[22.80,45.30],[24.50,45.90],[25.60,46.50],
+    [26.60,47.60],[26.00,48.30],[24.50,49.00],[22.80,49.50],[21.00,49.60],[19.00,49.40],[17.00,49.20],
+    [15.00,49.60],[14.20,50.60],[13.00,50.60],[12.20,50.20],[12.50,49.30],[13.40,48.60],[13.00,48.30],
+    [12.00,47.70],[10.50,47.55],[9.55,47.55]]},
+{n:'NATO-Staaten',a:1949,b:1991,f:'#2f6fd0',id:'er_kalterkrieg',
+ t:'Der westliche Block: 1949 von zwölf Staaten gegründet, 1955 tritt die Bundesrepublik bei. Der Systemwettstreit finanziert Kernphysik, Rechnerbau und Raumfahrt in bis dahin unbekanntem Umfang.',
+ pp:[[[-9.42,38.70],[-8.90,37.00],[-6.30,36.80],[-5.20,36.30],[-2.50,36.70],[-0.90,37.60],[0.50,39.50],
+    [1.00,40.90],[3.30,41.60],[4.00,43.50],[6.00,43.10],[7.00,43.70],[7.60,43.79],[7.50,45.90],
+    [7.00,46.20],[8.20,47.00],[8.60,47.60],[9.60,47.60],[10.20,47.40],[11.50,47.60],[13.00,48.30],
+    [13.40,48.60],[12.50,49.30],[12.20,50.20],[13.00,50.60],[14.20,50.60],[14.50,51.50],[14.70,52.80],
+    [14.20,53.90],[12.10,54.20],[10.80,54.30],[10.20,54.90],[10.00,55.30],[10.20,56.70],[10.40,57.30],
+    [10.55,57.74],[9.60,57.60],[8.60,57.10],[8.30,55.60],[8.10,55.00],[9.00,54.60],[8.50,53.60],
+    [6.80,53.45],[5.60,53.30],[4.80,52.90],[4.10,52.00],[2.90,51.20],[1.90,51.00],[0.20,49.40],
+    [-1.60,49.70],[-2.90,48.70],[-4.77,48.45],[-4.30,47.80],[-2.20,47.20],[-1.20,46.20],[-1.25,44.50],
+    [-1.80,43.35],[-3.00,43.40],[-5.60,43.60],[-8.40,43.40],[-9.30,42.90],[-8.70,41.10],[-8.87,40.14],
+    [-9.42,38.70]],
+    [[7.60,43.79],[8.93,44.40],[9.85,44.10],[10.30,43.55],[11.13,42.40],[12.23,41.75],[13.57,41.20],
+    [14.25,40.85],[14.75,40.68],[15.63,40.07],[16.05,39.36],[16.10,38.95],[15.85,38.55],[15.65,38.10],
+    [16.10,37.98],[17.20,38.95],[18.35,39.79],[18.52,40.13],[17.25,40.47],[16.85,41.13],[15.60,41.92],
+    [14.20,42.50],[13.52,43.62],[12.25,44.40],[12.30,45.40],[13.50,45.20],[13.60,46.40],[12.20,46.80],
+    [11.00,47.00],[10.20,47.40],[9.60,47.60],[8.60,47.60],[8.20,47.00],[7.50,45.90],[7.60,43.79]],
+    [[12.40,37.80],[13.40,38.15],[15.20,38.12],[15.42,38.02],[15.10,36.65],[12.40,37.80]],
+    [[8.20,39.10],[9.60,39.20],[9.80,41.00],[8.20,41.10],[8.20,39.10]],
+    [[-5.20,50.10],[-1.00,50.70],[1.40,51.00],[1.70,52.80],[0.10,54.10],[-1.10,55.00],[-2.50,57.50],
+    [-3.00,58.60],[-5.00,58.60],[-5.80,57.50],[-5.60,56.00],[-4.80,54.60],[-3.10,53.40],[-4.70,52.80],
+    [-5.30,51.70],[-3.60,50.60],[-5.20,50.10]],
+    [[26.20,40.20],[29.00,41.00],[33.00,42.00],[36.50,41.20],[38.00,41.50],[41.60,41.60],[43.00,41.00],
+    [44.50,39.70],[44.00,37.50],[42.00,37.20],[40.00,37.00],[38.00,36.80],[36.00,36.00],[35.03,36.72],
+    [33.00,36.30],[31.40,36.80],[29.10,36.60],[27.20,37.00],[26.72,38.38],[26.20,40.20]],
+    [[5.70,59.00],[5.10,61.50],[8.50,63.00],[11.67,64.55],[14.40,67.30],[18.94,69.64],[23.50,70.60],
+    [25.78,71.17],[30.10,70.40],[29.00,69.40],[24.00,68.60],[20.00,68.40],[17.00,67.20],[14.00,65.00],
+    [12.20,63.00],[12.00,61.00],[11.50,59.50],[10.75,59.91],[9.40,58.75],[7.05,57.98],[5.70,59.00]],
+    [[-24.50,64.40],[-22.00,63.40],[-15.50,64.00],[-14.50,65.80],[-20.00,66.40],[-24.50,65.50],[-24.50,64.40]],
+    [[19.50,40.50],[21.00,40.60],[23.00,41.20],[25.20,41.30],[26.20,40.20],[24.05,38.20],[23.20,37.45],
+    [22.00,36.70],[21.40,37.20],[20.60,39.10],[19.50,40.50]]]},
+{n:'Warschauer Pakt',a:1955,b:1991,f:'#c0392b',id:'er_kalterkrieg',
+ t:'Der Ostblock unter Führung der Sowjetunion. Die Sperrung der Grenzen – 1961 die Berliner Mauer – trennt auch Forschung und Lehre; östliche Ergebnisse erreichen den Westen oft mit Jahren Verzug.',
+ p:[[10.60,54.70],[12.10,54.20],[14.20,53.90],[16.20,54.55],[18.30,54.85],[19.60,54.70],[21.00,55.30],
+    [23.20,57.10],[24.10,57.80],[24.50,59.50],[27.50,60.30],[30.30,60.00],[30.00,65.00],[29.50,67.00],
+    [30.10,69.70],[33.00,69.30],[38.00,67.80],[43.50,66.40],[50.00,68.20],[57.00,68.80],[66.00,70.00],
+    [64.00,67.50],[60.00,60.00],[56.00,52.00],[52.00,47.00],[50.00,44.50],[47.50,42.60],[42.40,43.60],
+    [38.60,44.60],[37.40,44.90],[38.50,45.50],[36.00,45.30],[33.37,45.28],[30.20,46.00],[28.70,45.20],
+    [28.00,43.20],[27.90,41.80],[26.20,41.70],[25.00,41.30],[23.50,41.40],[22.50,42.30],[22.50,44.20],
+    [21.50,45.00],[20.50,45.20],[19.00,45.20],[17.50,45.60],[16.20,45.90],[16.50,47.00],[17.10,48.00],
+    [16.95,48.80],[15.60,48.90],[14.20,50.60],[12.20,50.20],[10.90,50.30],[10.20,51.30],[10.90,52.30],
+    [10.70,53.60],[11.30,54.30],[10.60,54.70]]},
 {n:'Osmanisches Reich',a:1450,b:1918,f:'#c07d10',id:'er_konstfall',
  t:'1453 fällt Konstantinopel – der Landweg nach Asien wird blockiert',
  pp:[[[19.00,42.50],[20.50,44.50],[22.50,45.50],[25.00,45.50],[28.70,45.20],[31.00,46.50],[33.00,46.00],
@@ -3318,15 +3450,42 @@ const REICHE = [
     [-0.90,37.60],[-0.20,38.80],[0.50,39.50],[1.00,40.90],[3.30,41.60],[3.00,42.50],[1.80,42.60],
     [0.50,42.70],[-0.50,43.00],[-1.80,43.35],[-3.00,43.40],[-5.60,43.60],[-8.40,43.40],[-9.30,42.90],
     [-8.70,41.10],[-8.87,40.14],[-9.42,38.70]]]},
-{n:'Britisches Empire (Indien)',a:1800,b:1947,f:'#4d6275',id:'ku_industrie',
- t:'Vermessung Indiens: die Great Trigonometrical Survey misst den Everest',
- p:[[67.00,25.00],[68.50,23.50],[70.00,21.00],[72.80,21.50],[72.50,20.00],[73.50,15.50],[75.00,12.00],
-    [76.00,9.50],[78.00,8.20],[79.50,10.50],[80.00,13.00],[80.50,15.50],[82.00,17.00],[84.00,19.00],
-    [87.00,21.00],[89.00,22.00],[91.00,22.00],[92.50,21.00],[93.50,19.50],[94.50,18.00],[95.50,17.00],
-    [97.00,16.50],[98.00,13.00],[98.50,11.00],[97.50,15.00],[96.50,19.00],[95.00,22.00],[94.00,24.00],
-    [92.00,25.50],[90.00,26.00],[88.00,27.00],[86.00,27.50],[84.00,28.00],[82.00,29.00],[80.00,29.50],
-    [78.00,30.80],[76.00,32.00],[74.50,34.00],[73.00,32.50],[71.50,30.00],[70.00,27.50],[68.50,26.00],
-    [67.00,25.00]]}
+{n:'Britisches Empire',a:1815,b:1947,f:'#4d6275',id:'er_empire',
+ t:'Das Reich, in dem die Sonne nie untergeht: auf dem Höhepunkt ein Viertel der Landfläche und ein Viertel der Menschheit. Getragen von Dampfschiff, Telegraf und Seemacht – der Greenwich-Meridian wird 1884 Weltstandard, weil drei Viertel der Seekarten britisch sind. Die Great Trigonometrical Survey vermisst Indien und bestimmt die Höhe des Everest; zugleich beruht der Wohlstand auf Sklavenhandel, Opiumkriegen und Hungersnöten in Bengalen.',
+ pp:[[[-5.20,50.10],[-1.00,50.70],[1.40,51.00],[1.70,52.80],[0.10,54.10],[-1.10,55.00],[-2.50,57.50],
+    [-3.00,58.60],[-5.00,58.60],[-5.80,57.50],[-5.60,56.00],[-4.80,54.60],[-3.10,53.40],[-4.70,52.80],
+    [-5.30,51.70],[-3.60,50.60],[-5.20,50.10]],
+    [[-10.40,51.80],[-6.00,52.20],[-6.00,54.00],[-5.50,54.60],[-8.00,55.30],[-9.90,54.30],[-10.00,53.00],
+    [-10.40,51.80]],
+    [[-123.00,48.50],[-124.50,50.00],[-131.00,54.00],[-137.00,59.00],[-140.99,60.10],[-141.00,69.60],[-130.00,70.50],
+    [-115.00,69.20],[-100.00,69.00],[-89.00,69.20],[-80.00,73.00],[-70.00,73.00],[-64.00,60.00],[-63.00,55.00],
+    [-55.50,51.50],[-56.50,49.50],[-61.50,46.50],[-66.00,44.80],[-67.80,47.10],[-71.00,45.00],[-76.00,44.00],
+    [-79.00,43.30],[-82.50,45.30],[-84.60,46.80],[-88.00,48.30],[-95.00,49.00],[-110.00,49.00],[-120.00,49.00],
+    [-123.00,48.50]],
+    [[67.00,25.00],[70.00,21.00],[72.80,21.50],[73.50,15.50],[76.00,9.50],[78.00,8.20],[80.00,13.00],
+    [82.00,17.00],[87.00,21.00],[89.00,22.00],[91.00,22.00],[93.50,19.50],[95.50,17.00],[97.00,16.50],
+    [98.50,11.00],[97.50,15.00],[96.50,19.00],[95.00,22.00],[94.00,24.00],[92.00,25.50],[90.00,26.00],
+    [88.00,27.00],[86.00,27.50],[84.00,28.00],[82.00,29.00],[80.00,29.50],[78.00,30.80],[76.00,32.00],
+    [74.50,34.00],[73.00,32.50],[71.50,30.00],[70.00,27.50],[68.50,26.00],[67.00,25.00]],
+    [[79.80,9.80],[81.90,6.90],[80.20,5.90],[79.70,7.50],[79.80,9.80]],
+    [[113.20,-22.00],[115.20,-32.00],[117.00,-35.00],[124.00,-33.00],[131.00,-31.50],[136.00,-35.00],[141.00,-38.30],
+    [145.00,-38.50],[150.00,-36.00],[153.50,-28.00],[153.00,-25.50],[149.00,-21.00],[146.00,-17.50],[142.50,-11.00],
+    [140.00,-17.00],[136.50,-12.50],[130.50,-12.50],[126.00,-14.00],[122.00,-18.00],[117.50,-20.50],[113.20,-22.00]],
+    [[144.60,-40.70],[148.30,-40.80],[147.90,-43.50],[145.20,-42.60],[144.60,-40.70]],
+    [[172.70,-34.40],[178.50,-38.00],[176.00,-40.50],[173.00,-41.00],[173.50,-38.00],[172.70,-34.40]],
+    [[172.60,-40.50],[174.20,-41.40],[172.80,-44.50],[168.50,-46.60],[166.50,-45.90],[171.00,-42.50],[172.60,-40.50]],
+    [[16.00,-28.50],[17.60,-32.00],[18.40,-33.90],[20.00,-34.80],[25.50,-33.80],[27.90,-33.00],[31.00,-29.90],
+    [32.00,-28.00],[31.30,-25.80],[29.30,-22.10],[25.00,-22.00],[20.00,-24.80],[19.00,-28.50],[16.00,-28.50]],
+    [[24.00,32.00],[29.90,31.20],[32.35,31.05],[34.30,31.30],[34.98,29.55],[34.25,27.75],[35.50,23.50],
+    [37.20,18.60],[38.50,17.50],[36.00,13.00],[33.00,10.00],[27.00,10.00],[24.00,14.00],[24.00,22.00],
+    [24.00,32.00]],
+    [[2.60,6.30],[5.60,4.30],[8.60,4.50],[9.70,4.00],[13.00,10.00],[13.50,13.50],[11.00,13.30],
+    [4.00,13.50],[3.60,11.70],[2.70,9.00],[2.60,6.30]],
+    [[29.60,-1.30],[33.90,-1.00],[37.60,-3.00],[39.40,-4.00],[39.30,-6.80],[40.50,-10.50],[35.00,-11.50],
+    [30.80,-8.50],[29.40,-6.00],[29.60,-1.30]],
+    [[33.90,-1.00],[35.00,4.60],[41.00,4.00],[41.00,-2.50],[39.40,-4.00],[37.60,-3.00],[33.90,-1.00]],
+    [[100.30,5.20],[102.60,1.90],[103.60,1.30],[103.90,1.80],[103.70,2.80],[102.50,4.80],[101.00,6.40],
+    [100.30,5.20]]]}
 ];
 
 /* ============================================================
@@ -4253,10 +4412,14 @@ function waehle(id, ausVerlauf){
   if (chrListe.length){
     h += '<h3>' + (chrListe.length === 1 ? 'Vertiefende Zeittafel' : 'Vertiefende Zeittafeln') + '</h3>';
     chrListe.forEach((c, k) => {
+      const unterzeile = c.skala
+        ? LAENGEN_SKALA.length + ' Stufen · 10' + hochZahl(LAENGEN_SKALA[0].e) + ' bis 10' +
+          hochZahl(LAENGEN_SKALA[LAENGEN_SKALA.length-1].e) + ' m'
+        : c.daten.length + ' Meilensteine · ' + fmtJahr(c.daten[0].j) + ' bis ' +
+          fmtJahr(c.daten[c.daten.length-1].j);
       h += '<button class="verweis" id="panelPi' + (k ? k : '') + '" data-chronik="' + c.id +
            '" style="border-left:4px solid ' + sp.farbe + '"><b>' + esc(c.titel) + ' öffnen</b><i>' +
-           c.daten.length + ' Meilensteine · ' + esc(fmtJahr(c.daten[0].j)) + ' bis ' +
-           esc(fmtJahr(c.daten[c.daten.length-1].j)) + '</i></button>';
+           esc(unterzeile) + '</i></button>';
     });
   }
   panelinhalt.innerHTML = h;
@@ -4576,12 +4739,44 @@ function normal(s){
 const SUCHINDEX = ITEMS.map(o => ({
   o, tt: normal(o.t), dd: normal(o.t + ' ' + (o.d||'') + ' ' + SPUR_VON_ID[o.s].name)
 }));
+/* Kartenobjekte sind ebenfalls durchsuchbar – sonst fände man Hannibal,
+   die Seidenstraße oder Karthago nicht, weil sie nur auf der Karte stehen. */
+let KARTENINDEX = null;
+function baueKartenIndex(){
+  if (KARTENINDEX) return KARTENINDEX;
+  KARTENINDEX = [];
+  const nimm = (liste, typ, art) => {
+    for (const x of liste || []){
+      KARTENINDEX.push({
+        typ, art, d: x, name: x.n,
+        tt: normal(x.n),
+        dd: normal(x.n + ' ' + (x.t || '') + ' ' + art)
+      });
+    }
+  };
+  nimm(typeof ORTE    !== 'undefined' ? ORTE    : [], 'ort',   'Ort');
+  nimm(typeof REICHE  !== 'undefined' ? REICHE  : [], 'reich', 'Reich');
+  nimm(typeof WEGE    !== 'undefined' ? WEGE    : [], 'weg',   'Weg');
+  return KARTENINDEX;
+}
+
 // Chronikeinträge werden erst beim ersten Suchen indiziert
 let CHRONIKINDEX = null;
 function baueChronikIndex(){
   if (CHRONIKINDEX) return CHRONIKINDEX;
   CHRONIKINDEX = [];
   for (const c of CHRONIKEN){
+    if (c.skala){
+      // Die Stufen der Skalenreise sind ebenfalls durchsuchbar
+      for (const st of LAENGEN_SKALA){
+        CHRONIKINDEX.push({
+          c, e: {wer: st.n, was: st.g, m: st.m, ziel: st.ziel, j: null, skalaStufe: st},
+          tt: normal(st.n + ' ' + st.g),
+          dd: normal(st.n + ' ' + st.g + ' ' + st.m + ' ' + c.titel)
+        });
+      }
+      continue;
+    }
     for (const e of c.daten){
       CHRONIKINDEX.push({
         c, e,
@@ -4612,6 +4807,12 @@ function suchen(){
     return a.o.a - b.o.a;
   });
   state.suchTreffer = new Set(tr.map(e => e.o.i));
+  const ktr = baueKartenIndex().filter(e => e.dd.indexOf(q) >= 0);
+  ktr.sort((a,b) => {
+    const at = a.tt.indexOf(q) >= 0 ? 0 : 1, bt = b.tt.indexOf(q) >= 0 ? 0 : 1;
+    if (at !== bt) return at - bt;
+    return a.d.a - b.d.a;
+  });
   const ctr = baueChronikIndex().filter(e => e.dd.indexOf(q) >= 0);
   ctr.sort((a,b) => {
     const at = a.tt.indexOf(q) >= 0 ? 0 : 1, bt = b.tt.indexOf(q) >= 0 ? 0 : 1;
@@ -4620,7 +4821,7 @@ function suchen(){
   });
   suchliste.innerHTML = '';
   suchListeIds = [];
-  if (!tr.length && !ctr.length){
+  if (!tr.length && !ctr.length && !ktr.length){
     suchliste.innerHTML = '<div class="suchleer">Kein Treffer für „' + esc(roh) + '“.</div>';
   }
   if (tr.length){
@@ -4650,15 +4851,45 @@ function suchen(){
       b.className = 'suchtreffer';
       b.dataset.chronik = e.c.id;
       b.dataset.jahr = e.e.j;
+      // Die Stufen der Skalenreise tragen keine Jahreszahl, sondern eine Größe
+      const unten = e.e.skalaStufe ? 'Größenordnung · ' + e.c.tab
+                                   : fmtJahr(e.e.j) + ' · ' + e.c.tab;
       b.innerHTML = '<span class="punkt" style="background:#8a4b2a;border-radius:50%"></span><span><b>' +
-        esc(e.e.wer) + ': ' + esc(e.e.was) + '</b><i>' + esc(fmtJahr(e.e.j)) + ' · ' + esc(e.c.tab) + '</i></span>';
+        esc(e.e.wer) + ': ' + esc(e.e.was) + '</b><i>' + esc(unten) + '</i></span>';
       beiTipp(b, () => {
         sucheAus(); sucheFeld.blur();
         oeffnePi(e.c.id);
-        setTimeout(() => hebeChronikZeileHervor(e.e.j), 60);
+        if (e.e.skalaStufe){
+          const k = LAENGEN_SKALA.indexOf(e.e.skalaStufe);
+          setTimeout(() => zeigeSkalaStufe(k), 80);
+        } else {
+          setTimeout(() => hebeChronikZeileHervor(e.e.j), 60);
+        }
       });
       suchliste.appendChild(b);
       suchListeIds.push({typ:'chronik', id:e.c.id, jahr:e.e.j});
+    });
+  }
+  if (ktr.length){
+    const kopf = document.createElement('div');
+    kopf.className = 'suchleer';
+    kopf.textContent = 'Karte – ' + ktr.length + ' Treffer' + (ktr.length > 8 ? ', die ersten 8:' : ':');
+    suchliste.appendChild(kopf);
+    ktr.slice(0, 8).forEach(e => {
+      const b = document.createElement('button');
+      b.className = 'suchtreffer';
+      b.dataset.kartenobjekt = e.name;
+      b.dataset.kartentyp = e.typ;
+      const bis = (e.d.b === undefined || e.d.b === null) ? e.d.a : e.d.b;
+      const zeit = e.d.a === bis ? fmtJahr(e.d.a) : fmtJahr(e.d.a) + ' – ' + fmtJahr(bis);
+      b.innerHTML = '<span class="punkt" style="background:#2b3a7a"></span><span><b>' +
+        esc(e.name) + '</b><i>' + esc(zeit + ' · ' + e.art + ' auf der Karte') + '</i></span>';
+      beiTipp(b, () => {
+        sucheAus(); sucheFeld.blur();
+        if (window.__karte) window.__karte.zeigeKartenObjekt(e.typ, e.name);
+      });
+      suchliste.appendChild(b);
+      suchListeIds.push({typ:'karte', id:e.name, kartentyp:e.typ});
     });
   }
   suchIndex = -1;
@@ -4685,6 +4916,8 @@ sucheFeld.addEventListener('keydown', e => {
       if (ziel.typ === 'chronik'){
         oeffnePi(ziel.id);
         setTimeout(() => hebeChronikZeileHervor(ziel.jahr), 60);
+      } else if (ziel.typ === 'karte'){
+        if (window.__karte) window.__karte.zeigeKartenObjekt(ziel.kartentyp, ziel.id);
       } else springeZu(ziel.id);
     }
   } else if (e.key === 'Escape'){
@@ -4751,6 +4984,10 @@ const CHRONIKEN = [
    titel:'Chronik des elektromagnetischen Spektrums',
    note:'1800 endete die Welt f\u00fcr das Auge bei Rot und Violett. Innerhalb von 100 Jahren wuchs das Spektrum auf \u00fcber 18 Zehnerpotenzen – und alles davon ist dieselbe Physik. Dass wir ausgerechnet den schmalen sichtbaren Streifen sehen, liegt am Fenster, das die Atmosph\u00e4re offen l\u00e4sst.',
    daten: SPEKTRUM_CHRONIK},
+  {id:'laengen', gruppe:'Physik', tab:'Größenordnungen', anker:'q_konstanten', skala:true,
+   titel:'Zehnerpotenzenreise: von der Planck-Länge bis zum Rand des Beobachtbaren',
+   note:'Zwanzig Stufen über 61 Zehnerpotenzen. Jeder Schritt bedeutet den Faktor zehn – das gestrichelte Quadrat zeigt jeweils die nächstgrößere Stufe. Mit ▶ läuft die Reise von selbst; der Regler springt zu jeder Stufe. Wo eine Stufe an ein Ereignis der Zeitleiste anknüpft, führt der Verweis dorthin.',
+   daten: []},
   {id:'teilchen', gruppe:'Physik', tab:'Teilchen', anker:'q_teilchen',
    titel:'Chronik der Teilchen',
    note:'Jede Ebene galt einmal als die unterste: Atom, Kern, Nukleon, Quark. Bemerkenswert ist, wie oft die Mathematik voranging – Antimaterie, Neutrino, Quarks und Higgs-Boson wurden vorhergesagt, bevor sie jemand fand. Und am Ende erkl\u00e4rt das vollst\u00e4ndige Standardmodell nur f\u00fcnf Prozent des Universums.',
@@ -4914,9 +5151,18 @@ function baueTabs(){
       const b = document.createElement('button');
       b.className = 'chronikkarte';
       b.dataset.chronik = c.id;
-      const von = fmtJahr(c.daten[0].j), bis = fmtJahr(c.daten[c.daten.length-1].j);
-      b.innerHTML = '<b>' + esc(c.tab) + '</b><i>' + esc(von + ' – ' + bis) + '</i>' +
-        '<span class="anzahl">' + c.daten.length + ' Einträge</span>';
+      let spanne, anzahl;
+      if (c.skala){
+        // Die Skalenreise trägt keine Jahre, sondern Zehnerpotenzen
+        const s0 = LAENGEN_SKALA[0].e, s1 = LAENGEN_SKALA[LAENGEN_SKALA.length-1].e;
+        spanne = '10' + hochZahl(s0) + ' – 10' + hochZahl(s1) + ' m';
+        anzahl = LAENGEN_SKALA.length + ' Stufen';
+      } else {
+        spanne = fmtJahr(c.daten[0].j) + ' – ' + fmtJahr(c.daten[c.daten.length-1].j);
+        anzahl = c.daten.length + ' Einträge';
+      }
+      b.innerHTML = '<b>' + esc(c.tab) + '</b><i>' + esc(spanne) + '</i>' +
+        '<span class="anzahl">' + esc(anzahl) + '</span>';
       b.title = c.titel;
       beiTipp(b, () => zeigeChronik(c.id));
       gitter.appendChild(b);
@@ -4935,10 +5181,12 @@ function zeigeUebersicht(){
   piliste.style.display = 'none';
   piChart.style.display = 'none';
   piChartUnter.style.display = 'none';
+  skalaReise.style.display = 'none';
+  skalaStopp();
   chronikkopf.style.display = 'none';
   piTitel.textContent = 'Chroniken';
   piNote.textContent = CHRONIKEN.length + ' vertiefende Zeittafeln mit insgesamt ' +
-    CHRONIKEN.reduce((n,c) => n + c.daten.length, 0) +
+    CHRONIKEN.reduce((n,c) => n + (c.skala ? LAENGEN_SKALA.length : c.daten.length), 0) +
     ' Einträgen. Jede verfolgt einen Faden quer durch die Zeitleiste; Einträge mit farbigem Jahr springen dorthin zurück.';
   const box = piliste.closest('.pibox');
   if (box) box.scrollTop = 0;
@@ -4958,7 +5206,10 @@ function zeigeChronik(id){
   piNote.textContent = c.note;
   piChart.style.display = c.chart ? 'block' : 'none';
   piChartUnter.style.display = c.chart ? 'block' : 'none';
+  skalaReise.style.display = c.skala ? 'block' : 'none';
+  if (!c.skala) skalaStopp();
   piliste.innerHTML = '';
+  piliste.style.display = c.skala ? 'none' : 'block';
   for (const e of c.daten){
     const b = document.createElement('div');
     b.className = 'pizeile' + (e.ziel ? ' klickbar' : '');
@@ -5003,7 +5254,137 @@ function zeigeChronik(id){
   if (box) box.scrollTop = 0;
   if (inChronikAnsicht()){ zeichneGruppentabs(); zeichneSpurleiste(); }
   if (c.chart) requestAnimationFrame(zeichnePiChart);
+  if (c.skala) requestAnimationFrame(() => { zeigeSkalaStufe(skalaIndex); zeichneSkala(); });
 }
+
+/* ------------------------------------------------------------
+   Zehnerpotenzenreise: Längenskala
+   ------------------------------------------------------------ */
+const skalaReise   = document.getElementById('skalareise');
+const skalaCanvas  = document.getElementById('skalacanvas');
+const sctx         = skalaCanvas.getContext('2d');
+const skalaRegler  = document.getElementById('skalaRegler');
+const skalaExp     = document.getElementById('skalaExp');
+const skalaKarte   = document.getElementById('skalaKarte');
+const skalaLauf    = document.getElementById('skalaLauf');
+let skalaIndex = 8;          // Start beim Menschen (10⁰ m)
+let skalaLaeuft = false, skalaTimer = null, skalaZiel = 8, skalaZeigt = 8, skalaAnim = null;
+
+function hochZahl(n){
+  const z = {'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+  return String(n).split('').map(c => z[c] || c).join('');
+}
+
+function zeichneSkala(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  const W = skalaCanvas.clientWidth, H = skalaCanvas.clientHeight;
+  if (!W) return;
+  if (skalaCanvas.width !== Math.round(W*dpr)){
+    skalaCanvas.width = Math.round(W*dpr); skalaCanvas.height = Math.round(H*dpr);
+  }
+  sctx.setTransform(dpr,0,0,dpr,0,0);
+  sctx.clearRect(0,0,W,H);
+
+  const e0 = LAENGEN_SKALA[0].e, e1 = LAENGEN_SKALA[LAENGEN_SKALA.length-1].e;
+  const rand = 26, yA = H - 42;
+  const xVonExp = e => rand + (e - e0) / (e1 - e0) * (W - 2*rand);
+
+  // Achse mit Zehnerpotenz-Marken
+  sctx.strokeStyle = '#b9a684'; sctx.lineWidth = 1;
+  sctx.beginPath(); sctx.moveTo(rand, yA+.5); sctx.lineTo(W-rand, yA+.5); sctx.stroke();
+  sctx.font = '10px -apple-system,Segoe UI,Roboto,sans-serif';
+  sctx.textAlign = 'center'; sctx.textBaseline = 'top';
+  for (let e = -35; e <= 26; e += 5){
+    const x = xVonExp(e);
+    sctx.strokeStyle = 'rgba(185,166,132,.7)';
+    sctx.beginPath(); sctx.moveTo(x, yA-4); sctx.lineTo(x, yA+4); sctx.stroke();
+    sctx.fillStyle = '#8a7d68';
+    sctx.fillText('10' + hochZahl(e), x, yA+7);
+  }
+
+  // Alle Stufen als Punkte, die aktuelle hervorgehoben
+  LAENGEN_SKALA.forEach((st, i) => {
+    const x = xVonExp(st.e);
+    const aktiv = i === skalaIndex;
+    sctx.fillStyle = aktiv ? '#8a4b2a' : 'rgba(138,75,42,.30)';
+    sctx.beginPath(); sctx.arc(x, yA, aktiv ? 6 : 3.2, 0, 7); sctx.fill();
+  });
+
+  // Größenvergleich: Quadrat, dessen Kantenlänge dem Zehnerpotenz-Abstand folgt
+  const st = LAENGEN_SKALA[skalaIndex];
+  const mitteX = W/2, mitteY = (yA - 18) / 2 + 6;
+  const spanne = st.e - skalaZeigt;                    // weich nachlaufender Wert
+  const seite = Math.max(4, Math.min(yA - 40, 96 * Math.pow(10, -Math.abs(spanne)*0.06)));
+  sctx.strokeStyle = '#8a4b2a'; sctx.lineWidth = 2;
+  sctx.fillStyle = 'rgba(138,75,42,.10)';
+  sctx.beginPath(); sctx.rect(mitteX - seite/2, mitteY - seite/2, seite, seite);
+  sctx.fill(); sctx.stroke();
+
+  // Vergleichsquadrat der nächstgrößeren Stufe – zeigt den Faktor 10 je Schritt
+  if (skalaIndex < LAENGEN_SKALA.length-1){
+    const gross = Math.min(yA - 26, seite * 2.2);
+    sctx.strokeStyle = 'rgba(31,111,146,.55)'; sctx.lineWidth = 1;
+    sctx.setLineDash([4,3]);
+    sctx.strokeRect(mitteX - gross/2, mitteY - gross/2, gross, gross);
+    sctx.setLineDash([]);
+  }
+
+  sctx.font = '600 13px -apple-system,Segoe UI,Roboto,sans-serif';
+  sctx.fillStyle = '#8a4b2a'; sctx.textBaseline = 'alphabetic';
+  sctx.fillText(st.n, mitteX, 18);
+  sctx.font = '11px -apple-system,Segoe UI,Roboto,sans-serif';
+  sctx.fillStyle = '#5b5145';
+  sctx.fillText(st.g, mitteX, 33);
+}
+
+function zeigeSkalaStufe(i, ohneRegler){
+  skalaIndex = clamp(i, 0, LAENGEN_SKALA.length-1);
+  const st = LAENGEN_SKALA[skalaIndex];
+  if (!ohneRegler) skalaRegler.value = String(skalaIndex);
+  skalaExp.textContent = '10' + hochZahl(st.e) + ' m';
+  let h = '<h4>' + esc(st.n) + '</h4><span class="groesse">' + esc(st.g) + '</span>' +
+          '<p>' + esc(st.m) + '</p>';
+  if (st.ziel && ITEM_VON_ID[st.ziel]){
+    h += '<button class="verweis" data-skalaziel="' + st.ziel + '">→ <b>' +
+         esc(ITEM_VON_ID[st.ziel].t) + '</b> in der Zeitleiste</button>';
+  }
+  skalaKarte.innerHTML = h;
+  const kn = skalaKarte.querySelector('[data-skalaziel]');
+  if (kn) beiTipp(kn, () => { skalaStopp(); schliessePi(); springeZu(kn.dataset.skalaziel); });
+  // weicher Übergang der Quadratgröße
+  if (skalaAnim) cancelAnimationFrame(skalaAnim);
+  const start = skalaZeigt, ende = st.e, t0 = performance.now();
+  (function lauf(t){
+    const f = Math.min(1, (t - t0) / 420);
+    const eF = f < .5 ? 2*f*f : 1 - Math.pow(-2*f + 2, 2)/2;
+    skalaZeigt = start + (ende - start) * eF;
+    zeichneSkala();
+    if (f < 1) skalaAnim = requestAnimationFrame(lauf); else skalaAnim = null;
+  })(t0);
+}
+
+function skalaStopp(){
+  skalaLaeuft = false;
+  if (skalaTimer){ clearInterval(skalaTimer); skalaTimer = null; }
+  skalaLauf.textContent = '▶';
+  skalaLauf.setAttribute('aria-label','Reise starten');
+}
+function skalaStart(){
+  if (skalaLaeuft){ skalaStopp(); return; }
+  skalaLaeuft = true;
+  skalaLauf.textContent = '❚❚';
+  skalaLauf.setAttribute('aria-label','Reise anhalten');
+  if (skalaIndex >= LAENGEN_SKALA.length-1) zeigeSkalaStufe(0);
+  skalaTimer = setInterval(() => {
+    if (skalaIndex >= LAENGEN_SKALA.length-1){ skalaStopp(); return; }
+    zeigeSkalaStufe(skalaIndex + 1);
+  }, 2200);
+}
+beiTipp(skalaLauf, skalaStart);
+beiTipp(document.getElementById('skalaZurueck'), () => { skalaStopp(); zeigeSkalaStufe(skalaIndex-1); });
+beiTipp(document.getElementById('skalaVor'),     () => { skalaStopp(); zeigeSkalaStufe(skalaIndex+1); });
+skalaRegler.addEventListener('input', () => { skalaStopp(); zeigeSkalaStufe(Number(skalaRegler.value), true); });
+window.addEventListener('resize', () => { if (skalaReise.style.display !== 'none') zeichneSkala(); });
 
 function zeichnePiChart(){
   if (!aktiveChronik || !aktiveChronik.chart) return;
@@ -5120,7 +5501,8 @@ window.__zl = {state, ITEMS, LINKS, SPUREN, SPUR_VON_ID, GRUPPEN, CHRONIKEN, CHR
   inChronikAnsicht, chronikGruppen,
   zeichneGruppentabs, zeichneSpurleiste, waehleReiter, verlauf, verlaufSpringe, zeigeUebersicht,
   render, waehle, geheZu, holeInsBild, springeZu, baueLayout, maxOffsetY, ITEM_VON_ID, suchen, oeffnePi, schliessePi, zeigeChronik,
-  schrittPaar, normal};
+  schrittPaar, normal, baueKartenIndex, LAENGEN_SKALA, zeigeSkalaStufe, skalaStart, skalaStopp,
+  skalaZustand: () => ({index: skalaIndex, laeuft: skalaLaeuft})};
 
 /* ============================================================
    KARTENANSICHT
@@ -5564,6 +5946,27 @@ function kKlick(x,y){
   kRender();
 }
 
+/* Zeigt ein beliebiges Kartenobjekt: Karte öffnen, Jahr passend setzen,
+   Objekt auswählen und anheften. Wird von der Suche benutzt. */
+function zeigeKartenObjekt(typ, name){
+  const quelle = typ === 'ort' ? ORTE : typ === 'reich' ? REICHE : WEGE;
+  const d = quelle.find(x => x.n === name);
+  if (!d) return false;
+  oeffneKarte();
+  const kat = typ === 'ort' ? 'ort' : typ === 'reich' ? 'reich' : 'weg';
+  if (kstate.kategorie !== kat){ kstate.kategorie = kat; zeichneKartenTabs(); zeichneKartenleiste(); }
+  const b = (d.b === undefined || d.b === null) ? d.a : d.b;
+  kSetzeJahr(Math.round((d.a + b) / 2), true);
+  kZeige({typ, d});
+  // In den Blick rücken
+  const mitte = typ === 'ort' ? d.o
+    : typ === 'weg' ? d.p[Math.floor(d.p.length/2)]
+    : (d.pp || [d.p])[0][0];
+  kstate.mx = mitte[0]; kstate.my = mitte[1];
+  kRender();
+  return true;
+}
+
 function kZeige(t){
   const d = t.d;
   kstate.auswahl = t.typ === 'ort' ? d : null;
@@ -5842,11 +6245,11 @@ function zeigeAufKarte(id, jahrWunsch){
 Object.assign(window.__zl, {
   ORTE, REICHE, WEGE, LANDMASSEN, MEERE, FLUESSE, GEBIRGE, REGIONEN, INSELN_IN_SEEN, kstate,
   oeffneKarte, schliesseKarte, inKartenAnsicht, kSetzeJahr, kRender,
-  hatOrt, ortZu, zeigeAufKarte, ORT_ZU_ELEMENT, kAus, kAngeheftet, zeichneKartenTabs, zeichneKartenleiste,
+  hatOrt, ortZu, zeigeAufKarte, zeigeKartenObjekt, ORT_ZU_ELEMENT, kAus, kAngeheftet, zeichneKartenTabs, zeichneKartenleiste,
   kZeige, kKlick, kProj
 });
 // Der Zeitleiste und den Chroniken bekannt machen
-window.__karte = { hatOrt, zeigeAufKarte };
+window.__karte = { hatOrt, zeigeAufKarte, zeigeKartenObjekt };
 </script>
 </body>
 </html>
