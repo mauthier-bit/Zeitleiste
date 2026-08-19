@@ -88,6 +88,8 @@
   .spurchip .punkt{width:10px;height:10px;border-radius:3px;flex:0 0 auto;border:1px solid rgba(0,0,0,.15)}
   .spurchip.aus{opacity:.4;background:var(--bg2);text-decoration:line-through}
   .spurchip.fern{opacity:.55}
+  .spurchip.fest{border-color:var(--akzent);box-shadow:0 0 0 2px rgba(138,111,69,.25);opacity:1}
+  #karteninfo .ausserhalb{color:var(--akzent);font-size:10.5px;margin-top:5px;font-style:italic}
   .spurchip.fern .punkt{filter:grayscale(.7)}
 
   .suchbox{position:relative}
@@ -311,7 +313,7 @@
         <li><b>Wechselwirkungen:</b> Ein ausgewähltes Element zeigt seine Einflusspfeile immer, mit Beschriftung. Die Taste <span class="schluessel">E</span> blendet alle Pfeile der sichtbaren Spuren ein, <span class="schluessel">G</span> setzt auf die Gesamtansicht zurück.</li>
         <li><b>Suchen:</b> Reiter <i>Suche</i> (oder Strg/Cmd + F). Durchsucht Zeitleiste <i>und</i> alle Chroniken. Treffer werden auf der Zeitleiste gelb umrandet; ein Tipp springt hin.</li>
         <li><b>Zeitachse:</b> Beim Zoomen verfeinert sich das Raster automatisch bis auf einzelne Jahre. Mit der Maus zeigt eine Hilfslinie das Jahr unter dem Zeiger.</li>
-        <li><b>Chroniken:</b> 40 vertiefende Zeittafeln, geordnet nach Mathematik, Physik, Astronomie, Technik und Kontext. Sie erscheinen anstelle der Zeitleiste; der Umschalter links oben wechselt die Ansicht. Einträge mit farbigem Jahr springen in die Zeitleiste zurück.</li>
+        <li><b>Chroniken:</b> 43 vertiefende Zeittafeln, geordnet nach Mathematik, Physik, Astronomie, Technik und Kontext. Sie erscheinen anstelle der Zeitleiste; der Umschalter links oben wechselt die Ansicht. Einträge mit farbigem Jahr springen in die Zeitleiste zurück.</li>
         <li><b>Zurück und Vorwärts:</b> Die Pfeile links oben führen durch die zuletzt besuchten Stationen – Zeitleisten-Elemente <i>und</i> Chroniken gemeinsam (auch Alt + Pfeiltaste). Der Knopf verrät im Tooltip, wohin er führt.</li>
       </ul>
       <h3>Die Idee</h3>
@@ -713,6 +715,7 @@ const ITEMS = [
 {i:'in_kaelte',s:'k_technik',t:'Kältemaschine & Kühlkette',a:1834,b:1950,r:2,d:'Der Kompressionskreislauf nutzt Blacks latente Wärme: Ein Gas verdampft, kühlt, wird verdichtet, gibt Wärme ab. Linde baut ihn ab 1873 zunächst für Brauereien; daraus wird die weltweite Kühlkette für Lebensmittel, Impfstoffe und Medikamente – eine der stillsten, aber folgenreichsten Techniken der Moderne.'},
 {i:'in_verbrennung',s:'k_technik',t:'Verbrennungsmotor',a:1876,b:1950,r:1,d:'Ottos Viertaktverfahren verlegt die Verbrennung in den Zylinder: kein Kessel, kein Vorheizen, sofort startbereit. Der Antrieb wird so klein und leicht, dass er sich selbst und seine Last trägt – Automobil und Flugzeug werden möglich, und mit ihnen eine völlig neue Siedlungs- und Wirtschaftsform.'},
 {i:'in_kernkraft',s:'k_technik',t:'Kernkraft in der Anwendung',a:1954,b:2025,r:1,d:'Obninsk speist 1954 als erstes Kernkraftwerk Strom ins Netz; das Versprechen lautet Energie im Überfluss. Zwei Unfälle prägen die öffentliche Wahrnehmung stärker als alle Betriebsjahre: Tschernobyl 1986 – ein Versuch bei abgeschalteten Sicherheitssystemen führt zur Explosion des Reaktors, radioaktive Wolken ziehen über Europa und machen Strahlenmessung über Nacht zum Alltagsthema – und Fukushima 2011 nach Seebeben und Tsunami. Deutschland beschließt daraufhin den Ausstieg, Frankreich hält an der Kernkraft fest. Ein Lehrstück darüber, dass die gesellschaftliche Bewertung einer Technik nicht allein aus ihrer Physik folgt.'},
+{i:'in_verkehr',s:'k_technik',t:'Verkehr: Geschwindigkeit und Reichweite',a:-3000,b:2025,r:1,d:'Über fast fünftausend Jahre bleibt die Reisegeschwindigkeit bei etwa 5 bis 15 km/h – Napoleon reist 1800 kaum schneller als Caesar. Erst die Dampfmaschine durchbricht die Grenze der Muskelkraft, und danach verzehnfacht sich die Geschwindigkeit binnen 150 Jahren. Physikalisch entscheiden drei Größen: die Leistung des Antriebs, der Widerstand (der bei Luft mit dem Quadrat der Geschwindigkeit wächst, die nötige Leistung also mit der dritten Potenz) und die mitführbare Energie. Deshalb ist das Fahrrad bis heute das energetisch günstigste Fortbewegungsmittel und die Rakete das teuerste.',bild:'geschwindigkeit'},
 {i:'in_raumfahrt',s:'k_technik',t:'Raketenantrieb & Raumfahrt',a:1926,b:2025,r:1,d:'Der einzige Antrieb, der ohne umgebendes Medium arbeitet – reiner Rückstoß nach Newtons drittem Axiom. Mehrstufenprinzip und Flüssigtreibstoff bringen Satelliten, Menschen und Teleskope ins All; der Systemwettstreit des Kalten Krieges finanziert dabei Grundlagenforschung in bis dahin unbekanntem Umfang.'},
 {i:'in_dampf',s:'k_technik',t:'Dampfmaschine',a:1712,b:1900,r:1,d:'Newcomen pumpt Wasser aus Kohlebergwerken, Watt macht die Maschine mit separatem Kondensator und Fliehkraftregler wirtschaftlich. Erstmals ist Leistung unabhängig von Wind, Wasser, Muskel und Jahreszeit verfügbar – und der Wunsch, sie zu verbessern, bringt die Thermodynamik hervor.',bild:'dampfmaschine'},
 {i:'in_transmission',s:'k_technik',t:'Transmission: Wellen & Riemen',a:1780,b:1920,r:2,d:'Eine zentrale Dampfmaschine treibt eine Deckenwelle, Lederriemen führen zu jeder Maschine. Die Halle steht still, wenn die Welle steht – und die Anordnung der Arbeitsplätze richtet sich nach der Mechanik. Erst der Elektromotor befreit die Fabrik davon.'},
@@ -736,6 +739,8 @@ const ITEMS = [
 {i:'er_punisch',s:'k_ereignis',t:'Punische Kriege',a:-264,b:-146,r:2,d:'Rom wird Seemacht und Mittelmeerherr. Bei der Belagerung von Syrakus 212 v. Chr. wird Archimedes von einem römischen Soldaten erschlagen – ein Sinnbild dafür, dass Rom die griechische Wissenschaft erbte, aber nicht fortsetzte.'},
 {i:'er_paxromana',s:'k_ereignis',t:'Pax Romana',a:-27,b:180,r:2,d:'Zweihundert Jahre relative Ruhe, gesicherte Straßen und einheitliche Münze. Handel und Bauwesen blühen, die Grundlagenforschung nicht: Ptolemäus und Heron arbeiten im griechischsprachigen Osten, nicht in Rom.'},
 {i:'er_bagdad',s:'k_ereignis',t:'Abbasiden: Gründung Bagdads',a:762,b:1258,r:1,d:'Die neue Hauptstadt zieht Gelehrte aus Persien, Indien und Byzanz an. Kalifen finanzieren Übersetzungen als Staatsaufgabe – das Haus der Weisheit ist Hofpolitik. 1258 zerstören die Mongolen die Stadt; die Bibliotheken gehen verloren.'},
+{i:'er_wikinger',s:'k_ereignis',t:'Wikingerzeit',a:793,b:1066,r:1,d:'Händler, Siedler und Krieger zugleich. Ihre Schiffe sind die technische Grundlage: Klinkerbauweise, geringer Tiefgang für Flüsse, ein Rahsegel, das Kreuzen erlaubt – damit erreichen sie Konstantinopel über die Flüsse ebenso wie Island, Grönland und um 1000 Neufundland. Nach Skandinavien fließen zehntausende arabische Silbermünzen; in England, der Normandie und Sizilien entstehen dauerhafte Herrschaften. Mit der Christianisierung um 1000 und der Niederlage von 1066 endet die Epoche.'},
+{i:'er_normannen',s:'k_ereignis',t:'Normannen: 1066 und Sizilien',a:911,b:1194,r:1,d:'Aus wikingischen Siedlern in der Normandie werden binnen 150 Jahren französischsprachige Ritter. 1066 erobert Wilhelm bei Hastings England – das Englische nimmt tausende französische Wörter auf und wird zur Mischsprache, das Domesday Book von 1086 ist die genaueste Bestandsaufnahme des mittelalterlichen Europa. Zeitgleich erobern Normannen Süditalien und Sizilien und übernehmen dort die arabische Verwaltung: An Roger II. Hof entsteht 1154 al-Idrisis Weltkarte, die genaueste ihrer Zeit. Ein Herrscherhaus, drei Kulturen – lateinisch, griechisch und arabisch nebeneinander.'},
 {i:'er_reconquista',s:'k_ereignis',t:'Toledo und die Übersetzerschulen',a:1085,b:1270,r:1,d:'Mit der Eroberung Toledos fallen arabische Bibliotheken in christliche Hand. Juden, Christen und Muslime übersetzen dort gemeinsam Aristoteles, Euklid, Ptolemäus und al-Chwarizmi ins Lateinische – der Wissenstransfer, ohne den es keine europäischen Universitäten gäbe.'},
 {i:'er_kreuzzuege',s:'k_ereignis',t:'Kreuzzüge',a:1096,b:1291,r:1,d:'Zwei Jahrhunderte Krieg um Jerusalem, begleitet von Massakern an Juden im Rheinland und an der Bevölkerung eroberter Städte – und zugleich von intensivem Austausch. Aus dem arabischen Raum gelangen Zuckerrohr, Zitrusfrüchte, Windmühlentechnik, Papierherstellung, Destillation und medizinisches Wissen nach Europa; italienische Seestädte bauen Handelsnetze auf, aus denen später Fibonaccis Rechenbuch und das Bankwesen erwachsen. Die Kreuzfahrerburgen zeigen zugleich, wie viel europäische Baumeister von islamischer Festungstechnik lernten.'},
 {i:'er_marcopolo',s:'k_ereignis',t:'Marco Polo & die Fernreisenden',a:1271,b:1295,r:2,d:'24 Jahre unterwegs, davon 17 im Dienst des Mongolenherrschers Kublai Khan. Sein im Genueser Gefängnis diktierter Reisebericht beschreibt Papiergeld, Kohle als Brennstoff, Postrelais und die Größe chinesischer Städte – vieles hielt man in Europa für Aufschneiderei. Kolumbus besaß ein Exemplar mit eigenhändigen Randbemerkungen. Marco Polo ist der bekannteste, aber nicht der einzige: Ibn Battuta legte im selben Jahrhundert die dreifache Strecke zurück.'},
@@ -1135,6 +1140,13 @@ const LINKS = [
 {a:'in_beschleun',b:'q_standard',t:'Immer höhere Energien zeigen immer kleinere Strukturen'},
 {a:'in_beschleun',b:'q_higgs',t:'LHC als Nachweisinstrument'},
 {a:'q_chadwick',b:'q_spaltung',t:'Neutronen als Geschosse für Kernreaktionen'},
+{a:'in_verkehr',b:'p_kraftwandler',t:'Reibung und Widerstand bestimmen den Kraftbedarf'},
+{a:'in_verkehr',b:'in_dampf',t:'Die erste Geschwindigkeit jenseits der Muskelkraft'},
+{a:'in_verkehr',b:'in_verbrennung',t:'Antrieb wird tragbar – Auto und Flugzeug'},
+{a:'in_verkehr',b:'in_raumfahrt',t:'Fluchtgeschwindigkeit als physikalische Grenze'},
+{a:'in_verkehr',b:'w_energie',t:'Energiebedarf je Personenkilometer'},
+{a:'in_verkehr',b:'in_zeit',t:'Der Fahrplan erzwingt einheitliche Zeit'},
+{a:'in_verkehr',b:'w_quellen',t:'Die mitführbare Energiedichte begrenzt die Reichweite'},
 {a:'q_kernenergie',b:'in_kernkraft',t:'Vom Reaktor zum Kraftwerk'},
 {a:'in_kernkraft',b:'w_quellen',t:'Grundlast ohne Verbrennung – mit ungelöster Endlagerfrage'},
 {a:'er_kalterkrieg',b:'in_kernkraft',t:'„Atome für den Frieden“ als Systemwerbung'},
@@ -1243,6 +1255,14 @@ const LINKS = [
 {a:'er_reconquista',b:'ku_uni',t:'Übersetzungen füllen die Lehrpläne der Universitäten'},
 {a:'er_reconquista',b:'z_alkh_ziffer',t:'Rechenbücher gelangen ins Lateinische'},
 {a:'er_mongolen',b:'in_papier',t:'Papier und Druck wandern nach Westen'},
+{a:'er_wikinger',b:'er_normannen',t:'Aus Wikingern werden Normannen'},
+{a:'er_wikinger',b:'in_zeit',t:'Navigation ohne Kompass: Sonnenstand, Vogelflug, Küstenkenntnis'},
+{a:'er_wikinger',b:'er_bagdad',t:'Silbermünzen belegen den Handel bis Bagdad'},
+{a:'er_wikinger',b:'er_entdeckungen',t:'Neufundland um 1000 – ohne Folgen für Europa'},
+{a:'er_normannen',b:'ku_islam',t:'Arabische Verwaltung und Gelehrsamkeit in Sizilien'},
+{a:'er_normannen',b:'ku_uni',t:'Das Domesday Book als frühe Vollerhebung'},
+{a:'er_normannen',b:'er_kreuzzuege',t:'Normannische Fürsten führen Kreuzzüge an'},
+{a:'er_normannen',b:'ka_romanik',t:'Normannische Kathedralen von Durham bis Monreale'},
 {a:'er_mongolen',b:'er_pest',t:'Karawanenwege verbreiten die Seuche'},
 {a:'er_mongolen',b:'er_bagdad',t:'1258 wird Bagdad zerstört'},
 {a:'er_pest',b:'in_druck',t:'Teure Arbeit macht arbeitssparende Technik lohnend'},
@@ -2265,6 +2285,56 @@ const WELTBILD_CHRONIK = [
 {j:2025,wer:'Bilanz',was:'Was der Fall lehrt',m:'Das geozentrische System war nicht dumm, sondern gut begründet und messtechnisch bestätigt. Es fiel nicht durch ein einzelnes Experiment, sondern über drei Jahrhunderte: erst Einfachheit (Kopernikus), dann bessere Daten (Kepler), dann eine physikalische Ursache (Newton), zuletzt direkte Messungen (Bradley, Bessel, Foucault). Wer im Unterricht nur „Kopernikus hatte recht“ erzählt, unterschlägt genau das, was Wissenschaft ausmacht.'}
 ];
 
+const INSTRUMENT_CHRONIK = [
+{j:-1500,wer:'Gnomon',was:'Der Schattenstab',m:'Ein senkrechter Stab genügt für Mittagslinie, Sonnenwenden und die Schiefe der Ekliptik. Das älteste astronomische Instrument ist zugleich das billigste – und Eratosthenes misst damit den Erdumfang.',ziel:'as_eratos'},
+{j:-1000,wer:'Merchet & Sichtrohr',was:'Ausrichten durch Peilen',m:'Ägyptische Priester richten Tempel und Pyramiden mit Lot und Peilschlitz nach Sternen aus. Genauigkeit ohne Optik: Die Pyramidenseiten weichen um weniger als ein Zwanzigstel Grad von der Nordrichtung ab.',ziel:'g_aegverm'},
+{j:-150,wer:'Armillarsphäre',was:'Der Himmel als Modell',m:'Ineinandergeschachtelte Ringe bilden Ekliptik, Äquator und Horizont nach. Das Gerät ist Rechenhilfe und Anschauungsmodell zugleich – und trägt das geozentrische Weltbild in seiner Bauweise bereits in sich.',ziel:'as_ptolem'},
+{j:-100,wer:'Mechanismus von Antikythera',was:'Ein Zahnradrechner',m:'Über dreißig Bronzezahnräder berechnen Sonnen- und Mondstände, Finsternisse und den Vierjahreszyklus der Spiele. 1901 in einem Schiffswrack gefunden, seine Feinmechanik erreicht erst wieder im 14. Jahrhundert dieses Niveau.',ziel:'in_uhr'},
+{j:800,wer:'Astrolabium',was:'Der Himmel als Scheibe',m:'Die Sphäre wird stereografisch auf eine Ebene projiziert – ein geometrisches Kunststück, das Zeitbestimmung, Ortsbestimmung und Gebetszeiten in einem Gerät vereint. Über al-Andalus gelangt es nach Europa und bleibt 700 Jahre das wichtigste Instrument der Seefahrt.',ziel:'in_astrolab'},
+{j:1259,wer:'Maragha & Samarkand',was:'Große Mauerquadranten',m:'Genauigkeit entsteht durch Größe: Ulug Begs Sextant hat einen Radius von 40 Metern. Ohne Optik kommt man so auf Bogenminuten – die Grenze dessen, was das bloße Auge auflösen kann.',ziel:'as_observ'},
+{j:1576,wer:'Tycho Brahe',was:'Die Grenze des bloßen Auges',m:'Mauerquadrant, Sextanten und Armillarsphären auf Hven, dazu systematische Fehlerkorrektur und die Idee, dieselbe Größe mehrfach zu messen. Tycho erreicht ein bis zwei Bogenminuten – die Datengrundlage, aus der Kepler die Ellipsen gewinnt.',ziel:'as_tycho'},
+{j:1608,wer:'Das Fernrohr',was:'Ein Handwerksprodukt kippt ein Weltbild',m:'Von Brillenmachern für die Seefahrt gedacht, ein Jahr später von Galilei zum Himmel gerichtet. Jupitermonde, Mondgebirge, Venusphasen und die Auflösung der Milchstraße in Einzelsterne – vier Entdeckungen in wenigen Monaten.',ziel:'in_fernrohr'},
+{j:1668,wer:'Newton',was:'Der Spiegel statt der Linse',m:'Linsen zerlegen das Licht in Farben und liefern farbige Ränder; ein Hohlspiegel tut das nicht. Alle großen Teleskope seither sind Spiegelteleskope – die Bauform folgt einer physikalischen Notwendigkeit.',ziel:'e_newtonoptik'},
+{j:1730,wer:'Sextant',was:'Winkelmessung auf schwankendem Deck',m:'Zwei Spiegel bringen Horizont und Gestirn ins selbe Blickfeld – dadurch stört das Schwanken des Schiffs nicht mehr. Zusammen mit dem Schiffschronometer wird die Ortsbestimmung auf See praktikabel.',ziel:'in_zeit'},
+{j:1789,wer:'Herschel',was:'Größe schlägt Vergrößerung',m:'Sein 12-Meter-Spiegelteleskop sammelt Licht, statt nur zu vergrößern – die entscheidende Einsicht: Lichtsammelvermögen wächst mit der Spiegelfläche. Herschel entdeckt Uranus und vermisst erstmals den Aufbau der Milchstraße.',ziel:'as_herschel'},
+{j:1838,wer:'Heliometer',was:'Ein geteiltes Objektiv',m:'Fraunhofers Bauweise erlaubt die Messung winziger Winkelabstände. Damit gelingt Bessel die erste Sternparallaxe – 0,3 Bogensekunden. Ohne die Präzisionsoptik aus Benediktbeuern hätte die Messung noch Jahrzehnte gedauert.',ziel:'as_parallaxe'},
+{j:1859,wer:'Spektroskop',was:'Licht wird zerlegt',m:'Kirchhoff und Bunsen zeigen: Die dunklen Linien verraten die Stoffe. Aus der Astronomie der Positionen wird eine Astronomie der Zusammensetzung – die Astrophysik entsteht als Fach.',ziel:'as_spektral'},
+{j:1880,wer:'Fotoplatte',was:'Ein Auge mit Gedächtnis',m:'Die Platte sammelt Licht über Stunden und sieht dadurch, was kein Auge erreicht. Sie ist zudem objektiv und archivierbar – Messreihen werden nachprüfbar. Ohne sie keine Leavittsche Perioden-Leuchtkraft-Beziehung.',ziel:'in_fotografie'},
+{j:1932,wer:'Radioteleskop',was:'Ein neues Fenster',m:'Karl Jansky sucht Störquellen für Telefonverbindungen und findet Radiostrahlung aus dem Zentrum der Milchstraße. Erstmals beobachtet Astronomie außerhalb des sichtbaren Lichts – es folgen Pulsare, Quasare und die Hintergrundstrahlung.',ziel:'as_radio'},
+{j:1946,wer:'Beobachtung von oben',was:'Über die Atmosphäre hinaus',m:'Röntgen- und Ultraviolettstrahlung erreichen den Erdboden nicht. Erst Raketen und später Satelliten öffnen diese Bereiche – die Atmosphäre ist Schutz und Hindernis zuglech.',ziel:'in_raumfahrt'},
+{j:1969,wer:'CCD-Sensor',was:'Photonen werden gezählt',m:'Der Halbleitersensor erfasst über 70 Prozent der eintreffenden Photonen, die Fotoplatte nur wenige Prozent. Ein bestehendes Teleskop wird dadurch über Nacht um ein Vielfaches empfindlicher – der größte Sprung ohne neuen Spiegel.',ziel:'e_halbleiter'},
+{j:1990,wer:'Weltraumteleskope',was:'Hubble und die Nachfolger',m:'Ohne Luftunruhe wird die Auflösung nur noch von der Beugung begrenzt. Der anfängliche Spiegelfehler – 2,2 Mikrometer zu flach geschliffen – zeigt zugleich, wie empfindlich solche Systeme sind; eine Korrekturoptik rettet die Mission.',ziel:'as_teleskope'},
+{j:1995,wer:'Adaptive Optik',was:'Die Luftunruhe wird herausgerechnet',m:'Ein verformbarer Spiegel gleicht das Flimmern der Atmosphäre hunderte Male pro Sekunde aus, gesteuert über einen künstlichen Laser-Leitstern. Erdgebundene Großteleskope erreichen damit die Schärfe von Weltraumteleskopen.',ziel:'e_laser'},
+{j:2015,wer:'Interferometrie',was:'Viele Spiegel als einer',m:'Zusammengeschaltete Teleskope erreichen die Auflösung eines Instruments von der Größe ihres Abstands. So entsteht 2019 das erste Bild eines Schwarzen Lochs – und LIGO misst Längenänderungen von einem Tausendstel Protondurchmesser.',ziel:'r_gravwellen'},
+{j:2025,wer:'Muster',was:'Was Instrumente entscheiden',m:'Fast jede astronomische Entdeckung folgt einem neuen Instrument, nicht einer neuen Idee: Fernrohr, Spektroskop, Fotoplatte, Radioantenne, Satellit, CCD, Interferometer. Und jedes neue Fenster brachte etwas, das niemand vorhergesagt hatte – Pulsare, Quasare, Exoplaneten, Gravitationswellen.'}
+];
+
+const VERKEHR_CHRONIK = [
+{j:-40000,wer:'Zu Fuß',was:'5 km/h, 30 km am Tag',m:'Der Mensch ist ein Ausdauerläufer: langsam, aber über Stunden durchhaltend. Ein Fußmarsch schafft 25 bis 40 Kilometer am Tag – dieses Maß bestimmt jahrtausendelang die Größe von Herrschaftsgebieten und den Abstand von Siedlungen.',ziel:'in_verkehr',bild:'geschwindigkeit'},
+{j:-3500,wer:'Ochsenkarren',was:'3 km/h, aber 500 kg Last',m:'Langsamer als der Fußgänger, dafür trägt er das Vielfache. Erstmals zählt nicht nur Geschwindigkeit, sondern das Produkt aus Last und Weg – der eigentliche Nutzen eines Verkehrsmittels.'},
+{j:-3000,wer:'Segelschiff',was:'4–8 Knoten, aber Tag und Nacht',m:'Rund 7 bis 15 km/h – kaum mehr als ein Fußgänger. Der Vorteil liegt woanders: Das Schiff fährt ununterbrochen und trägt hundert Tonnen. Eine Tagesleistung von 150 km ist normal; über Wasser kostet Transport rund ein Zwanzigstel dessen, was er über Land kostet.',ziel:'er_entdeckungen'},
+{j:-2000,wer:'Pferd',was:'Galopp 40 km/h – für zwei Kilometer',m:'Kurzfristig schnell, dauerhaft nicht: Im Trab hält ein Pferd etwa 15 km/h. Über lange Strecken ist der Mensch dem Pferd sogar überlegen, weil er schwitzen kann und das Pferd hecheln muss.'},
+{j:-500,wer:'Persische Königsstraße',was:'2500 km in sieben Tagen',m:'Nicht das Pferd wird schneller, sondern das System: Wechselstationen alle 25 km, ausgeruhte Reiter, Staffelbetrieb. Rund 350 km am Tag – eine Geschwindigkeit, die erst die Eisenbahn wieder erreicht.',ziel:'ku_perser'},
+{j:-100,wer:'Kamelkarawane',was:'4 km/h, aber 40 Tage ohne Nachschub',m:'Langsam und unschlagbar in der Wüste: Reichweite schlägt Geschwindigkeit. Die Seidenstraße funktioniert nicht trotz, sondern wegen dieser Eigenschaft.',ziel:'er_mongolen'},
+{j:100,wer:'Römische Straßen',was:'Der cursus publicus',m:'80 000 km befestigte Straßen. Ein Eilbote schafft 75 km am Tag, in Notfällen 300 km. Entscheidend ist die Berechenbarkeit: Erstmals lässt sich eine Reisezeit planen.',ziel:'er_paxromana'},
+{j:800,wer:'Wikingerschiff',was:'10–15 Knoten unter Segel',m:'Geringer Tiefgang, geklinkerte Planken, ein Rahsegel zum Kreuzen: bis Neufundland und über russische Flüsse bis Bagdad. Ein Schiff, das Meer und Fluss beherrscht.',ziel:'er_wikinger'},
+{j:1500,wer:'Karavelle & Galeone',was:'Monate auf See',m:'Etwa 4 Knoten Durchschnitt – aber 60 bis 90 Tage am Stück. Reichweite entsteht nicht durch Tempo, sondern durch Vorräte, Navigation und die Fähigkeit, gegen den Wind zu kreuzen.',ziel:'er_entdeckungen'},
+{j:1650,wer:'Postkutsche',was:'8 km/h, 60–100 km am Tag',m:'Auf gepflasterten Chausseen mit Pferdewechsel. Zwischen Antike und Dampfzeit ändert sich fast nichts: Napoleon reist 1800 kaum schneller als Caesar 1800 Jahre zuvor.'},
+{j:1807,wer:'Dampfschiff',was:'Unabhängig vom Wind',m:'Fultons Clermont fährt 8 km/h – langsamer als ein guter Segler, aber pünktlich und flussaufwärts. Die Verlässlichkeit ist der Fortschritt, nicht die Geschwindigkeit.',ziel:'in_dampf'},
+{j:1825,wer:'Eisenbahn',was:'Von 24 auf 100 km/h in siebzig Jahren',m:'Stephensons Locomotion schafft 24 km/h, 1830 erreicht die Rocket 47, um 1900 fahren Schnellzüge 100 km/h. Der geringe Rollwiderstand von Stahl auf Stahl – etwa ein Zehntel dessen einer Straße – macht die Bahn bis heute zum energieeffizientesten Landverkehrsmittel.',ziel:'in_dampf'},
+{j:1840,wer:'Der Fahrplan',was:'Zeit wird vereinheitlicht',m:'Züge zwingen zur gemeinsamen Uhrzeit: England führt 1847 die Railway Time ein, Deutschland 1893 die Mitteleuropäische Zeit. Ein Verkehrsmittel verändert den Zeitbegriff.',ziel:'in_zeit'},
+{j:1885,wer:'Fahrrad',was:'20 km/h – und das effizienteste Fahrzeug überhaupt',m:'Etwa 0,06 kWh pro 100 Personenkilometer. Ein Radfahrer braucht weniger Energie pro Kilometer als jedes Tier und jede Maschine, den Menschen zu Fuß eingeschlossen. Physikalisch: kleiner Rollwiderstand, aufrechte Haltung als Hauptwiderstand, direkte Kraftübertragung ohne Verluste.',ziel:'p_kraftwandler'},
+{j:1886,wer:'Automobil',was:'16 km/h – zunächst langsamer als die Kutsche',m:'Benz’ Patent-Motorwagen fährt kaum schneller als ein Pferdegespann. Sein Vorteil ist die Verfügbarkeit: kein Füttern, kein Ausruhen, sofort einsatzbereit. Die Geschwindigkeit folgt später.',ziel:'in_verbrennung'},
+{j:1903,wer:'Motorflug',was:'48 km/h über 37 Meter',m:'Der erste Flug der Brüder Wright ist kürzer als die Spannweite einer heutigen Verkehrsmaschine. Entscheidend ist das Leistungsgewicht: erst ein Motor mit unter 10 kg je PS macht das Fliegen möglich.',ziel:'in_verbrennung'},
+{j:1936,wer:'Verkehrsflugzeug',was:'300 km/h, Atlantik in 30 Stunden',m:'Die DC-3 macht den Luftverkehr wirtschaftlich. Erstmals ist Fliegen kein Abenteuer, sondern Verkehr – mit Fahrplan.'},
+{j:1958,wer:'Düsenflugzeug',was:'900 km/h in 10 km Höhe',m:'Oben ist die Luft dünn: In 10 km Höhe beträgt die Dichte nur ein Drittel, der Widerstand entsprechend weniger. Deshalb fliegen Verkehrsmaschinen so hoch – nicht wegen des Wetters, sondern wegen der Physik.',ziel:'in_verbrennung'},
+{j:1964,wer:'Shinkansen',was:'210 km/h planmäßig',m:'Eigene Trasse, keine Kreuzungen, sanfte Radien. Der Hochgeschwindigkeitsverkehr ist weniger eine Antriebsfrage als eine Frage der Streckenführung.'},
+{j:1969,wer:'Concorde & Mondrakete',was:'2170 km/h – und 39 000 km/h',m:'Im selben Jahr fliegt die Concorde erstmals und Apollo 11 zum Mond. Die Concorde scheitert wirtschaftlich: Der Luftwiderstand und damit der Verbrauch wachsen mit der dritten Potenz der Geschwindigkeit. Physik schlägt Prestige.',ziel:'in_raumfahrt'},
+{j:1970,wer:'Fluchtgeschwindigkeit',was:'11,2 km/s – die harte Grenze',m:'Um die Erde zu verlassen, sind 11,2 km/s nötig, für eine Umlaufbahn 7,9 km/s. Die Raketengrundgleichung koppelt das an das Massenverhältnis: Deshalb bestehen Trägerraketen zu über 90 Prozent aus Treibstoff. Hier stößt Verkehr an eine physikalische, nicht technische Grenze.',ziel:'in_raumfahrt'},
+{j:1991,wer:'Datenverkehr',was:'Information statt Transport',m:'Erstmals ersetzt Übertragung teilweise die Reise. Eine E-Mail legt dieselbe Strecke in Millisekunden zurück, für die ein Eilbote Roms zwei Wochen brauchte – bei einem Millionstel des Energieaufwands.',ziel:'in_netze'},
+{j:2025,wer:'Bilanz',was:'Was Geschwindigkeit kostet',m:'Die Reisegeschwindigkeit stieg in 200 Jahren um den Faktor 100, der Energiebedarf je Personenkilometer aber nicht im gleichen Maß: Fahrrad 0,06, Bahn 1,5, Auto 5, Flugzeug 10 kWh je 100 Personenkilometer. Die Physik erklärt, warum – Widerstand wächst mit v², die nötige Leistung mit v³. Schnelligkeit ist deshalb immer teuer erkauft.',ziel:'w_energie',bild:'energiebedarf'},
+];
+
 /* ============================================================
    GRAFIKEN – selbst gezeichnete SVG-Diagramme, fest eingebettet.
    Sie brauchen kein Internet, sind beliebig skalierbar und
@@ -2521,6 +2591,51 @@ buchdruck: svg(300,150,
   '<text x="10" y="20" class="gt">Beweglicher Letternsatz</text>'+
   '<text x="10" y="140" class="gk">einmal setzen, hundertfach drucken</text>'),
 
+geschwindigkeit: svg(300,160,
+  '<line x1="34" y1="18" x2="34" y2="126" class="gl"/>'+
+  '<line x1="34" y1="126" x2="286" y2="126" class="gl"/>'+
+  '<text x="8" y="14" class="gt">Reisegeschwindigkeit</text>'+
+  '<text x="8" y="28" class="gk">Zehnerpotenzen in km/h</text>'+
+  // Achsenbeschriftung (logarithmisch)
+  '<text x="14" y="122" class="gk">1</text>'+
+  '<text x="10" y="96" class="gk">10</text>'+
+  '<text x="6" y="70" class="gk">100</text>'+
+  '<text x="2" y="44" class="gk">1000</text>'+
+  '<line x1="30" y1="96" x2="286" y2="96" class="gh"/>'+
+  '<line x1="30" y1="70" x2="286" y2="70" class="gh"/>'+
+  '<line x1="30" y1="44" x2="286" y2="44" class="gh"/>'+
+  // Zeitachse
+  '<text x="36" y="140" class="gk">−3000</text>'+
+  '<text x="150" y="140" class="gk">1800</text>'+
+  '<text x="205" y="140" class="gk">1900</text>'+
+  '<text x="258" y="140" class="gk">2000</text>'+
+  '<line x1="160" y1="122" x2="160" y2="130" class="gl"/>'+
+  '<line x1="215" y1="122" x2="215" y2="130" class="gl"/>'+
+  '<line x1="268" y1="122" x2="268" y2="130" class="gl"/>'+
+  // Verlauf: Jahrtausende flach, dann steiler Anstieg
+  '<path d="M40 112 L120 110 L150 108 L162 100 L178 86 L200 78 L225 62 L250 48 L272 30" class="gd"/>'+
+  '<circle cx="40" cy="112" r="3" fill="#8a4b2a"/><text x="44" y="110" class="gk">Fuß, Segel</text>'+
+  '<circle cx="150" cy="108" r="3" fill="#8a4b2a"/><text x="112" y="104" class="gk">Kutsche</text>'+
+  '<circle cx="178" cy="86" r="3" fill="#8a4b2a"/><text x="168" y="82" class="gk">Bahn</text>'+
+  '<circle cx="225" cy="62" r="3" fill="#8a4b2a"/><text x="212" y="58" class="gk">Flugzeug</text>'+
+  '<circle cx="272" cy="30" r="3" fill="#8a4b2a"/><text x="238" y="26" class="gk">Rakete</text>'+
+  '<text x="40" y="156" class="gk">5000 Jahre nahezu unverändert – dann Faktor 100 in 150 Jahren</text>'),
+
+energiebedarf: svg(300,150,
+  '<text x="10" y="18" class="gt">Energie je 100 Personenkilometer</text>'+
+  '<line x1="70" y1="30" x2="70" y2="118" class="gl"/>'+
+  '<line x1="70" y1="118" x2="280" y2="118" class="gl"/>'+
+  '<rect x="70" y="36" width="4" height="12" class="gf" stroke="#8a4b2a"/>'+
+  '<text x="8" y="46" class="gk">Fahrrad</text><text x="80" y="46" class="gk">0,06 kWh</text>'+
+  '<rect x="70" y="56" width="24" height="12" class="gf" stroke="#8a4b2a"/>'+
+  '<text x="22" y="66" class="gk">Bahn</text><text x="100" y="66" class="gk">1,5</text>'+
+  '<rect x="70" y="76" width="80" height="12" class="gf" stroke="#8a4b2a"/>'+
+  '<text x="30" y="86" class="gk">Auto</text><text x="156" y="86" class="gk">5</text>'+
+  '<rect x="70" y="96" width="160" height="12" class="gf2" stroke="#1f6f92"/>'+
+  '<text x="14" y="106" class="gk">Flugzeug</text><text x="236" y="106" class="gk">10</text>'+
+  '<text x="10" y="136" class="gk">Widerstand ~ v², nötige Leistung ~ v³</text>'+
+  '<text x="10" y="148" class="gk">Schnelligkeit ist immer teuer erkauft</text>'),
+
 dampfmaschine: svg(300,150,
   '<rect x="40" y="52" width="70" height="46" class="gl"/>'+
   '<rect x="46" y="58" width="30" height="34" class="gf"/>'+
@@ -2582,10 +2697,10 @@ const LANDMASSEN = [
    [15.10,40.35],[14.75,40.68],[14.45,40.63],[14.25,40.85],[13.95,40.72],[13.75,41.00],[13.57,41.20],
    [13.05,41.25],[12.63,41.45],[12.42,41.62],[12.23,41.75],[11.80,42.10],[11.35,42.28],[11.13,42.40],
    [10.98,42.60],[10.72,42.80],[10.50,42.93],[10.30,43.20],[10.30,43.55],[10.05,43.85],[9.85,44.10],
-   [9.35,44.30],[8.93,44.40],[8.48,44.31],[8.03,43.88],[7.60,43.79],[7.00,43.70],[7.00,43.70],
-   [6.00,43.10],[5.00,43.30],[4.00,43.50],[3.00,42.50],[3.30,41.60],[2.00,41.20],[1.00,40.90],
-   [0.50,39.50],[-0.20,38.80],[-0.90,37.60],[-1.80,36.90],[-2.50,36.70],[-3.50,36.70],[-4.50,36.60],
-   [-5.20,36.30],[-5.60,36.00]],
+   [9.35,44.30],[8.93,44.40],[8.48,44.31],[8.03,43.88],[7.60,43.79],[7.00,43.70],[6.00,43.10],
+   [5.00,43.30],[4.00,43.50],[3.00,42.50],[3.30,41.60],[2.00,41.20],[1.00,40.90],[0.50,39.50],
+   [-0.20,38.80],[-0.90,37.60],[-1.80,36.90],[-2.50,36.70],[-3.50,36.70],[-4.50,36.60],[-5.20,36.30],
+   [-5.60,36.00]],
   [[-5.80,35.90],[-4.50,35.80],[-2.00,35.50],[0.00,36.00],[1.50,36.60],[3.00,36.90],[5.50,36.90],
    [8.00,37.00],[9.50,37.30],[10.30,37.05],[10.75,36.85],[11.05,37.10],[11.10,36.50],[10.80,35.60],
    [10.30,34.80],[10.10,34.30],[10.70,33.60],[11.10,33.20],[11.55,32.85],[12.30,32.85],[13.20,32.90],
@@ -2685,13 +2800,13 @@ const LANDMASSEN = [
    [-46.50,-24.00],[-48.50,-25.50],[-48.60,-27.00],[-50.00,-28.50],[-51.00,-30.00],[-52.20,-32.00],[-53.50,-33.50],
    [-55.00,-34.90],[-56.20,-34.90],[-57.30,-34.70],[-58.40,-34.60],[-57.60,-35.20],[-57.10,-36.00],[-56.70,-36.40],
    [-57.50,-38.50],[-60.00,-39.00],[-62.00,-40.50],[-63.50,-41.00],[-64.00,-42.50],[-65.00,-43.50],[-65.50,-45.00],
-   [-66.50,-47.00],[-67.50,-49.00],[-68.50,-52.50],[-69.50,-53.20],[-70.50,-54.00],[-72.00,-53.50],[-73.50,-53.00],
-   [-74.50,-51.00],[-74.50,-49.00],[-74.00,-47.00],[-73.50,-45.00],[-73.50,-43.00],[-73.00,-41.00],[-73.50,-39.00],
-   [-72.00,-37.00],[-71.50,-35.00],[-71.50,-33.00],[-71.50,-30.00],[-70.50,-28.00],[-70.40,-25.50],[-70.40,-23.00],
-   [-70.50,-20.50],[-70.50,-18.50],[-72.00,-17.00],[-75.00,-14.50],[-76.50,-13.50],[-77.00,-12.00],[-78.50,-9.00],
-   [-79.00,-8.00],[-80.50,-7.00],[-81.00,-6.00],[-81.20,-5.00],[-80.50,-3.50],[-80.30,-3.00],[-79.90,-2.60],
-   [-80.60,-2.30],[-80.90,-2.10],[-80.60,-1.60],[-80.00,-1.00],[-79.50,0.50],[-78.50,1.50],[-77.50,4.00],
-   [-77.50,6.00],[-77.00,7.00],[-77.50,8.50]],
+   [-66.50,-47.00],[-67.50,-49.00],[-68.50,-52.30],[-69.50,-52.40],[-70.50,-52.45],[-71.80,-52.30],[-73.20,-52.20],
+   [-74.30,-51.20],[-74.50,-51.00],[-74.50,-49.00],[-74.00,-47.00],[-73.50,-45.00],[-73.50,-43.00],[-73.00,-41.00],
+   [-73.50,-39.00],[-72.00,-37.00],[-71.50,-35.00],[-71.50,-33.00],[-71.50,-30.00],[-70.50,-28.00],[-70.40,-25.50],
+   [-70.40,-23.00],[-70.50,-20.50],[-70.50,-18.50],[-72.00,-17.00],[-75.00,-14.50],[-76.50,-13.50],[-77.00,-12.00],
+   [-78.50,-9.00],[-79.00,-8.00],[-80.50,-7.00],[-81.00,-6.00],[-81.20,-5.00],[-80.50,-3.50],[-80.30,-3.00],
+   [-79.90,-2.60],[-80.60,-2.30],[-80.90,-2.10],[-80.60,-1.60],[-80.00,-1.00],[-79.50,0.50],[-78.50,1.50],
+   [-77.50,4.00],[-77.50,6.00],[-77.00,7.00],[-77.50,8.50]],
   [[113.20,-22.00],[113.50,-24.00],[113.70,-26.00],[114.50,-28.50],[115.00,-30.00],[115.20,-32.00],[115.70,-33.00],
    [117.00,-35.00],[118.00,-35.00],[120.00,-34.00],[122.00,-34.00],[124.00,-33.00],[126.00,-32.30],[129.00,-31.60],
    [131.00,-31.50],[132.50,-32.00],[134.00,-33.00],[135.00,-34.50],[136.00,-35.00],[137.00,-35.50],[138.00,-34.80],
@@ -2799,10 +2914,6 @@ const LANDMASSEN = [
   [[23.60,35.30],[24.80,35.20],[26.20,35.20],[26.30,35.60],[25.20,35.40],[24.00,35.70],[23.60,35.30]],
   [[32.30,34.60],[33.50,34.70],[34.60,35.10],[34.00,35.30],[33.50,35.40],[32.90,35.30],[32.30,35.10],
    [32.30,34.60]],
-  [[-59.30,47.60],[-57.00,47.60],[-55.50,47.00],[-53.50,46.60],[-52.70,47.60],[-53.20,48.60],[-55.00,49.50],
-   [-56.80,49.90],[-58.50,49.20],[-59.30,47.60]],
-  [[-125.00,48.60],[-123.30,48.40],[-123.00,49.30],[-125.20,50.50],[-127.50,50.90],[-128.30,50.20],[-126.50,49.30],
-   [-125.00,48.60]],
   [[144.60,-40.70],[148.30,-40.80],[148.30,-42.20],[147.90,-43.50],[146.50,-43.60],[145.20,-42.60],[144.60,-40.70]],
   [[10.50,76.60],[16.50,76.60],[21.00,78.30],[20.50,79.80],[16.00,79.90],[11.00,79.00],[10.50,76.60]],
   [[52.50,70.80],[55.50,71.50],[59.00,72.80],[62.00,74.50],[65.00,75.80],[68.50,76.80],[67.50,77.20],
@@ -2813,7 +2924,8 @@ const LANDMASSEN = [
   [[-25.40,14.80],[-22.60,14.80],[-22.60,17.20],[-25.40,17.00],[-25.40,14.80]],
   [[-17.30,32.60],[-16.30,32.60],[-16.30,33.10],[-17.30,33.00],[-17.30,32.60]],
   [[-61.40,-52.40],[-57.70,-51.30],[-57.80,-52.00],[-60.90,-52.50],[-61.40,-52.40]],
-  [[-74.50,-52.80],[-70.00,-52.70],[-68.20,-52.70],[-68.20,-54.90],[-70.50,-54.90],[-73.00,-54.10],[-74.50,-52.80]],
+  [[-74.60,-53.30],[-71.50,-53.20],[-69.00,-53.10],[-68.30,-53.20],[-68.30,-54.90],[-70.50,-54.90],[-73.20,-54.20],
+   [-74.60,-53.30]],
   [[-160.20,21.90],[-155.00,19.50],[-154.80,19.90],[-159.80,22.30],[-160.20,21.90]],
   [[163.80,-20.20],[167.00,-22.40],[167.10,-22.70],[164.00,-20.50],[163.80,-20.20]],
   [[12.95,67.85],[13.80,68.05],[14.60,68.25],[15.40,68.45],[15.10,68.65],[14.20,68.45],[13.30,68.15],
@@ -2825,17 +2937,17 @@ const LANDMASSEN = [
 
 /* Binnenmeere – werden nach den Landflächen in Meerfarbe gezeichnet */
 const MEERE = [
-{n:'Ostsee', p:[[10.55,57.74],[9.20,58.20],[7.00,58.05],[5.80,58.95],[7.00,58.60],[8.80,58.55],
-  [10.20,58.90],[10.70,59.60],[11.30,58.80],[11.60,58.10],[11.90,57.60],[12.30,56.90],
-  [12.60,56.20],[12.55,55.70],[13.00,55.35],[14.30,55.30],[15.80,55.90],[16.20,56.60],
-  [16.70,57.30],[17.20,58.20],[18.30,58.90],[18.90,59.70],[19.60,60.30],[21.20,60.60],
-  [21.40,61.60],[21.60,62.60],[22.60,63.80],[24.00,64.90],[25.30,65.60],[24.50,65.70],
-  [23.00,65.60],[21.60,64.70],[20.20,63.60],[19.10,62.60],[18.10,61.40],[17.30,60.60],
-  [18.30,60.00],[19.60,60.30],[21.00,60.00],[22.60,59.90],[24.20,60.00],[26.30,60.20],
-  [28.20,60.40],[30.20,59.95],[28.00,59.90],[26.00,59.60],[24.30,59.40],[23.50,58.60],
-  [24.10,57.80],[23.20,57.10],[21.60,57.00],[21.10,56.10],[21.00,55.30],[19.60,54.70],
-  [18.30,54.85],[16.20,54.55],[14.20,54.05],[13.00,54.55],[11.60,54.45],[10.60,54.70],
-  [10.00,55.30],[10.30,56.00],[10.20,56.70],[10.40,57.30],[10.55,57.74]]},
+{n:'Ostsee', p:[[10.60,57.72],[9.60,58.05],[9.40,58.75],[10.03,59.05],[10.75,59.91],[11.17,58.94],
+  [11.60,58.30],[11.97,57.71],[12.25,57.11],[12.55,56.25],[12.55,55.95],[12.90,55.55],[13.50,55.35],
+  [14.30,55.40],[15.80,55.90],[16.20,56.60],[16.70,57.30],[17.20,58.20],[18.30,58.90],
+  [18.90,59.70],[19.60,60.30],[19.10,61.20],[18.10,61.40],[17.30,60.60],[17.60,61.60],
+  [18.60,62.80],[19.80,63.60],[21.20,64.60],[22.60,65.30],[24.00,65.70],[25.30,65.60],
+  [24.60,64.90],[23.20,63.80],[21.80,62.60],[21.30,61.40],[21.20,60.60],[22.00,60.20],
+  [22.60,59.90],[24.20,60.00],[26.30,60.20],[28.20,60.40],[30.20,59.95],[28.00,59.70],
+  [26.00,59.50],[24.30,59.40],[23.50,58.60],[24.10,57.80],[23.20,57.10],[21.60,57.00],
+  [21.10,56.10],[21.00,55.30],[19.60,54.70],[18.30,54.85],[16.20,54.55],[14.20,54.05],
+  [13.00,54.55],[11.60,54.45],[10.60,54.70],[10.00,55.30],[10.30,56.00],[10.20,56.70],
+  [10.40,57.30],[10.60,57.72]]},
 {n:'Weißes Meer', p:[[40.00,66.90],[38.50,66.40],[36.50,66.60],[34.50,66.90],[33.20,67.10],[32.80,66.40],
   [34.50,65.80],[36.00,65.10],[37.50,64.50],[39.00,64.60],[39.80,65.30],[40.60,66.10],
   [40.00,66.90]]},
@@ -2912,6 +3024,11 @@ const ORTE = [
 {n:'Pergamon',o:[27.18,39.13],a:-280,b:-133,id:'ku_hellenismus',t:'Zweitgrößte Bibliothek der Antike; als Ägypten den Papyrus-Export stoppt, entsteht hier das Pergament'},
 {n:'Antiochia',o:[36.20,36.20],a:-300,b:1268,id:'ku_hellenismus',t:'Seleukidenhauptstadt, später byzantinische Metropole und Kreuzfahrerfürstentum – ein Umschlagplatz über 1500 Jahre'},
 {n:'Akkon',o:[35.07,32.93],a:1104,b:1291,id:'er_kreuzzuege',t:'Wichtigster Kreuzfahrerhafen; über ihn laufen Zucker, Gewürze, Papier und arabische Handschriften nach Europa'},
+{n:'Jorvik (York)',o:[-1.08,53.96],a:866,b:1066,id:'er_wikinger',t:'Dänische Hauptstadt in England; Ausgrabungen zeigen Handelsgüter aus Byzanz, Samarkand und dem Rheinland'},
+{n:'Hastings',o:[0.57,50.86],a:1066,b:1066,id:'er_normannen',t:'Wilhelms Sieg 1066; das Englische nimmt daraufhin tausende französische Wörter auf'},
+{n:'Palermo',o:[13.36,38.12],a:1061,b:1194,id:'er_normannen',t:'Normannischer Königshof mit lateinischer, griechischer und arabischer Kanzlei; hier entsteht 1154 al-Idrisis Weltkarte'},
+{n:'L’Anse aux Meadows',o:[-56.60,50.30],a:1000,b:1020,id:'er_wikinger',t:'Nordische Siedlung auf Neufundland – archäologisch gesichert, 500 Jahre vor Kolumbus, ohne Folgen für Europa'},
+{n:'Haithabu',o:[9.56,54.49],a:800,b:1066,id:'er_wikinger',t:'Größter Handelsplatz Nordeuropas an der Landenge zwischen Nord- und Ostsee'},
 {n:'Venedig',o:[12.34,45.44],a:1100,b:1600,id:'er_marcopolo',t:'Drehscheibe zwischen Orient und Europa; Heimatstadt Marco Polos, später Zentrum des Buchdrucks'},
 {n:'Khanbaliq (Peking)',o:[116.40,39.90],a:1271,b:1368,id:'er_marcopolo',t:'Residenz Kublai Khans, Ziel Marco Polos; hier arbeiten persische Astronomen am mongolischen Hof'},
 {n:'Persepolis',o:[52.89,29.94],a:-550,b:-330,id:'ku_grie',t:'Zentrum des Perserreichs'},
@@ -3070,8 +3187,7 @@ const REICHE = [
     [70.50,36.00],[72.00,33.00],[70.00,30.00],[67.00,25.00],[62.00,25.20],[58.00,25.50],[59.80,22.50],
     [57.50,20.00],[56.30,25.00],[56.50,26.00],[52.00,27.50],[48.00,30.20],[45.00,31.00],[42.00,31.50],
     [39.00,29.00],[36.00,29.00],[35.00,30.50],[34.30,31.30],[35.50,31.50],[36.00,34.00],[36.00,36.00],
-    [33.00,36.30],[30.00,36.30],[27.20,37.00],[26.72,38.38],[26.72,38.38],[24.00,40.60],[22.00,40.80],
-    [20.50,41.20]],
+    [33.00,36.30],[30.00,36.30],[27.20,37.00],[26.72,38.38],[24.00,40.60],[22.00,40.80],[20.50,41.20]],
     [[34.30,31.30],[34.98,29.55],[34.40,28.05],[34.25,27.75],[33.30,28.50],[32.60,29.95],[33.06,28.38],
     [33.64,27.12],[34.50,25.50],[35.50,23.50],[32.50,24.00],[30.80,27.00],[29.90,31.20],[32.35,31.05],
     [34.30,31.30]]]},
@@ -3136,9 +3252,9 @@ const REICHE = [
     [-2.20,47.20],[-1.20,46.20],[-1.20,45.60],[-1.25,44.50],[-1.60,43.40],[-1.80,43.35]]},
 {n:'Maya',a:250,b:900,f:'#5f7a55',id:'z_maya',
  t:'Stellenwertsystem mit Null, Kalenderastronomie',
- p:[[-90.50,21.00],[-90.50,21.00],[-90.29,21.05],[-88.95,21.39],[-87.00,21.50],[-86.80,20.00],[-87.60,18.50],
-    [-88.35,17.65],[-88.20,16.00],[-88.80,15.00],[-89.50,14.20],[-90.50,14.30],[-91.47,14.59],[-92.20,15.50],
-    [-92.50,16.50],[-93.00,17.50],[-93.20,18.30],[-91.97,18.52],[-91.05,19.45],[-90.50,21.00]]},
+ p:[[-90.50,21.00],[-90.29,21.05],[-88.95,21.39],[-87.00,21.50],[-86.80,20.00],[-87.60,18.50],[-88.35,17.65],
+    [-88.20,16.00],[-88.80,15.00],[-89.50,14.20],[-90.50,14.30],[-91.47,14.59],[-92.20,15.50],[-92.50,16.50],
+    [-93.00,17.50],[-93.20,18.30],[-91.97,18.52],[-91.05,19.45],[-90.50,21.00]]},
 {n:'Inka',a:1400,b:1533,f:'#a05a3a',id:'ku_maya',
  t:'Quipu als Knotenschrift, Straßennetz über 30 000 km',
  p:[[-78.50,1.50],[-77.50,0.00],[-77.00,-1.00],[-76.50,-3.00],[-76.00,-5.00],[-75.00,-7.00],[-74.00,-9.00],
@@ -3254,10 +3370,17 @@ const WEGE = [
 {n:'Arabische Expansion',a:632,b:750,art:'wanderung',id:'ku_islam',
  p:[[40,22],[33,30],[25,31],[15,33],[5,35],[-5,36],[-4,38]],
  t:'In hundert Jahren entsteht ein Raum von Spanien bis Zentralasien mit einer Verkehrssprache. Erst dadurch können griechische, persische und indische Traditionen an einem Ort zusammenkommen – die Voraussetzung für Bagdad, Córdoba und die Algebra.'},
-{n:'Wikingerfahrten nach Westen',a:793,b:1066,art:'fahrt',id:'in_zeit',
+{n:'Normannenzug nach England',a:1066,b:1066,art:'wanderung',id:'er_normannen',
+ p:[[-0.20,49.30],[0.10,49.55],[0.35,50.20],[0.57,50.86],[0.20,51.20],[-0.13,51.51]],
+ t:'Wilhelm setzt im September 1066 mit etwa 7000 Mann und Pferden über den Kanal; bei Hastings entscheidet sich die Schlacht. Die Folgen reichen weit über die Politik hinaus: Das Englische nimmt tausende französische Wörter auf, und das Domesday Book von 1086 erfasst Besitz und Erträge des ganzen Landes – die genaueste Bestandsaufnahme des mittelalterlichen Europa.'},
+{n:'Normannen nach Sizilien',a:1061,b:1091,art:'wanderung',id:'er_normannen',
+ p:[[-0.20,49.30],[2.35,48.86],[5.00,45.00],[8.00,44.40],[12.49,41.90],[15.90,41.60],[16.10,38.65],
+    [15.42,38.02],[13.36,38.12]],
+ t:'Dieselbe Familie, die England erobert, nimmt Süditalien und Sizilien. Roger II. übernimmt die arabische Verwaltung, beschäftigt griechische, arabische und lateinische Gelehrte und lässt 1154 al-Idrisis Weltkarte anfertigen – die genaueste ihrer Zeit. Palermo wird zu einem Ort, an dem drei Schriftkulturen nebeneinander arbeiten.'},
+{n:'Wikingerfahrten nach Westen',a:793,b:1066,art:'fahrt',id:'er_wikinger',
  p:[[10,59],[-2,57],[-8,54],[-20,64],[-40,62],[-52,60],[-56,52]],
  t:'Über Island und Grönland bis Neufundland – 500 Jahre vor Kolumbus, archäologisch gesichert in L\u2019Anse aux Meadows. Ohne Verbreitung des Wissens bleibt die Entdeckung folgenlos: Weder Karten noch Berichte erreichten das übrige Europa.'},
-{n:'Wikinger nach Osten',a:850,b:1050,art:'fahrt',id:'er_bagdad',
+{n:'Wikinger nach Osten',a:850,b:1050,art:'fahrt',id:'er_wikinger',
  p:[[18,59],[28,60],[32,55],[35,50],[38,45],[44,40],[44,33]],
  t:'Über Wolga und Dnjepr bis Konstantinopel und Bagdad. In skandinavischen Gräbern finden sich zehntausende arabische Silbermünzen – ein Beleg dafür, wie weit die Handelsnetze reichten, lange bevor Landkarten es zeigten.'},
 {n:'Übersetzungsweg Bagdad–Toledo',a:800,b:1200,art:'wissen',id:'er_reconquista',
@@ -4616,6 +4739,10 @@ const CHRONIKEN = [
    titel:'Chronik der Weltbilder: geozentrisch und heliozentrisch',
    note:'Das geozentrische System war nicht dumm, sondern gut begründet: Es sagte Planetenpositionen brauchbar vorher, und der Haupteinwand gegen die Erdbewegung – die fehlende Sternparallaxe – war messtechnisch korrekt. Es fiel über drei Jahrhunderte: erst Einfachheit (Kopernikus), dann bessere Daten (Kepler), dann eine physikalische Ursache (Newton), zuletzt direkte Messungen (Bradley 1728, Bessel 1838, Foucault 1851).',
    daten: WELTBILD_CHRONIK},
+  {id:'instrumente', gruppe:'Astronomie', tab:'Instrumente', anker:'in_fernrohr',
+   titel:'Chronik der astronomischen Instrumente',
+   note:'Fast jede astronomische Entdeckung folgt einem neuen Instrument, nicht einer neuen Idee: Gnomon, Astrolabium, Mauerquadrant, Fernrohr, Spiegelteleskop, Spektroskop, Fotoplatte, Radioantenne, Satellit, CCD, Interferometer. Und jedes neue Fenster brachte etwas, das niemand vorhergesagt hatte.',
+   daten: INSTRUMENT_CHRONIK},
   {id:'entfernung', gruppe:'Astronomie', tab:'Entfernungen', anker:'as_entfernung',
    titel:'Chronik der kosmischen Entfernungsleiter',
    note:'Jede Sprosse ruht auf der darunterliegenden: Erdradius, Mondparallaxe, Astronomische Einheit, Sternparallaxe, Cepheiden, Supernovae, Rotverschiebung. Deshalb ist die Leiter empfindlich – als Baade 1944 eine Sprosse korrigierte, verdoppelte sich die Gr\u00f6\u00dfe des ganzen Universums.',
@@ -4624,6 +4751,10 @@ const CHRONIKEN = [
    titel:'Chronik der Zeitmessung',
    note:'Viereinhalb Jahrtausende lang misst jede Uhr letztlich die Erddrehung. Erst als Quarzuhren zeigen, dass die Erde selbst ungleichm\u00e4\u00dfig l\u00e4uft, kehrt sich das Verh\u00e4ltnis um: Seit 1967 ist die Sekunde eine feste Zahl von Schwingungen im C\u00e4siumatom – und der Himmel muss sich nach der Uhr richten.',
    daten: ZEIT_CHRONIK},
+  {id:'verkehr', gruppe:'Technik', tab:'Verkehrsmittel', anker:'in_verkehr',
+   titel:'Chronik der Verkehrsmittel: Geschwindigkeit, Reichweite, Energie',
+   note:'Fast fünftausend Jahre lang blieb die Reisegeschwindigkeit bei 5 bis 15 km/h – Napoleon reiste kaum schneller als Caesar. Erst die Dampfmaschine durchbrach die Grenze der Muskelkraft. Drei physikalische Größen entscheiden: Antriebsleistung, Widerstand (bei Luft mit v², die nötige Leistung also mit v³) und die mitführbare Energie. Deshalb ist das Fahrrad bis heute das effizienteste Fahrzeug und die Rakete das teuerste.',
+   daten: VERKEHR_CHRONIK},
   {id:'antrieb', gruppe:'Technik', tab:'Antriebe', anker:'p_antrieb',
    titel:'Chronik der Antriebe',
    note:'Muskel, Zugtier, Segel, Ruder, Dampf, Verbrennung, Elektro, Strahl, Rakete, Ion. Zwei Fragen kehren immer wieder: Woher kommt die Energie – und wogegen st\u00fctzt sich der Antrieb ab? Nur die Rakete beantwortet die zweite mit „gegen nichts“.',
@@ -4968,6 +5099,27 @@ const kAlle = document.getElementById('kAlle');
 const kAbspielen = document.getElementById('kAbspielen');
 const karteninfo = document.getElementById('karteninfo');
 
+/* Inseln, die innerhalb eines Binnenmeeres liegen – sie müssen nach den
+   Wasserflächen erneut gezeichnet werden. Einmalig beim Laden ermittelt. */
+const INSELN_IN_SEEN = (() => {
+  const drin = (pt, poly) => {
+    let d = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++){
+      const [xi,yi] = poly[i], [xj,yj] = poly[j];
+      if (((yi > pt[1]) !== (yj > pt[1])) &&
+          (pt[0] < (xj-xi)*(pt[1]-yi)/(yj-yi) + xi)) d = !d;
+    }
+    return d;
+  };
+  return LANDMASSEN.filter(m => {
+    if (m.length > 40) return false;                 // Kontinente ausschließen
+    let sx = 0, sy = 0;
+    m.forEach(([lo,la]) => { sx += lo; sy += la; });
+    const mitte = [sx/m.length, sy/m.length];
+    return MEERE.some(s => drin(mitte, s.p));
+  });
+})();
+
 const kstate = { jahr: 1500, z: 3, mx: 0, my: 0, gesetzt: false,
   auswahl: null, reichAuswahl: null, wegAuswahl: null, laeuft: false };
 
@@ -4993,10 +5145,19 @@ function kAnpassen(){
 const kAus = { reich:new Set(), weg:new Set(), ort:new Set() };
 function kZeigtGruppe(typ, name){ return !kAus[typ].has(name); }
 
+/* Angeklicktes bleibt sichtbar, auch wenn der Regler den Zeitraum verlässt.
+   So geht die Auswahl beim Weiterschieben der Zeit nicht verloren. */
+const kAngeheftet = new Set();
+
 function kSichtbar(o){
   if (kAlle.checked) return true;
+  if (kAngeheftet.has(o)) return true;
   const a = o.a, b = (o.b === undefined || o.b === null) ? o.a : o.b;
-  return kstate.jahr >= a && kstate.jahr <= b + (b === a ? 25 : 0);
+  // Kurze Ereignisse würden sonst zwischen zwei Reglerschritten verschwinden.
+  // Sie bleiben so lange sichtbar, dass sie mindestens ein Rasterjahr treffen.
+  const spanne = b - a;
+  const rand = spanne >= 25 ? 0 : Math.ceil((25 - spanne) / 2);
+  return kstate.jahr >= a - rand && kstate.jahr <= b + rand;
 }
 
 let kTreffer = [];
@@ -5059,6 +5220,15 @@ function kRender(){
   for (const m of MEERE){
     kctx.beginPath();
     m.p.forEach(([lo,la],i) => { const p = kProj(lo,la); i ? kctx.lineTo(p.x,p.y) : kctx.moveTo(p.x,p.y); });
+    kctx.closePath(); kctx.fill(); kctx.stroke();
+  }
+
+  // Inseln, die in einem Binnenmeer liegen, danach erneut zeichnen –
+  // sonst würden Seeland, Fünen, Gotland, Öland, Bornholm und Åland übermalt.
+  kctx.fillStyle = '#eee6d5'; kctx.strokeStyle = '#b9ab90'; kctx.lineWidth = 1;
+  for (const m of INSELN_IN_SEEN){
+    kctx.beginPath();
+    m.forEach(([lo,la],i) => { const p = kProj(lo,la); i ? kctx.lineTo(p.x,p.y) : kctx.moveTo(p.x,p.y); });
     kctx.closePath(); kctx.fill(); kctx.stroke();
   }
 
@@ -5179,11 +5349,19 @@ function kRender(){
     kctx.strokeStyle = gewaehlt ? '#241f18' : f;
     kctx.lineWidth = gewaehlt ? 4 : 2.2;
     if (wg.art === 'wissen') kctx.setLineDash([7,5]);
+    // An der Datumsgrenze wird die Linie getrennt, sonst liefe sie quer über die Karte
     kctx.beginPath();
-    wg.p.forEach(([lo,la],i) => { const p = kProj(lo,la); i ? kctx.lineTo(p.x,p.y) : kctx.moveTo(p.x,p.y); });
+    let vorherLon = null;
+    wg.p.forEach(([lo,la],i) => {
+      const p = kProj(lo,la);
+      const sprung = vorherLon !== null && Math.abs(lo - vorherLon) > 180;
+      (i === 0 || sprung) ? kctx.moveTo(p.x,p.y) : kctx.lineTo(p.x,p.y);
+      vorherLon = lo;
+    });
     kctx.stroke(); kctx.setLineDash([]);
     // Pfeilspitze am Ende
     const n = wg.p.length;
+    if (Math.abs(wg.p[n-1][0] - wg.p[n-2][0]) > 180){ kLinien.push({d:wg, punkte: wg.p.map(([lo,la]) => kProj(lo,la))}); continue; }
     const p1 = kProj(wg.p[n-2][0], wg.p[n-2][1]), p2 = kProj(wg.p[n-1][0], wg.p[n-1][1]);
     const w1 = Math.atan2(p2.y-p1.y, p2.x-p1.x);
     kctx.beginPath();
@@ -5331,6 +5509,8 @@ function kKlick(x,y){
   let beste = null, bestA = 14;
   for (const l of kLinien){
     for (let i = 0; i < l.punkte.length-1; i++){
+      // Segmente über die Datumsgrenze sind nicht gezeichnet und daher nicht anklickbar
+      if (l.d.p && Math.abs(l.d.p[i+1][0] - l.d.p[i][0]) > 180) continue;
       const a = kAbstand(x, y, l.punkte[i], l.punkte[i+1]);
       if (a < bestA){ bestA = a; beste = l.d; }
     }
@@ -5341,7 +5521,11 @@ function kKlick(x,y){
     const t = kTreffer[i];
     if (t.typ === 'reich' && x>=t.x && x<=t.x+t.w && y>=t.y && y<=t.y+t.h){ kZeige(t); return; }
   }
-  kstate.auswahl = null; karteninfo.classList.remove('an'); kRender();
+  kstate.auswahl = null; kstate.reichAuswahl = null; kstate.wegAuswahl = null;
+  kAngeheftet.clear();
+  karteninfo.classList.remove('an');
+  if (inKartenAnsicht()) zeichneKartenleiste();
+  kRender();
 }
 
 function kZeige(t){
@@ -5349,12 +5533,20 @@ function kZeige(t){
   kstate.auswahl = t.typ === 'ort' ? d : null;
   kstate.reichAuswahl = t.typ === 'reich' ? d : null;
   kstate.wegAuswahl = t.typ === 'weg' ? d : null;
+  if (t.typ === 'ort' || t.typ === 'reich' || t.typ === 'weg'){
+    kAngeheftet.clear();
+    kAngeheftet.add(d);
+    if (inKartenAnsicht()) zeichneKartenleiste();
+  }
   const artname = t.typ==='weg'
       ? ({wanderung:'Wanderung', fahrt:'Fahrt', wissen:'Wissenstransfer'}[d.art] || 'Weg')
       : t.typ==='reich' ? 'Reich oder Kulturraum' : 'Ort';
   const von = fmtJahr(d.a), bis = (d.b === d.a) ? null : fmtJahr(d.b);
   let h = '<span class="kart">' + esc(artname) + '</span><b>' + esc(d.n) + '</b>' + esc(d.t || '');
   h += '<i>' + esc(von + (bis ? ' – ' + bis : '')) + '</i>';
+  const imJahr = kstate.jahr >= d.a && kstate.jahr <= ((d.b === undefined ? d.a : d.b));
+  if (!imJahr) h += '<i class="ausserhalb">außerhalb des eingestellten Jahres – bleibt sichtbar, ' +
+    'solange es ausgewählt ist</i>';
   if (d.id && ITEM_VON_ID[d.id]){
     h += '<button class="verweis zumelement" data-ziel="' + d.id + '">→ ' +
          esc(ITEM_VON_ID[d.id].t) + ' in der Zeitleiste</button>';
@@ -5522,9 +5714,10 @@ function zeichneKartenleiste(){
 
   for (const x of alle){
     const aus = kAus[kat.id].has(x.n);
-    const imJahr = kAlle.checked || (kstate.jahr >= x.a && kstate.jahr <= (x.b === x.a ? x.a + 25 : x.b));
+    const imJahr = kSichtbar(x);
+    const fest = kAngeheftet.has(x);
     const b = document.createElement('button');
-    b.className = 'spurchip' + (aus ? ' aus' : '') + (imJahr ? '' : ' fern');
+    b.className = 'spurchip' + (aus ? ' aus' : '') + (imJahr ? '' : ' fern') + (fest ? ' fest' : '');
     b.dataset.kart = x.n;
     const von = fmtJahr(x.a), bis = (x.b === x.a) ? '' : '–' + fmtJahr(x.b);
     b.innerHTML = '<span class="punkt" style="background:' + kat.farbe(x) + '"></span>' +
@@ -5611,9 +5804,9 @@ function zeigeAufKarte(id, jahrWunsch){
 
 /* Karten-API nachtragen, sobald alles initialisiert ist */
 Object.assign(window.__zl, {
-  ORTE, REICHE, WEGE, LANDMASSEN, MEERE, FLUESSE, GEBIRGE, REGIONEN, kstate,
+  ORTE, REICHE, WEGE, LANDMASSEN, MEERE, FLUESSE, GEBIRGE, REGIONEN, INSELN_IN_SEEN, kstate,
   oeffneKarte, schliesseKarte, inKartenAnsicht, kSetzeJahr, kRender,
-  hatOrt, ortZu, zeigeAufKarte, ORT_ZU_ELEMENT, kAus, zeichneKartenTabs, zeichneKartenleiste,
+  hatOrt, ortZu, zeigeAufKarte, ORT_ZU_ELEMENT, kAus, kAngeheftet, zeichneKartenTabs, zeichneKartenleiste,
   kZeige, kKlick, kProj
 });
 // Der Zeitleiste und den Chroniken bekannt machen
