@@ -314,7 +314,7 @@
         <li><b>Suchen:</b> Reiter <i>Suche</i> (oder Strg/Cmd + F). Durchsucht Zeitleiste <i>und</i> alle Chroniken. Treffer werden auf der Zeitleiste gelb umrandet; ein Tipp springt hin.</li>
         <li><b>Zeitachse:</b> Beim Zoomen verfeinert sich das Raster automatisch bis auf einzelne Jahre. Mit der Maus zeigt eine Hilfslinie das Jahr unter dem Zeiger.</li>
         <li><b>Chroniken:</b> 43 vertiefende Zeittafeln, geordnet nach Mathematik, Physik, Astronomie, Technik und Kontext. Sie erscheinen anstelle der Zeitleiste; der Umschalter links oben wechselt die Ansicht. Einträge mit farbigem Jahr springen in die Zeitleiste zurück.</li>
-        <li><b>Zurück und Vorwärts:</b> Die Pfeile links oben führen durch die zuletzt besuchten Stationen – Zeitleisten-Elemente <i>und</i> Chroniken gemeinsam (auch Alt + Pfeiltaste). Der Knopf verrät im Tooltip, wohin er führt.</li>
+        <li><b>Zurück und Vorwärts:</b> Die Pfeile links oben führen durch die zuletzt besuchten Stationen – Zeitleisten-Elemente <i>und</i> Chroniken gemeinsam (auch Alt + Pfeiltaste). Beim Springen wird die Ansicht auch senkrecht nachgeführt, damit die Spur des Ziels im Bild liegt.</li>
       </ul>
       <h3>Die Idee</h3>
       <p>Hauptstränge sind <b>Mathematik</b> (Zahlen, Geometrie, Algebra, Analysis, Stochastik, Logik) und <b>Physik</b> (Mechanik, Wärmelehre, Elektrodynamik, Relativität, Quantenphysik) sowie die eigenständige <b>Astronomie</b>. Die Kontextspuren – Kulturräume, Weltbild, Instrumente, Gesellschaft – erklären, <i>warum</i> etwas gerade dort und dann entdeckt wurde.</p>
@@ -3633,6 +3633,35 @@ function maxOffsetY(){
   return Math.max(0, l.gesamt - cv.clientHeight);
 }
 
+/* Holt die Spur eines Elements senkrecht in den sichtbaren Bereich.
+   Liegt sie schon mit genug Abstand im Bild, bleibt die Ansicht stehen –
+   sonst wird sie mittig gesetzt und weich angefahren. */
+function holeInsBild(id, sofort){
+  const o = ITEM_VON_ID[id];
+  if (!o) return;
+  const l = baueLayout();
+  const g = l.spuren.find(x => x.sp.id === o.s);
+  if (!g) return;
+  const H = cv.clientHeight;
+  const oben = g.y0 - state.offsetY, unten = oben + g.hoehe;
+  const rand = 24;
+  if (oben >= AXIS_H + rand && unten <= H - rand) return;
+  let ziel;
+  if (g.hoehe + 2*rand >= H - AXIS_H) ziel = g.y0 - AXIS_H - rand;
+  else ziel = g.y0 + g.hoehe/2 - (AXIS_H + (H - AXIS_H)/2);
+  ziel = clamp(ziel, 0, maxOffsetY());
+  if (sofort || Math.abs(ziel - state.offsetY) < 2){ state.offsetY = ziel; render(); return; }
+  const start = state.offsetY, t0 = performance.now(), dauer = 260;
+  (function schritt(t){
+    const f = Math.min(1, (t - t0) / dauer);
+    const e = f < .5 ? 2*f*f : 1 - Math.pow(-2*f + 2, 2)/2;
+    state.offsetY = start + (ziel - start) * e;
+    render();
+    if (f < 1) requestAnimationFrame(schritt);
+    else { state.offsetY = ziel; render(); }
+  })(t0);
+}
+
 /* ============================================================
    ZEICHNEN
    ============================================================ */
@@ -4015,7 +4044,13 @@ function geheZu(von, bis, dauer){
     state.z = za + (zZiel - za)*e;
     state.x0 = x0a + (xZiel - x0a)*e;
     begrenze(); render();
-    if (p < 1) animId = requestAnimationFrame(tick); else animId = null;
+    if (p < 1){ animId = requestAnimationFrame(tick); }
+    else {
+      animId = null;
+      // Der Zoom verändert die Detailstufe und damit die Spurhöhen. Erst jetzt
+      // steht das endgültige Layout fest – deshalb hier senkrecht nachführen.
+      if (state.auswahl) holeInsBild(state.auswahl, true);
+    }
   }
   animId = requestAnimationFrame(tick);
 }
@@ -4189,6 +4224,7 @@ function waehle(id, ausVerlauf){
   const o = ITEM_VON_ID[id];
   if (!o){ state.auswahl = null; panel.classList.remove('offen'); render(); return; }
   const sp = SPUR_VON_ID[o.s];
+  holeInsBild(id);
   const rein = LINKS.filter(v => v.b === id);
   const raus = LINKS.filter(v => v.a === id);
   let h = '';
@@ -4254,7 +4290,7 @@ function springeZu(id){
   const a = o.a, b = (o.b === undefined || o.b === null) ? o.a : o.b;
   const rand = Math.max(120, (b - a) * 0.6);
   geheZu(a - rand, b + rand);
-  setTimeout(() => waehle(id), 60);
+  setTimeout(() => { waehle(id); holeInsBild(id); }, 60);
 }
 document.getElementById('zu').addEventListener('click', () => waehle(null));
 
@@ -5079,11 +5115,11 @@ state.z = zMin();
 state.x0 = MIN_JAHR;
 begrenze();
 render();
-window.__zl = {state, ITEMS, LINKS, SPUREN, GRUPPEN, CHRONIKEN, CHRONIK_VON_ID, baueChronikIndex, GRAFIKEN,
+window.__zl = {state, ITEMS, LINKS, SPUREN, SPUR_VON_ID, GRUPPEN, CHRONIKEN, CHRONIK_VON_ID, baueChronikIndex, GRAFIKEN,
   alleEinfluesse, gesamtansicht,
   inChronikAnsicht, chronikGruppen,
   zeichneGruppentabs, zeichneSpurleiste, waehleReiter, verlauf, verlaufSpringe, zeigeUebersicht,
-  render, waehle, geheZu, ITEM_VON_ID, suchen, oeffnePi, schliessePi, zeigeChronik,
+  render, waehle, geheZu, holeInsBild, springeZu, baueLayout, maxOffsetY, ITEM_VON_ID, suchen, oeffnePi, schliessePi, zeigeChronik,
   schrittPaar, normal};
 
 /* ============================================================
