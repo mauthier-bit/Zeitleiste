@@ -190,6 +190,8 @@
   .chroniktabs button{font-size:12px}
   .chroniktabs button.aktiv{background:var(--akzent);color:#fff;border-color:var(--akzent)}
   #pichart{display:block;width:100%;height:170px;border:1px solid var(--line);border-radius:10px;background:#fffefb}
+  #retrocanvas{display:block;width:100%;height:300px;border:1px solid var(--line);
+    border-radius:10px;background:#fffefb}
   #skalacanvas{display:block;width:100%;height:190px;border:1px solid var(--line);border-radius:10px;background:#fffefb}
   .skalasteuer{display:flex;align-items:center;gap:8px;margin:8px 0 4px}
   .skalasteuer input[type=range]{flex:1 1 auto;min-width:80px;accent-color:var(--akzent)}
@@ -258,6 +260,9 @@
     -webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
   .hilfebox h2{margin:0 0 10px;font-size:18px}
   .hilfebox h3{font-size:13px;margin:14px 0 4px;color:var(--akzent)}
+  .hilfebox .impressum{font-size:12px;line-height:1.5;color:var(--ink2);
+    margin:0 0 8px;padding-left:2px}
+  .hilfebox .impressum a{color:var(--akzent)}
   .hilfebox ul{margin:0 0 10px;padding-left:20px;font-size:13.5px;line-height:1.55}
   .hilfebox p{font-size:13.5px;line-height:1.5}
   .schluessel{background:var(--bg2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12.5px}
@@ -324,12 +329,49 @@
         <li><b>Wechselwirkungen:</b> Ein ausgewähltes Element zeigt seine Einflusspfeile immer, mit Beschriftung. Die Taste <span class="schluessel">E</span> blendet alle Pfeile der sichtbaren Spuren ein, <span class="schluessel">G</span> setzt auf die Gesamtansicht zurück.</li>
         <li><b>Suchen:</b> Das Feld rechts oben (oder Strg/Cmd + F) durchsucht alle drei Ansichten: Zeitleiste, Chroniken <i>und</i> die Karte mit ihren Orten, Reichen und Wegen. Die Trefferliste ist nach diesen drei Bereichen gegliedert; ein Tipp springt hin. Treffer der Zeitleiste werden dort zusätzlich gelb umrandet.</li>
         <li><b>Zeitachse:</b> Beim Zoomen verfeinert sich das Raster automatisch bis auf einzelne Jahre. Mit der Maus zeigt eine Hilfslinie das Jahr unter dem Zeiger.</li>
-        <li><b>Chroniken:</b> 44 vertiefende Zeittafeln, geordnet nach Mathematik, Physik, Astronomie, Technik und Kontext. Sie erscheinen anstelle der Zeitleiste; der Umschalter links oben wechselt die Ansicht. Einträge mit farbigem Jahr springen in die Zeitleiste zurück.</li>
+        <li><b>Chroniken:</b> 45 vertiefende Zeittafeln, geordnet nach Mathematik, Physik, Astronomie, Technik und Kontext. Sie erscheinen anstelle der Zeitleiste; der Umschalter links oben wechselt die Ansicht. Einträge mit farbigem Jahr springen in die Zeitleiste zurück.</li>
         <li><b>Zurück und Vorwärts:</b> Die Pfeile links oben führen durch die zuletzt besuchten Stationen – Zeitleisten-Elemente <i>und</i> Chroniken gemeinsam (auch Alt + Pfeiltaste). Beim Springen wird die Ansicht auch senkrecht nachgeführt, damit die Spur des Ziels im Bild liegt.</li>
       </ul>
       <h3>Die Idee</h3>
       <p>Hauptstränge sind <b>Mathematik</b> (Zahlen, Geometrie, Algebra, Analysis, Stochastik, Logik) und <b>Physik</b> (Mechanik, Wärmelehre, Elektrodynamik, Relativität, Quantenphysik) sowie die eigenständige <b>Astronomie</b>. Die Kontextspuren – Kulturräume, Weltbild, Instrumente, Gesellschaft – erklären, <i>warum</i> etwas gerade dort und dann entdeckt wurde.</p>
       <p>Besonders lohnend sind die Pfeile zwischen den Strängen: Kegelschnitte (−200) → Keplerbahnen (1609). Riemanns Geometrie (1854) → Allgemeine Relativitätstheorie (1915). Matrizenrechnung (1858) → Heisenberg (1925). Und umgekehrt: Wärmeleitung → Fourierreihen, Ceres-Bahn → Methode der kleinsten Quadrate.</p>
+
+      <h3>Impressum</h3>
+      <p class="impressum">
+        Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG) und § 18 Abs. 2
+        Medienstaatsvertrag (MStV)<br><br>
+        <b>Michael Authier</b><br>
+        Hofweg 3<br>
+        92224 Amberg<br>
+        E-Mail: <a href="mailto:mauthier@web.de">mauthier@web.de</a><br><br>
+        Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV: Michael Authier,
+        Anschrift wie oben.
+      </p>
+      <p class="impressum">
+        <b>Haftung für Inhalte.</b> Die Inhalte wurden mit Sorgfalt erstellt.
+        Für die Richtigkeit, Vollständigkeit und Aktualität kann jedoch keine
+        Gewähr übernommen werden. Als Diensteanbieter bin ich gemäß § 7 Abs. 1
+        DDG für eigene Inhalte nach den allgemeinen Gesetzen verantwortlich;
+        nach §§ 8 bis 10 DDG besteht keine Verpflichtung, übermittelte oder
+        gespeicherte fremde Informationen zu überwachen.
+      </p>
+      <p class="impressum">
+        <b>Urheberrecht.</b> Texte, Daten und Abbildungen dieser Seite
+        unterliegen dem deutschen Urheberrecht. Die Diagramme sind eigens
+        gezeichnete SVG-Grafiken und enthalten kein fremdes Bildmaterial.
+        Eine Nutzung für den eigenen Unterricht ist ausdrücklich erwünscht.
+      </p>
+      <p class="impressum">
+        <b>Datenschutz.</b> Diese Datei läuft vollständig im Browser. Es werden
+        keine Daten erhoben, gespeichert oder an Dritte übertragen; es bestehen
+        keine Verbindungen zu externen Servern und es werden keine Cookies
+        gesetzt.
+      </p>
+      <p class="impressum">
+        <b>Streitbeilegung.</b> Ich bin nicht bereit und nicht verpflichtet,
+        an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
+        teilzunehmen.
+      </p>
     </div>
   </div>
   <div id="karte">
@@ -353,6 +395,17 @@
       <h2 id="pititel">Chronik</h2>
       <p class="pinote" id="pinote"></p>
       <div id="chronikuebersicht"></div>
+      <div id="retro" style="display:none">
+        <canvas id="retrocanvas"></canvas>
+        <div class="skalasteuer">
+          <button id="retroLauf" class="symbolknopf" title="Bewegung starten und anhalten" aria-label="Bewegung starten">▶</button>
+          <button id="retroZurueck" class="symbolknopf" title="Ein Stück zurück" aria-label="zurück">‹</button>
+          <button id="retroVor" class="symbolknopf" title="Ein Stück vor" aria-label="vor">›</button>
+          <input id="retroRegler" type="range" min="0" max="1000" value="0" step="1" aria-label="Zeitpunkt wählen">
+          <span id="retroZeit" class="skalaexp">0,00 J</span>
+        </div>
+        <div class="skalakarte" id="retroText"></div>
+      </div>
       <div id="skalareise" style="display:none">
         <canvas id="skalacanvas"></canvas>
         <div class="skalasteuer">
@@ -430,6 +483,8 @@ const ITEMS = [
 {i:'z_komplex',s:'ma_zahl',t:'Komplexe Zahlen',a:1545,b:1806,r:1,d:'Cardano stolpert beim Lösen kubischer Gleichungen über Wurzeln aus negativen Zahlen; Euler, Gauß und Argand geben ihnen mit der Zahlenebene eine anschauliche Bedeutung. Ohne sie gäbe es keine Wechselstromtechnik und keine Quantenmechanik.'},
 {i:'z_e',s:'ma_zahl',t:'Die Eulersche Zahl e',a:1618,b:1873,r:1,d:'Sie taucht zuerst dort auf, wo niemand eine neue Zahl sucht: bei der Zinseszinsrechnung. Jakob Bernoulli fragt 1683, wohin (1+1/n)^n strebt, wenn immer häufiger verzinst wird – der Grenzwert ist e ≈ 2,71828. Euler gibt ihr 1731 den Namen, berechnet 18 Stellen und zeigt, dass e die einzige Basis ist, bei der die Exponentialfunktion ihre eigene Ableitung ist. Damit wird e zur Naturkonstante jedes Wachstums- und Zerfallsvorgangs.'},
 {i:'z_binaer',s:'ma_zahl',t:'Leibniz: Dualsystem',a:1703,r:2,d:'Nur 0 und 1 – für Leibniz zugleich eine philosophisch-theologische Idee. 240 Jahre später wird daraus die Sprache jedes Computers.'},
+{i:'z_kombinatorik',s:'ma_zahl',t:'Kombinatorik & das Zahlendreieck',a:-200,b:1654,r:1,d:'Dasselbe Dreieck wird viermal unabhängig gefunden: Pingala beschreibt es um −200 in Indien beim Abzählen von Versmaßen, al-Karadschi um 1000 in Bagdad, Yang Hui 1261 in China – deshalb heißt es dort bis heute Yang-Hui-Dreieck –, und Pascal 1654 in Frankreich. Jede Zahl ist die Summe der beiden darüber; darin stecken Binomialkoeffizienten, Fibonacci-Zahlen und die Wahrscheinlichkeiten des Münzwurfs zugleich. Ein Musterbeispiel dafür, dass mathematische Strukturen unabhängig von Kultur und Zeit gefunden werden.',bild:'zahlendreieck'},
+{i:'z_gauss_zahlen',s:'ma_zahl',t:'Gauß: Disquisitiones Arithmeticae',a:1801,b:1801,r:1,d:'Mit 24 Jahren fasst Gauß die Zahlentheorie zu einem Gebäude zusammen und führt die Kongruenzrechnung ein: a ≡ b (mod m) – zwei Zahlen heißen gleich, wenn sie beim Teilen durch m denselben Rest lassen. Damit wird das Rechnen mit Resten zu einer Algebra mit eigenen Regeln. Gauß nennt die Zahlentheorie die Königin der Mathematik und rühmt, dass sie keinerlei Anwendung habe. Hundertfünfzig Jahre später beruht auf genau dieser Kongruenzrechnung die Verschlüsselung jeder Banküberweisung.',bild:'kongruenz'},
 {i:'z_reell',s:'ma_zahl',t:'Konstruktion der reellen Zahlen',a:1872,r:2,d:'Dedekind (Schnitte) und Cantor (Fundamentalfolgen) definieren endlich exakt, was eine reelle Zahl ist – 2300 Jahre nach der Entdeckung der Irrationalität.'},
 {i:'z_transz',s:'ma_zahl',t:'e und π sind transzendent',a:1873,b:1882,r:2,d:'Hermite und Lindemann beweisen: π ist keine Lösung irgendeiner algebraischen Gleichung. Damit ist die Quadratur des Kreises endgültig unmöglich.'},
 {i:'z_primzahlen',s:'ma_zahl',t:'Primzahlen',a:-300,b:2025,r:1,d:'Die Bausteine aller Zahlen – und zugleich das größte ungelöste Rätsel der Mathematik. Im Kleinen wirken sie zufällig verstreut, im Großen folgt ihre Häufigkeit einem klaren Gesetz. Zwei Dinge machen sie besonders: Euklids Beweis ihrer Unendlichkeit gilt vielen als der schönste der Mathematik, und ausgerechnet die als „nutzlos“ gerühmte Zahlentheorie sichert heute jede Banküberweisung. Öffne die Chronik der Primzahlen.'},
@@ -452,6 +507,7 @@ const ITEMS = [
 {i:'g_liuhui',s:'ma_geo',t:'Liu Hui & Zu Chongzhi: π',a:263,b:480,r:2,d:'Mit einem 3072-Eck erreicht Liu Hui fünf, Zu Chongzhi schließlich sieben korrekte Stellen von π – ein Rekord, den Europa erst 1000 Jahre später einholt.'},
 {i:'g_aryabhata',s:'ma_geo',t:'Aryabhata: Sinustafeln',a:499,r:2,d:'Indische Astronomen ersetzen die griechischen Sehnentafeln durch Halbsehnen – daraus wird über das Arabische unser Wort „Sinus“.'},
 {i:'g_trigo',s:'ma_geo',t:'Trigonometrie in der islamischen Welt',a:850,b:1050,r:2,d:'Al-Battani und Abu l-Wafa entwickeln die sechs Winkelfunktionen und sphärische Trigonometrie – gebraucht für Gebetsrichtung, Kalender und Astronomie.'},
+{i:'g_triangulation',s:'ma_geo',t:'Landesvermessung durch Triangulation',a:1615,b:1900,r:1,d:'Snellius misst 1615 in den Niederlanden erstmals ein ganzes Land durch ein Netz aneinandergrenzender Dreiecke: Eine einzige Strecke wird genau ausgemessen, alles Weitere folgt aus Winkeln. Cassini kartiert damit ab 1670 Frankreich – und stellt fest, dass das Land kleiner ist als gedacht; „der König verliert mehr Gebiet an die Astronomen als an seine Feinde“. Die britische Great Trigonometrical Survey vermisst ab 1802 Indien über siebzig Jahre und bestimmt 1852 die Höhe des Everest. Gauß leitet ab 1818 die Hannoversche Landesvermessung; aus der Frage, wie sich gekrümmte Flächen vermessen lassen, entwickelt er die Differentialgeometrie – reine Mathematik aus einem Vermessungsauftrag.'},
 {i:'g_perspektive',s:'ma_geo',t:'Zentralperspektive',a:1420,b:1525,r:1,d:'Brunelleschi, Alberti und Dürer entwickeln die geometrische Konstruktion des Sehens. Kunst wird angewandte Mathematik – und aus dieser Praxis wächst die projektive Geometrie.'},
 {i:'g_descartes',s:'ma_geo',t:'Descartes: Analytische Geometrie',a:1637,r:1,d:'Punkte werden Zahlenpaare, Kurven werden Gleichungen. Geometrie und Algebra verschmelzen – die Voraussetzung dafür, dass Physik überhaupt in Formeln geschrieben werden kann.'},
 {i:'g_desargues',s:'ma_geo',t:'Desargues: Projektive Geometrie',a:1639,r:3,d:'Geometrie, in der Parallelen sich im Unendlichen schneiden – aus der Perspektivkunst der Maler wird eine eigene Theorie.'},
@@ -475,6 +531,7 @@ const ITEMS = [
 {i:'a_fundamental',s:'ma_alg',t:'Gauß: Fundamentalsatz der Algebra',a:1799,r:1,d:'Jede Polynomgleichung n-ten Grades hat genau n komplexe Lösungen. Die komplexen Zahlen erweisen sich als der „richtige“ Zahlbereich der Algebra.'},
 {i:'a_galois',s:'ma_alg',t:'Abel & Galois: Unlösbarkeit & Gruppen',a:1824,b:1832,r:1,d:'Ab Grad fünf gibt es keine allgemeine Lösungsformel mehr. Der 20-jährig im Duell getötete Galois beantwortet das Warum mit einem völlig neuen Werkzeug: der Gruppentheorie.'},
 {i:'a_hamilton_q',s:'ma_alg',t:'Hamilton: Quaternionen',a:1843,r:3,d:'Eine Zahlbereichserweiterung, in der a·b ≠ b·a gilt. Heute rechnet jede 3D-Grafik damit.'},
+{i:'a_vektoren',s:'ma_alg',t:'Vektorrechnung',a:1844,b:1901,r:1,d:'Grassmann veröffentlicht 1844 seine Ausdehnungslehre – so abstrakt geschrieben, dass sie fast niemand liest. Hamilton entwickelt parallel die Quaternionen. Erst Gibbs und Heaviside destillieren daraus in den 1880er Jahren die heutige Vektorrechnung mit Skalar- und Kreuzprodukt, weil sie für Maxwells Gleichungen eine handliche Schreibweise brauchen. 1901 erscheint das erste Lehrbuch. Ein Beispiel dafür, dass sich nicht die allgemeinste, sondern die brauchbarste Fassung durchsetzt: Maxwells zwanzig Gleichungen schrumpfen in Vektorschreibweise auf vier.',bild:'vektoren'},
 {i:'a_matrizen',s:'ma_alg',t:'Matrizen & lineare Algebra',a:1858,b:1900,r:2,d:'Cayley und Sylvester machen aus Zahlenschemata rechenbare Objekte – die Sprache, in der später Quantenmechanik und jede Computergrafik formuliert werden.'},
 {i:'a_lie',s:'ma_alg',t:'Lie: kontinuierliche Symmetriegruppen',a:1873,b:1890,r:2,d:'Symmetrie wird selbst zum mathematischen Objekt. Im 20. Jh. wird sie zum Bauprinzip der gesamten Teilchenphysik.'},
 {i:'a_noether',s:'ma_alg',t:'Emmy Noether: Symmetrie ⇔ Erhaltungssatz',a:1918,r:1,d:'Zu jeder kontinuierlichen Symmetrie gehört eine Erhaltungsgröße: Zeitverschiebung → Energie, Ortsverschiebung → Impuls, Drehung → Drehimpuls. Der tiefste Brückenschlag zwischen Mathematik und Physik.'},
@@ -512,6 +569,7 @@ const ITEMS = [
 {i:'s_laplace',s:'ma_sto',t:'Laplace: Théorie analytique des probabilités',a:1812,r:1,d:'Er systematisiert die gesamte Wahrscheinlichkeitsrechnung und wendet sie auf Astronomie, Bevölkerung und Rechtsprechung an – zugleich Vertreter eines streng deterministischen Weltbilds.'},
 {i:'s_quetelet',s:'ma_sto',t:'Quetelet: Statistik über Menschen',a:1835,r:3,d:'Der „mittlere Mensch“: Körpergrößen und Verbrechensraten folgen Verteilungen. Statistik wird zum Werkzeug der Gesellschaftswissenschaft.'},
 {i:'s_maxwellboltz',s:'ma_sto',t:'Maxwell & Boltzmann: statistische Physik',a:1860,b:1877,r:1,d:'Statt jedes Teilchen zu verfolgen, beschreibt man Verteilungen. Erstmals wird ein Naturgesetz – der zweite Hauptsatz – als Wahrscheinlichkeitsaussage verstanden.'},
+{i:'s_spieltheorie',s:'ma_sto',t:'Spieltheorie',a:1928,b:1944,r:1,d:'Von Neumann beweist 1928 den Minimax-Satz: In jedem Nullsummenspiel zweier Personen gibt es eine optimale Strategie. 1944 folgt mit Morgenstern das Buch, das die Mathematik in die Wirtschaftswissenschaft trägt. Nash erweitert das 1950 auf Spiele ohne Nullsumme – sein Gleichgewichtsbegriff beschreibt Situationen, in denen niemand allein besser aussteigt, obwohl alle zusammen besser könnten. Im Kalten Krieg wird daraus Abschreckungstheorie; heute reicht die Anwendung von Auktionen bis zur Evolutionsbiologie.'},
 {i:'s_fisher',s:'ma_sto',t:'Fisher: moderne Testtheorie',a:1925,r:2,d:'Versuchsplanung, Signifikanz, Varianzanalyse – entstanden in der Agrarforschung, heute Standard in Medizin, Psychologie und Qualitätskontrolle.'},
 {i:'s_kolmogorow',s:'ma_sto',t:'Kolmogorow: Axiome der Wahrscheinlichkeit',a:1933,r:1,d:'Wahrscheinlichkeit wird als Maß definiert. Erst damit ist die Stochastik ein vollwertiges Teilgebiet der Mathematik – 280 Jahre nach Pascal und Fermat.'},
 {i:'s_montecarlo',s:'ma_sto',t:'Monte-Carlo-Methoden',a:1946,r:2,d:'Am Kernforschungslabor Los Alamos wird der Zufall zum Rechenwerkzeug: Was analytisch unlösbar ist, wird durchgewürfelt – heute Standard von Teilchenphysik bis Finanzmathematik.'},
@@ -545,6 +603,11 @@ const ITEMS = [
 {i:'p_merton',s:'ph_mech',t:'Merton-Regel & Oresmes Diagramme',a:1350,r:2,d:'Gleichmäßig beschleunigte Bewegung wird korrekt beschrieben – graphisch bewiesen an der Universität Oxford und in Paris, lange vor jedem Experiment.'},
 {i:'p_stevin',s:'ph_mech',t:'Stevin: Kräfteparallelogramm',a:1586,r:3,d:'Kräfte werden als gerichtete Größen addiert – und ein Fallversuch zeigt schon vor Galilei, dass unterschiedlich schwere Kugeln gleich schnell fallen.'},
 {i:'p_galilei',s:'ph_mech',t:'Galilei: Fallgesetz, Trägheit, Wurfparabel',a:1590,b:1638,r:1,d:'Er misst statt zu spekulieren (schiefe Ebene, Wasseruhr), findet s ~ t², das Trägheitsprinzip und die Unabhängigkeit von waagrechter und senkrechter Bewegung. Das Buch der Natur, sagt er, sei in mathematischen Zeichen geschrieben.',bild:'fallgesetz'},
+{i:'p_schall',s:'ph_mech',t:'Schall & Akustik',a:-530,b:2025,r:2,d:'Pythagoras findet, dass zusammenklingende Saiten einfache Längenverhältnisse haben – 2:1 die Oktave, 3:2 die Quinte. Damit ist erstmals eine Sinneswahrnehmung auf Zahlen zurückgeführt, für die Pythagoreer der Beweis, dass die Welt aus Zahl besteht. Dass Schall eine Welle in Luft ist, zeigt sich erst 1660: Boyle lässt eine Glocke im Vakuum läuten – man sieht den Klöppel, hört aber nichts. Anders als Licht braucht Schall ein Trägermedium. Diese Unterscheidung wird später beim Äther entscheidend.'},
+{i:'p_mersenne',s:'ph_mech',t:'Mersenne misst die Schallgeschwindigkeit',a:1636,b:1636,r:1,d:'Mit Echo und Pendeluhr bestimmt Mersenne rund 450 m/s – etwa dreißig Prozent zu hoch, aber erstmals eine Zahl. Er findet auch die Saitengesetze: Die Frequenz wächst mit der Wurzel der Spannung und fällt mit Länge und Wurzel der Massenbelegung. 1738 misst die Pariser Akademie mit Kanonenschüssen über 29 km schon 332 m/s. Newton berechnet den Wert theoretisch zu niedrig, weil er die Schallausbreitung für isotherm hält; erst Laplace korrigiert das 1816 mit dem adiabatischen Faktor.'},
+{i:'p_chladni',s:'ph_mech',t:'Chladnis Klangfiguren',a:1787,b:1787,r:1,d:'Sand auf einer gestrichenen Metallplatte sammelt sich dort, wo die Platte in Ruhe bleibt – die Knotenlinien werden sichtbar. Eine Schwingung, die man sonst nur hört, wird zum Bild. Chladni führt das an europäischen Höfen vor, Napoleon lässt seine Schrift übersetzen. Für die Physik ist es der Beginn der Erforschung stehender Wellen in Flächen; für den Unterricht bis heute eines der überzeugendsten Experimente.'},
+{i:'p_doppler',s:'ph_mech',t:'Doppler-Effekt',a:1842,b:1842,r:1,d:'Bewegt sich eine Quelle auf uns zu, treffen die Wellenberge dichter ein – die Frequenz steigt; entfernt sie sich, sinkt sie. Doppler entwickelt das in Prag am Beispiel des Lichts von Doppelsternen. Buys Ballot prüft es 1845, indem er Trompeter auf einen fahrenden Eisenbahnwagen setzt und andere Musiker am Gleis den Ton bestimmen lässt – erstmals wird die Eisenbahn zum Messgerät. Die Folgen reichen weit: Rotverschiebung als Grundlage der Expansion des Universums, Radarmessung, Ultraschalldiagnostik und die Entdeckung von Exoplaneten über die Taumelbewegung ihrer Sterne.',bild:'doppler'},
+{i:'p_schwingung',s:'ph_mech',t:'Schwingung & Resonanz',a:1602,b:1940,r:1,d:'Galilei bemerkt 1602, dass die Schwingungsdauer eines Pendels nicht von der Auslenkung abhängt – die Grundlage der Pendeluhr. Wird ein schwingungsfähiges System mit seiner Eigenfrequenz angeregt, wachsen die Ausschläge auf ein Vielfaches: Resonanz. Das trägt jeden Musikinstrumentenkörper und jeden Schwingkreis im Radio, kann aber auch zerstören – die Tacoma-Narrows-Brücke bricht 1940 bei mäßigem Wind, weil sich Wirbelablösung und Eigenschwingung aufschaukeln. Marschierende Truppen brechen aus demselben Grund über Brücken den Gleichschritt.',bild:'resonanz'},
 {i:'p_torricelli',s:'ph_mech',t:'Torricelli: Luftdruck & Barometer',a:1643,r:1,d:'Eine oben geschlossene Quecksilbersäule fällt auf 76 cm und bleibt dort stehen – darüber ist nichts. Torricelli erklärt das mit dem Gewicht der Luft und erzeugt nebenbei das erste dauerhafte Vakuum. Pascal lässt 1648 das Barometer auf einen Berg tragen: Oben steht die Säule niedriger, wie vorhergesagt. Damit ist die Luft ein wägbarer Stoff und das Vakuum möglich – gegen Aristoteles gleich zweifach.'},
 {i:'p_huygens',s:'ph_mech',t:'Huygens: Pendel, Zentripetalkraft, Stoßgesetze',a:1656,b:1673,r:1,d:'Die Pendeluhr macht Zeitmessung auf Sekunden genau – und liefert damit dem Experiment das entscheidende Werkzeug. Dazu Kreisbewegung und elastischer Stoß mathematisch exakt.'},
 {i:'p_newton',s:'ph_mech',t:'Newton: „Principia“ – Axiome & Gravitation',a:1687,r:1,d:'Drei Axiome und ein Gravitationsgesetz erklären Fall, Wurf, Pendel, Gezeiten und Planetenbahnen mit denselben Formeln. Himmel und Erde gehorchen erstmals einer einzigen Physik.'},
@@ -598,6 +661,7 @@ const ITEMS = [
 {i:'e_hertz',s:'ph_em',t:'Hertz: Nachweis der Radiowellen',a:1887,r:1,d:'Im Karlsruher Hörsaal springt ein Funke über – Maxwells Vorhersage ist bestätigt. Hertz selbst hält es für praktisch nutzlos; zehn Jahre später funkt Marconi über den Atlantik.'},
 {i:'e_michelson',s:'ph_em',t:'Michelson-Morley: kein Ätherwind',a:1887,r:1,d:'Das genaueste Experiment seiner Zeit findet keinen Unterschied der Lichtgeschwindigkeit in Bewegungsrichtung. Ein Nullresultat, das die klassische Physik ins Wanken bringt.'},
 {i:'e_elektron',s:'ph_em',t:'Thomson: das Elektron',a:1897,r:1,d:'Kathodenstrahlen bestehen aus Teilchen, 2000-mal leichter als das leichteste Atom. Das Atom ist doch teilbar.'},
+{i:'e_photovoltaik',s:'ph_em',t:'Photovoltaik',a:1839,b:1976,r:1,d:'Der 19-jährige Alexandre Becquerel beobachtet 1839, dass zwischen belichteten Elektroden eine Spannung entsteht. Erklärbar wird das erst durch Einsteins Lichtquantenhypothese von 1905. Praktisch nutzbar wird es 1954 in den Bell-Laboratorien: eine Siliziumzelle mit sechs Prozent Wirkungsgrad, zunächst hundertmal zu teuer für Stromerzeugung – ihr erster Markt ist die Raumfahrt, wo es keine Alternative gibt. Was fehlt, ist billiges Material: Das Czochralski-Verfahren zieht Einkristalle langsam aus der Schmelze – hervorragend für Mikroelektronik, viel zu aufwendig für Stromerzeugung. Den Ausweg findet Mitte der 1970er Jahre Bernhard Authier bei der Wacker-Chemitronic in Burghausen: Silizium wird in einer Form gerichtet erstarrt, statt gezogen. Es entsteht kein Einkristall, sondern ein Block aus vielen säulenförmigen Kristalliten – polykristallines Silizium, unter dem Namen SILSO vermarktet. Die Korngrenzen kosten etwas Wirkungsgrad, das Verfahren spart aber ein Vielfaches an Energie und Zeit. Aus dem gegossenen Block lassen sich zudem quadratische Scheiben sägen, die sich lückenlos zum Modul fügen – runde Einkristallscheiben können das nicht. Multikristallines Silizium wird dadurch jahrzehntelang das meistverwendete Solarzellenmaterial. Heute liegen Siliziumzellen bei über zwanzig Prozent; die theoretische Grenze einer Einfachzelle liegt bei rund 33 Prozent, weil Photonen unterhalb der Bandlücke nicht wirken und der Überschuss darüber als Wärme verloren geht.',bild:'photovoltaik'},
 {i:'e_halbleiter',s:'ph_em',t:'Halbleiter, Transistor & Mikroelektronik',a:1947,b:2000,r:2,d:'Quantenmechanik der Festkörper wird zur Technik: Der Transistor ersetzt die Elektronenröhre und ermöglicht Computer, Handy und Solarzelle.'},
 {i:'e_laser',s:'ph_em',t:'Laser',a:1960,r:2,d:'Einsteins Idee der stimulierten Emission von 1917 wird Gerät. Kohärentes Licht revolutioniert Messtechnik, Medizin, Datenübertragung und Astronomie.'},
 
@@ -625,6 +689,7 @@ const ITEMS = [
 {i:'q_photoeffekt',s:'ph_qm',t:'Einstein: Lichtquanten & Photoeffekt',a:1905,r:1,d:'Licht verhält sich beim Herauslösen von Elektronen wie ein Strom von Teilchen. Für genau diese Arbeit – nicht für die Relativitätstheorie – erhält Einstein den Nobelpreis.'},
 {i:'q_roentgen',s:'ph_qm',t:'Röntgen: eine neue Art von Strahlen',a:1895,r:1,d:'Beim Arbeiten mit einer Kathodenstrahlröhre leuchtet ein Schirm auf, der abgedeckt ist. Innerhalb weniger Wochen geht das Bild einer durchleuchteten Hand um die Welt – Physik verändert die Medizin schneller als je zuvor. Was die Strahlen sind, bleibt 17 Jahre offen.'},
 {i:'q_radioaktiv',s:'ph_qm',t:'Radioaktivität (Becquerel, Marie & Pierre Curie)',a:1896,b:1911,r:1,d:'Becquerel findet 1896, dass Uransalze von selbst strahlen – ohne Anregung von außen. Marie Curie prägt den Begriff Radioaktivität, isoliert unter körperlich harten Bedingungen Polonium und Radium und erhält als erster Mensch zwei Nobelpreise in zwei Fächern. Die Energie kommt aus dem Atom selbst – der erste Hinweis, dass es eine innere Struktur haben muss. Ihre Präparate liefern zugleich die Alphateilchen für Rutherfords Streuversuch.'},
+{i:'q_brown',s:'ph_qm',t:'Brownsche Bewegung: Atome werden nachweisbar',a:1905,b:1908,r:1,d:'Seit 1827 kennt man das Zittern von Pollen in Wasser, ohne es zu erklären. Einstein zeigt 1905, dass es von Stößen der Wassermoleküle stammt, und berechnet, wie weit ein Teilchen in einer bestimmten Zeit im Mittel wandert – eine prüfbare Zahl. Perrin misst das 1908 nach und bestimmt daraus die Avogadro-Konstante. Damit ist die Atomhypothese keine Annahme mehr, sondern belegt; Ostwald und Mach, die Atome für Rechenhilfen gehalten hatten, geben ihren Widerstand auf. Dieselbe Rechnung beschreibt heute Diffusion und Wärmeleitung.',bild:'brown'},
 {i:'q_rutherford',s:'ph_qm',t:'Rutherford: der Atomkern',a:1911,r:1,d:'Alphateilchen prallen an Goldfolie zurück – „so unwahrscheinlich, als hätte man eine Granate auf Seidenpapier geschossen“. Das Atom ist fast leer, seine Masse steckt im winzigen Kern.',bild:'atommodelle'},
 {i:'q_bohr',s:'ph_qm',t:'Bohr: Atommodell mit Quantenbahnen',a:1913,r:1,d:'Erlaubte Bahnen und Quantensprünge erklären erstmals die Spektrallinien des Wasserstoffs quantitativ. Ein widersprüchliches Zwischenmodell, das trotzdem funktioniert.'},
 {i:'q_korrespondenz',s:'ph_qm',t:'Korrespondenzprinzip: der Grenzfall h → 0',a:1920,r:1,d:'Bohr fordert: Für große Quantenzahlen müssen die Formeln der Quantentheorie in die der klassischen Physik übergehen. Formal betrachtet man den Grenzübergang h → 0 – gemeint ist, dass h gegenüber den beteiligten Wirkungen verschwindend klein wird. Beim Elektron im Atom ist h entscheidend, beim Pendel im Hörsaal ist die Wirkung 10³⁰-mal größer als h. Deshalb war die klassische Physik nie falsch, sondern der Grenzfall großer Wirkungen.'},
@@ -664,13 +729,14 @@ const ITEMS = [
 {i:'as_newtongrav',s:'as_astro',t:'Newton erklärt Keplers Gesetze',a:1687,r:1,d:'Aus dem 1/r²-Gesetz folgen die Ellipsenbahnen mathematisch zwingend. Astronomie wird zum Anwendungsfall der Mechanik – Himmelsmechanik entsteht.'},
 {i:'as_halley',s:'as_astro',t:'Halley: Vorhersage der Kometenwiederkehr',a:1705,b:1758,r:2,d:'Er sagt die Rückkehr für 1758 voraus – 16 Jahre nach seinem Tod erscheint der Komet. Ein spektakulärer Beleg für die Vorhersagekraft der neuen Physik.'},
 {i:'as_herschel',s:'as_astro',t:'Herschel: Uranus & Aufbau der Milchstraße',a:1781,b:1800,r:2,d:'Der erste seit der Antike neu entdeckte Planet – gefunden mit selbstgebauten Spiegelteleskopen. Herschel beginnt, die Struktur unseres Sternsystems zu vermessen.'},
+{i:'as_ceres',s:'as_astro',t:'Ceres: eine Bahn aus drei Punkten',a:1801,b:1801,r:1,d:'Piazzi entdeckt am Neujahrstag 1801 einen Himmelskörper zwischen Mars und Jupiter, kann ihn aber nur 41 Tage verfolgen, bevor er hinter der Sonne verschwindet. Alle Suchversuche scheitern. Der 24-jährige Gauß berechnet aus den wenigen Beobachtungen die vollständige Bahn – mit einem neuen Verfahren, das später als Methode der kleinsten Quadrate bekannt wird. Ein Jahr später wird Ceres genau dort wiedergefunden, wo er es vorhergesagt hatte. Der Fall macht Gauß mit einem Schlag berühmt und zeigt exemplarisch, was Mathematik für die Astronomie leistet: aus drei Punkten eine ganze Bahn.',bild:'ceres'},
 {i:'as_neptun',s:'as_astro',t:'Neptun – am Schreibtisch entdeckt',a:1846,r:1,d:'Aus Bahnstörungen des Uranus berechnen Le Verrier und Adams die Position eines unbekannten Planeten. Das Teleskop findet ihn in derselben Nacht, 1° neben der Vorhersage – der größte Triumph der Newtonschen Mechanik.'},
 {i:'as_parallaxe',s:'as_astro',t:'Bessel: die erste Sternparallaxe',a:1838,b:1838,r:1,d:'Seit Aristarch war der stärkste Einwand gegen die Erdbewegung, dass sich die Sterne im Jahreslauf nicht verschieben. Bessel misst diese Verschiebung endlich: 0,3 Bogensekunden bei 61 Cygni – der Winkel, unter dem eine Ein-Euro-Münze in 15 Kilometern Entfernung erscheint. Daraus folgt eine Entfernung von elf Lichtjahren. Der antike Einwand war also berechtigt und der Effekt vorhanden; er war nur zweitausend Jahre lang zu klein zum Messen. Zugleich wird damit die erste Sprosse der kosmischen Entfernungsleiter geeicht.'},
 {i:'as_spektral',s:'as_physik',t:'Spektralanalyse: Woraus Sterne bestehen',a:1814,b:1868,r:1,d:'Fraunhofer entdeckt dunkle Linien im Sonnenspektrum, Kirchhoff und Bunsen deuten sie als Fingerabdrücke chemischer Elemente. Was der Philosoph Comte 1835 für ewig unerkennbar erklärte, ist damit messbar.'},
 {i:'as_leavitt',s:'as_astro',t:'Leavitt: Cepheiden als Entfernungsmaß',a:1912,r:2,d:'Aus der Perioden-Leuchtkraft-Beziehung wird der erste zuverlässige Maßstab für kosmische Entfernungen – die Voraussetzung für alles Folgende.'},
 {i:'as_sternnatur',s:'as_physik',t:'Woraus besteht der Himmel?',a:-350,b:1835,r:2,d:'Aristoteles erklärt die Himmelskörper aus einem fünften Element, das weder entsteht noch vergeht – deshalb gilt der Himmel als unveränderlich. Tychos Supernova von 1572 widerlegt das. Der Philosoph Comte erklärt 1835 die stoffliche Zusammensetzung der Sterne für prinzipiell unerforschbar – 24 Jahre bevor die Spektralanalyse sie beantwortet. Die Astrophysik beginnt dort, wo man aufhört, den Himmel für andersartig zu halten.'},
 {i:'as_hrd',s:'as_physik',t:'Hertzsprung-Russell-Diagramm',a:1913,r:3,d:'Leuchtkraft gegen Temperatur aufgetragen ordnet die Sterne – und wird zur Landkarte der Sternentwicklung.'},
-{i:'as_weltbilder',s:'as_kosmo',t:'Frühe Weltbilder',a:-600,b:1750,r:2,d:'Scheibe im Ozean, Sphärenschalen, ein Kosmos mit Rand und Mittelpunkt: Jede Kultur denkt sich den Bau des Ganzen. Giordano Bruno postuliert 1584 unendlich viele Welten, Thomas Digges zeichnet 1576 erstmals ein Sternenmeer ohne Außenwand. Kosmologie ist bis ins 19. Jahrhundert Philosophie – messbar wird sie erst mit Entfernungen und Rotverschiebung.'},
+{i:'as_weltbilder',s:'as_kosmo',t:'Frühe Weltbilder',a:-600,b:1750,r:2,d:'Scheibe im Ozean, Sphärenschalen, ein Kosmos mit Rand und Mittelpunkt: Jede Kultur denkt sich den Bau des Ganzen. Auffällig war überall dasselbe: Fast alle Lichtpunkte stehen fest zueinander, doch fünf wandern zwischen ihnen umher. Die Griechen nannten sie planḗtai astéres, umherirrende Sterne – daher unser Wort Planet, im Deutschen früher Wandelstern. Giordano Bruno postuliert 1584 unendlich viele Welten, Thomas Digges zeichnet 1576 erstmals ein Sternenmeer ohne Außenwand. Kosmologie ist bis ins 19. Jahrhundert Philosophie – messbar wird sie erst mit Entfernungen und Rotverschiebung.'},
 {i:'as_hubble',s:'as_kosmo',t:'Hubble: Galaxien & Expansion',a:1924,b:1929,r:1,d:'Die „Nebel“ sind eigene Milchstraßensysteme, und je weiter sie entfernt sind, desto schneller entfernen sie sich. Das Universum hat eine Geschichte.'},
 {i:'as_urknall',s:'as_kosmo',t:'Lemaître: das Uranfangsatom',a:1927,r:1,d:'Ein belgischer Priester und Physiker leitet aus Einsteins Gleichungen ein expandierendes Universum ab und denkt es zurück bis zu einem Anfang. Der Spottname „Big Bang“ stammt von einem Gegner der Theorie.'},
 {i:'as_fusion',s:'as_physik',t:'Bethe: Kernfusion in Sternen',a:1939,r:2,d:'Wasserstoff verschmilzt zu Helium – endlich ist geklärt, warum die Sonne seit Milliarden Jahren scheint. Kernphysik beantwortet die älteste astronomische Frage.'},
@@ -816,7 +882,6 @@ const LINKS = [
 {a:'in_schrift',b:'z_sexa',t:'Dauerhafte Aufzeichnung ermöglicht Stellenwertrechnung'},
 {a:'gl_himmel',b:'as_babtag',t:'Himmelsdeutung als Priesterpflicht → 1500 Jahre Messreihen'},
 {a:'z_sexa',b:'as_babtag',t:'Bequemes Bruchrechnen für Winkel und Zeiten'},
-{a:'as_babtag',b:'z_sexa',t:'Winkel- und Zeitmaß in 60er-Schritten bis heute'},
 {a:'a_babquad',b:'z_sexa',t:'Rechenverfahren im Sexagesimalsystem'},
 {a:'ku_aeg',b:'g_aegverm',t:'Nilflut zwingt zur jährlichen Neuvermessung'},
 {a:'g_aegverm',b:'z_aegbruch',t:'Vermessung und Verteilung erfordern Bruchrechnung'},
@@ -1019,7 +1084,6 @@ const LINKS = [
 {a:'p_foucault',b:'as_kopernikus',t:'Die Erddrehung wird im Hörsaal sichtbar'},
 {a:'as_weltbilder',b:'as_ptolem',t:'Das geozentrische Modell wird rechenfähig'},
 {a:'g_eudoxos',b:'as_ptolem',t:'Sphärenmodelle als Vorläufer der Epizykel'},
-{a:'as_tycho',b:'as_kopernikus',t:'Tychos Zwischenmodell: Planeten um die Sonne, Sonne um die Erde'},
 {a:'as_kopernikus',b:'as_tycho',t:'Streitfrage motiviert Präzisionsmessung'},
 {a:'as_tycho',b:'as_kepler',t:'8 Bogenminuten Abweichung erzwingen die Ellipse'},
 {a:'g_apollon',b:'as_kepler',t:'Kegelschnitte liefern die passende Kurve'},
@@ -1065,7 +1129,6 @@ const LINKS = [
 {a:'w_energie',b:'w_entropie',t:'Erster und zweiter Hauptsatz ergänzen sich'},
 {a:'w_entropie',b:'w_boltzmann',t:'Statistische Deutung der Entropie'},
 {a:'s_maxwellboltz',b:'w_boltzmann',t:'Verteilungen statt Einzelbahnen'},
-{a:'w_boltzmann',b:'s_maxwellboltz',t:'Naturgesetz als Wahrscheinlichkeitsaussage'},
 {a:'an_fourier',b:'w_klima',t:'Wärmeleitungsrechnung führt zum Treibhauseffekt'},
 {a:'w_klima',b:'an_numerik',t:'Klimamodelle als Großsimulation'},
 {a:'an_fourier',b:'e_maxwell',t:'Wellenzerlegung als Standardwerkzeug der Feldtheorie'},
@@ -1082,7 +1145,6 @@ const LINKS = [
 {a:'a_matrizen',b:'e_maxwell',t:'Vektor- und Matrizenschreibweise ordnet die Gleichungen'},
 {a:'in_spektro',b:'as_spektral',t:'Zerlegtes Licht wird dauerhaft aufgezeichnet'},
 {a:'as_spektral',b:'q_bohr',t:'Spektrallinien sind die zu erklärenden Daten'},
-{a:'g_riemann',b:'g_nichteukl',t:'Verallgemeinerung auf beliebige Krümmung'},
 {a:'g_nichteukl',b:'l_hilbert',t:'Axiome sind wählbar, nicht vorgegeben'},
 
 /* --- 20. Jahrhundert --- */
@@ -1173,9 +1235,99 @@ const LINKS = [
 {a:'in_verkehr',b:'w_quellen',t:'Die mitführbare Energiedichte begrenzt die Reichweite'},
 {a:'q_kernenergie',b:'in_kernkraft',t:'Vom Reaktor zum Kraftwerk'},
 {a:'in_kernkraft',b:'w_quellen',t:'Grundlast ohne Verbrennung – mit ungelöster Endlagerfrage'},
+{a:'as_megalith',b:'as_aegkal',t:'Beobachtung wird zum Kalender'},
+{a:'as_china',b:'as_tycho',t:'Chinesische Chroniken überliefern Sternexplosionen'},
+{a:'er_seevoelker',b:'in_wasserrad',t:'Nach dem Zusammenbruch verbreitet sich Eisen und einfache Technik neu'},
+{a:'e_bernstein',b:'e_gilbert',t:'Von der Kuriosität zur systematischen Untersuchung'},
+{a:'e_gilbert',b:'e_coulomb',t:'Magnetismus wird messbar'},
+{a:'g_probleme',b:'a_galois',t:'Erst die Gruppentheorie zeigt die Unmöglichkeit'},
+{a:'w_element',b:'w_rumford',t:'Vom Stoff zur Bewegung'},
+{a:'e_antikoptik',b:'e_alhazen',t:'Ibn al-Haitham prüft die antike Optik experimentell'},
+{a:'p_heron',b:'in_dampf',t:'Die Dampfkugel bleibt Spielzeug – 1700 Jahre zu früh'},
+{a:'z_maya',b:'z_null',t:'Die Null unabhängig ein zweites Mal gefunden'},
+{a:'ku_maya',b:'z_maya',t:'Kalenderrechnung verlangt ein Nullzeichen'},
+{a:'a_diophant',b:'a_alkhwarizmi',t:'Vorlage für die arabische Algebra'},
+{a:'a_diophant',b:'l_wiles',t:'Fermat notiert seine Vermutung an den Rand des Diophant'},
+{a:'g_liuhui',b:'z_pi',t:'Ein früher Näherungswert von hoher Genauigkeit'},
+{a:'a_chayyam',b:'a_cardano',t:'Von der geometrischen zur algebraischen Lösung'},
+{a:'an_kerala',b:'an_infinitesimal',t:'Unendliche Reihen zweihundert Jahre vor Europa'},
+{a:'z_dezbruch',b:'ge_revolution',t:'Dezimalschreibweise als Grundlage des metrischen Systems'},
+{a:'s_cardano',b:'s_pascalfermat',t:'Erste systematische Behandlung des Glücksspiels'},
+{a:'p_stevin',b:'p_newton',t:'Kräfte addieren sich wie Strecken'},
+{a:'an_cavalieri',b:'an_infinitesimal',t:'Indivisiblen als Vorstufe des Integrals'},
+{a:'in_rechen',b:'in_computer',t:'Vom mechanischen Rechnen zur Maschine'},
+{a:'s_huygens',b:'s_bernoulli',t:'Der Erwartungswert wird zum Grundbegriff'},
+{a:'e_newtonoptik',b:'e_spektrum',t:'Das Spektrum als Ordnung des Lichts'},
+{a:'e_newtonoptik',b:'as_spektral',t:'Fraunhofer findet Linien im Sonnenspektrum'},
+{a:'e_newtonoptik',b:'in_fernrohr',t:'Farbfehler der Linsen führen zum Spiegelteleskop'},
+{a:'l_leibniz',b:'l_boole',t:'Der Traum vom Kalkül des Denkens'},
+{a:'r_absolut',b:'p_mach',t:'Machs Kritik am absoluten Raum'},
+{a:'an_streit',b:'ku_akademien',t:'Der Streit spaltet die europäische Mathematik'},
+{a:'g_euler_top',b:'g_fraktal',t:'Neue Begriffe von Form und Dimension'},
+{a:'p_hydro',b:'in_verkehr',t:'Strömungslehre für Schiff und Flugzeug'},
+{a:'as_herschel',b:'as_hubble',t:'Von der Milchstraße zu den Galaxien'},
+{a:'as_herschel',b:'e_spektrum',t:'Herschel entdeckt die Infrarotstrahlung'},
+{a:'q_dalton',b:'q_demokrit',t:'Demokrits Idee wird chemisch prüfbar'},
+{a:'q_dalton',b:'q_rutherford',t:'Vom unteilbaren Atom zum Kern'},
+{a:'e_ohm',b:'e_chronik',t:'Grundgesetz jeder Schaltung'},
+{a:'s_quetelet',b:'s_fisher',t:'Statistik über Menschen wird zur Testtheorie'},
+{a:'a_hamilton_q',b:'a_matrizen',t:'Rechnen ohne Kommutativgesetz'},
+{a:'gl_darwin',b:'gl_galilei',t:'Zweiter großer Konflikt um Deutungshoheit'},
+{a:'w_gibbs',b:'w_boltzmann',t:'Statistische Begründung der Thermodynamik'},
+{a:'r_lorentz',b:'r_srt',t:'Die Transformationen stehen schon bereit'},
+{a:'g_hilbert_geo',b:'l_hilbert',t:'Axiomatik als Programm'},
+{a:'an_lebesgue',b:'an_hilbertraum',t:'Neuer Integralbegriff für die Funktionalanalysis'},
+{a:'as_radio',b:'as_teleskope',t:'Beobachtung jenseits des sichtbaren Lichts'},
+{a:'a_vektoren',b:'a_hamilton_q',t:'Aus Quaternionen wird die Vektorrechnung'},
+{a:'a_vektoren',b:'e_maxwell',t:'Zwanzig Gleichungen schrumpfen auf vier'},
+{a:'a_vektoren',b:'p_stevin',t:'Kräfteparallelogramm als anschaulicher Ursprung'},
+{a:'a_vektoren',b:'g_riemann',t:'Grundlage für Tensoren und gekrümmte Räume'},
+{a:'s_spieltheorie',b:'in_computer',t:'Von Neumann prägt beide Gebiete'},
+{a:'s_spieltheorie',b:'er_kalterkrieg',t:'Abschreckung als Gleichgewichtsproblem'},
+{a:'s_spieltheorie',b:'s_ml',t:'Strategien in lernenden Systemen'},
+{a:'q_brown',b:'q_demokrit',t:'Die Atomidee wird endgültig belegt'},
+{a:'q_brown',b:'w_boltzmann',t:'Statistische Mechanik wird bestätigt'},
+{a:'q_brown',b:'q_photoeffekt',t:'Beide Arbeiten stammen aus Einsteins Jahr 1905'},
+{a:'q_brown',b:'s_chronik',t:'Zufallsbewegung als stochastischer Prozess'},
+{a:'p_schwingung',b:'in_pendeluhr',t:'Konstante Schwingungsdauer als Uhrwerk'},
+{a:'p_schwingung',b:'p_schall',t:'Töne sind Schwingungen'},
+{a:'p_schwingung',b:'an_fourier',t:'Jede Schwingung als Summe von Grundtönen'},
+{a:'p_schwingung',b:'e_hertz',t:'Der elektrische Schwingkreis'},
+{a:'e_photovoltaik',b:'q_photoeffekt',t:'Erst Lichtquanten erklären den Effekt'},
+{a:'e_photovoltaik',b:'e_halbleiter',t:'Silizium macht die Zelle brauchbar'},
+{a:'e_photovoltaik',b:'w_quellen',t:'Strom direkt aus Sonnenlicht'},
+{a:'e_photovoltaik',b:'in_raumfahrt',t:'Erster Markt: Satelliten ohne Alternative'},
+{a:'e_photovoltaik',b:'ku_industrie',t:'Gegossenes Silizium macht Solarzellen bezahlbar'},
+{a:'e_photovoltaik',b:'q_konstanten',t:'Die Bandlücke begrenzt den Wirkungsgrad'},
+{a:'p_schall',b:'g_pyth',t:'Saitenverhältnisse: Musik wird berechenbar'},
+{a:'p_schall',b:'p_mersenne',t:'Vom Verhältnis zur gemessenen Geschwindigkeit'},
+{a:'p_schall',b:'e_licht',t:'Schall braucht ein Medium, Licht nicht'},
+{a:'p_mersenne',b:'p_chladni',t:'Von der Saite zur schwingenden Fläche'},
+{a:'p_mersenne',b:'w_thermo',t:'Laplace korrigiert Newton über den adiabatischen Faktor'},
+{a:'p_chladni',b:'an_fourier',t:'Stehende Wellen als Summe von Grundtönen'},
+{a:'p_schall',b:'p_doppler',t:'Der Effekt zeigt sich zuerst am Schall'},
+{a:'p_doppler',b:'as_hubble',t:'Rotverschiebung wird zum Maß der Expansion'},
+{a:'p_doppler',b:'as_exo',t:'Exoplaneten über das Taumeln ihrer Sterne'},
+{a:'p_doppler',b:'as_spektral',t:'Verschobene Spektrallinien als Geschwindigkeitsmesser'},
+{a:'p_doppler',b:'in_verkehr',t:'Radar misst Geschwindigkeit über die Frequenzverschiebung'},
+{a:'z_kombinatorik',b:'s_pascalfermat',t:'Aus dem Dreieck werden Wahrscheinlichkeiten'},
+{a:'z_kombinatorik',b:'z_fibo',t:'Die Fibonacci-Zahlen stecken in den Diagonalen'},
+{a:'z_kombinatorik',b:'ku_islam',t:'Al-Karadschi kennt das Dreieck um 1000'},
+{a:'z_gauss_zahlen',b:'z_primzahlen',t:'Die Zahlentheorie wird zum Gebäude'},
+{a:'z_gauss_zahlen',b:'z_rsa',t:'Kongruenzrechnung trägt heute jede Verschlüsselung'},
+{a:'z_gauss_zahlen',b:'a_galois',t:'Struktur statt Rechenrezept'},
+{a:'as_ceres',b:'s_gauss',t:'Aus der Bahnbestimmung entsteht die Methode der kleinsten Quadrate'},
+{a:'as_ceres',b:'as_neptun',t:'Rechnung sagt Himmelskörper voraus'},
+{a:'as_ceres',b:'g_apollon',t:'Kegelschnitte als Bahnformen'},
 {a:'er_empire',b:'ku_industrie',t:'Rohstoffe und Absatzmärkte für die Industrie'},
 {a:'er_empire',b:'in_zeit',t:'Greenwich wird 1884 Nullmeridian der Welt'},
-{a:'er_empire',b:'g_groma',t:'Great Trigonometrical Survey: Indien und der Everest'},
+{a:'er_empire',b:'g_triangulation',t:'Great Trigonometrical Survey: Indien und der Everest'},
+{a:'g_groma',b:'g_triangulation',t:'Vom Absteckwerkzeug zum Dreiecksnetz'},
+{a:'g_triangulation',b:'g_riemann',t:'Gauß: aus der Landesvermessung wird Differentialgeometrie'},
+{a:'g_triangulation',b:'s_gauss',t:'Ausgleichsrechnung aus widersprüchlichen Messungen'},
+{a:'g_triangulation',b:'as_eratos',t:'Dieselbe Idee: aus wenigen Messungen auf große Strecken schließen'},
+{a:'g_triangulation',b:'er_frevolution',t:'Die Meridianmessung liefert die Länge des Meters'},
+{a:'g_triangulation',b:'e_optik',t:'Genauigkeit hängt am Fernrohr des Theodoliten'},
 {a:'er_empire',b:'er_entdeckungen',t:'Darwin reist auf einem Vermessungsschiff der Marine'},
 {a:'er_empire',b:'in_telegraf',t:'Seekabel verbinden das Reich in Minuten'},
 {a:'er_habsburger',b:'as_kepler',t:'Rudolf II. holt Tycho und Kepler nach Prag'},
@@ -1592,6 +1744,7 @@ const QUELLEN_CHRONIK = [
 {j:1939,wer:'Bethe',was:'Woher die Sonne ihre Energie hat',m:'Kernfusion von Wasserstoff zu Helium. Damit ist gekl\u00e4rt, dass fast alle irdischen Energiequellen – Holz, Kohle, \u00d6l, Wind, Wasser – umgewandeltes Sonnenlicht sind. Nur Kernenergie, Geothermie und Gezeiten stammen aus anderen Quellen.',ziel:'as_fusion'},
 {j:1954,wer:'Kernkraftwerk & Solarzelle',was:'Zwei neue Wege im selben Jahr',m:'In Obninsk speist der erste Reaktor Strom ins Netz; bei Bell Labs erreicht die erste brauchbare Siliziumsolarzelle 6 % Wirkungsgrad. Beide beruhen auf Quantenphysik – der eine auf dem Kern, der andere auf der Elektronenh\u00fclle.',ziel:'q_kernenergie'},
 {j:1956,wer:'Hubbert',was:'Endlichkeit wird berechenbar',m:'Ein Geologe sagt das F\u00f6rdermaximum des US-Erd\u00f6ls f\u00fcr etwa 1970 voraus und beh\u00e4lt recht. Erstmals wird eine Energiequelle nicht als unersch\u00f6pflich gedacht.'},
+{j:1976,wer:'Gegossenes Silizium',was:'Solarstrom wird bezahlbar',m:'Einkristalle aus der Schmelze zu ziehen ist für Mikroelektronik ideal, für Stromerzeugung zu teuer. Bernhard Authier entwickelt bei der Wacker-Chemitronic in Burghausen ein Gießverfahren: Silizium erstarrt gerichtet in einer Form zu säulenförmigen Kristalliten. Etwas weniger Wirkungsgrad, aber ein Vielfaches weniger Aufwand – und quadratische Scheiben, die sich lückenlos zum Modul fügen. Multikristallines Silizium bleibt jahrzehntelang das meistverwendete Solarzellenmaterial.',ziel:'e_photovoltaik'},
 {j:1979,wer:'Windkraft & Photovoltaik',was:'R\u00fcckkehr der alten Quellen in neuer Form',m:'\u00d6lkrisen f\u00f6rdern Windturbinen und Solarmodule. Es sind dieselben Energiestr\u00f6me wie bei M\u00fchle und Segel – nur wird jetzt Strom daraus, der sich transportieren l\u00e4sst.',ziel:'w_transport'},
 {j:1990,wer:'Klimaforschung',was:'Die Kosten der fossilen Quellen',m:'Was seit Arrhenius 1896 berechnet ist, wird politisch: Die Verbrennung gespeicherter Sonnenenergie aus 300 Millionen Jahren ver\u00e4ndert die Atmosph\u00e4re messbar.',ziel:'w_klima'},
 {j:2025,wer:'Fusionsforschung',was:'Die Quelle der Sterne auf der Erde',m:'ITER und Laserfusion arbeiten daran, den Vorgang nachzubauen, der die Sonne antreibt. Seit den 1950er Jahren gilt der Durchbruch als „noch einige Jahrzehnte entfernt“ – 2022 wurde erstmals im Labor mehr Energie freigesetzt als eingestrahlt.'}
@@ -2109,11 +2262,14 @@ const KARTEN_CHRONIK = [
 {j:1492,wer:'Behaims Erdapfel',was:'Der älteste erhaltene Globus',m:'In Nürnberg gefertigt, im Jahr von Kolumbus’ Fahrt – und noch ohne Amerika. Zwischen Ozean und Asien liegt bei Behaim nur wenig Wasser: derselbe folgenreiche Irrtum.',ziel:'er_entdeckungen'},
 {j:1507,wer:'Waldseemüller',was:'Amerika bekommt seinen Namen',m:'Eine Karte aus St. Didel in den Vogesen benennt den neuen Kontinent nach Amerigo Vespucci – und zeigt ihn erstmals als eigenständige Landmasse, vom Ozean umgeben.'},
 {j:1569,wer:'Mercator',was:'Winkeltreue für die Seefahrt',m:'Seine Projektion verzerrt Flächen massiv – Grönland wirkt so groß wie Afrika –, hält dafür aber Winkel ein: Ein Kurs mit festem Kompasswinkel wird zur Geraden. Ein bewusster Tausch von Eigenschaften, wie ihn jede Projektion erzwingt.',ziel:'g_perspektive'},
+{j:1615,wer:'Snellius',was:'Ein Land aus Dreiecken',m:'Eine einzige Strecke wird genau gemessen, alles Weitere folgt aus Winkeln. Das Verfahren bleibt bis zur Satellitenvermessung im 20. Jahrhundert die Grundlage jeder Landkarte.',ziel:'g_triangulation'},
 {j:1617,wer:'Snellius',was:'Triangulation',m:'Ein Netz aneinandergrenzender Dreiecke, von einer einzigen genau gemessenen Grundlinie aus berechnet. Damit lassen sich ganze Länder vermessen, ohne sie abzuschreiten – Geometrie ersetzt Schrittzählen.',ziel:'e_snellius'},
+{j:1670,wer:'Cassini',was:'Frankreich schrumpft',m:'Die erste durchgehende Triangulation eines ganzen Landes zeigt: Frankreich ist kleiner als bisher angenommen. Der Hof spottet, der König verliere mehr Gebiet an die Astronomen als an seine Feinde.',ziel:'g_triangulation'},
 {j:1671,wer:'Cassini-Karte von Frankreich',was:'Ein Staat vermisst sich selbst',m:'Vier Generationen Cassini brauchen über 100 Jahre. Ludwig XIV. bemerkt, die Vermesser hätten ihm mehr Land genommen als seine Feinde – erstmals war klar, wie groß Frankreich wirklich ist.'},
 {j:1735,wer:'Gradmessungen',was:'Ist die Erde abgeplattet?',m:'Expeditionen nach Lappland und Peru messen die Länge eines Breitengrads. Ergebnis: Der Grad ist am Pol länger, die Erde also abgeplattet – Newton behält gegen die Cassinis recht. Eine Theorie wird durch Landvermessung entschieden.',ziel:'p_cavendish'},
 {j:1761,wer:'Harrison & Längengrad',was:'Der Ort aus der Uhrzeit',m:'Erst der Schiffschronometer macht die Längenbestimmung auf See praktikabel. Bis dahin waren Karten in Ost-West-Richtung systematisch falsch.',ziel:'in_zeit'},
 {j:1799,wer:'Humboldt',was:'Karten zeigen Zusammenhänge',m:'Er trägt Temperatur, Pflanzenverbreitung und Höhe in Karten ein und erfindet die Isotherme. Aus dem Abbild des Raumes wird ein Werkzeug der Analyse – die thematische Karte.'},
+{j:1818,wer:'Gauß',was:'Aus Vermessung wird Geometrie',m:'Die Hannoversche Landesvermessung stellt Gauß vor die Frage, wie sich gekrümmte Flächen vermessen lassen. Aus der Antwort entsteht die Differentialgeometrie – und die Ausgleichsrechnung für widersprüchliche Messwerte.',ziel:'g_triangulation'},
 {j:1854,wer:'John Snow',was:'Eine Karte löst ein Rätsel',m:'Er trägt Cholerafälle in einen Londoner Stadtplan ein; die Häufung um eine Wasserpumpe belegt den Übertragungsweg. Ein früher Beleg dafür, dass Darstellung selbst Erkenntnis erzeugt.',ziel:'s_quetelet'},
 {j:1884,wer:'Nullmeridian',was:'Greenwich wird Weltstandard',m:'25 Staaten einigen sich in Washington – Frankreich enthält sich und rechnet noch Jahrzehnte von Paris aus. Ein Koordinatensystem ist immer auch eine politische Entscheidung.'},
 {j:1884,wer:'Meridiankonferenz',was:'Greenwich wird Nullpunkt',m:'25 Staaten legen den Nullmeridian auf Greenwich fest – nicht aus Physik, sondern aus Praxis: Drei Viertel aller Seekarten waren bereits britisch. Frankreich enthielt sich und rechnete noch bis 1911 nach Paris.',ziel:'er_empire'},
@@ -2189,6 +2345,7 @@ const BAYERN_CHRONIK = [
 {j:1919,wer:'Deutsches Museum',was:'Technik zum Anfassen',m:'Oskar von Millers Haus auf der Isarinsel wird zum Vorbild für Technikmuseen weltweit – mit dem ausdrücklichen Ziel, Naturwissenschaft durch eigenes Ausprobieren zu vermitteln.'},
 {j:1933,wer:'Vertreibung',was:'Auch hier ein Bruch',m:'Jüdische und regimekritische Wissenschaftler verlieren ihre Stellen; Sommerfeld wird ein Anhänger der „Deutschen Physik“ als Nachfolger aufgezwungen. Der internationale Rang der Münchner Physik geht verloren.',ziel:'er_wk2'},
 {j:1957,wer:'Forschungsreaktor Garching',was:'Das Atom-Ei',m:'Der erste Forschungsreaktor der Bundesrepublik entsteht bei München; um ihn wächst ein Wissenschaftscampus. Heute forschen dort TU, LMU und Max-Planck-Institute nebeneinander.',ziel:'ku_gross'},
+{j:1976,wer:'Burghausen',was:'Silizium für die Solartechnik',m:'In der Wacker-Chemitronic entsteht das Gießverfahren für polykristallines Silizium. Der Standort an der Salzach, einst vom Salzhandel geprägt, wird zu einem Zentrum der Halbleiterchemie – und liefert das Material, aus dem später ein Großteil der weltweiten Solarzellen besteht.',ziel:'e_photovoltaik'},
 {j:2025,wer:'Gegenwart',was:'Von der Optik zur Quantentechnik',m:'Halbleiter, Lasertechnik, Quanteninformatik und Astrophysik knüpfen an eine lange Tradition an – die Linie von Fraunhofers Glasschmelze bis zu heutigen Laserlaboren ist keine zufällige.',ziel:'q_quantencomp'}
 ];
 
@@ -2305,6 +2462,7 @@ const GEO_ENTDECKUNG_CHRONIK = [
 
 const WELTBILD_CHRONIK = [
 {j:-600,wer:'Anaximander',was:'Die Erde schwebt frei',m:'Sie ruht auf nichts, weil es keinen Grund gibt, in eine bestimmte Richtung zu fallen. Ein Argument aus Symmetrie statt aus Mythos – der erste Schritt zu einem physikalischen Weltbild.',ziel:'as_weltbilder'},
+{j:-500,wer:'Die Griechen',was:'Wanderer am Himmel',m:'Fast alle Lichtpunkte stehen fest zueinander – doch fünf wandern zwischen ihnen umher. Die Griechen nennen sie πλανῆται ἀστέρες, planḗtai astéres: „umherirrende Sterne“, von πλανᾶσθαι, umherschweifen. Daraus wird unser Wort Planet, im Deutschen früher wörtlich als Wandelstern oder Wanderstern übersetzt. Der Name benennt also nicht, was ein Planet ist, sondern was an ihm auffiel: dass er sich bewegt – und zeitweise sogar rückwärts. Genau diese Bewegung zu erklären, wird für zwei Jahrtausende die Hauptaufgabe der Astronomie.',ziel:'as_weltbilder'},
 {j:-370,wer:'Eudoxos & Aristoteles',was:'Sphären aus Kristall',m:'27 ineinandergeschachtelte, gleichförmig rotierende Kugelschalen tragen die Gestirne. Das Modell erklärt die Rückläufigkeit der Planeten und gilt als physikalisch real: unten die vier Elemente, oben ein fünftes, unveränderliches. Aus dieser Zweiteilung folgt, dass am Himmel nichts Neues entstehen kann.',ziel:'g_eudoxos'},
 {j:-270,wer:'Aristarch',was:'Die Sonne im Zentrum',m:'Er stellt die Erde in Bewegung – 1800 Jahre vor Kopernikus. Der Einwand seiner Zeitgenossen ist keineswegs dumm: Bewegte sich die Erde, müssten die Sterne im Jahreslauf ihre Position ändern. Diese Parallaxe wird tatsächlich erst 1838 gemessen. Aristarchs Modell scheitert nicht an Sturheit, sondern an fehlender Messgenauigkeit.',ziel:'as_aristarch'},
 {j:-240,wer:'Eratosthenes',was:'Die Erde ist vermessen',m:'Der Erdumfang wird auf wenige Prozent genau bestimmt. Die Kugelgestalt war in gebildeten Kreisen der Antike unstrittig – die verbreitete Vorstellung, das Mittelalter habe an eine Scheibe geglaubt, ist eine Erfindung des 19. Jahrhunderts.',ziel:'as_eratos'},
@@ -2401,6 +2559,25 @@ const LAENGEN_SKALA = [
 {e:26,n:'Beobachtbares Universum',g:'93 Mrd. Lichtjahre',m:'Trotz eines Alters von 13,8 Milliarden Jahren ist der beobachtbare Bereich weiter, weil sich der Raum währenddessen ausdehnte. Die Hintergrundstrahlung von 1965 ist sein Rand.',ziel:'as_cmb'}
 ];
 
+const IRRTUM_CHRONIK = [
+{j:-350,wer:'Aristoteles',was:'Schwere Körper fallen schneller',m:'Zweitausend Jahre lang unwidersprochen, weil es der Alltagserfahrung entspricht: Ein Stein fällt schneller als ein Blatt. Der Fehler steckt in der Verallgemeinerung – Aristoteles hält den Luftwiderstand für nebensächlich statt für die Ursache. Galilei zerlegt das Argument um 1590 rein gedanklich: Bände man einen schweren und einen leichten Körper zusammen, müsste das Bündel zugleich schneller (weil schwerer) und langsamer (weil der leichte bremst) fallen. Ein Widerspruch, der ohne Experiment auskommt.',ziel:'p_aristo'},
+{j:-350,wer:'Aristoteles',was:'Der Himmel ist unveränderlich',m:'Unterhalb des Mondes vier vergängliche Elemente, darüber ein fünftes, ewiges. Aus dieser Zweiteilung folgt zwingend, dass am Himmel nichts Neues entstehen kann – Kometen müssen also Erscheinungen der Lufthülle sein. Tychos Nova von 1572 und der Komet von 1577 zeigen ohne messbare Parallaxe: beide sind weiter entfernt als der Mond. Ein einziges Messergebnis kippt eine Kosmologie.',ziel:'as_tycho'},
+{j:150,wer:'Ptolemäus',was:'Epizykel – ein guter Irrtum',m:'Kreise auf Kreisen sagen Planetenpositionen über Jahrhunderte brauchbar vorher. Das Modell ist falsch und trotzdem gute Wissenschaft: Es ist präzise, überprüfbar und rechenbar. Genau das macht seine Ablösung so mühsam – Kopernikus ist anfangs nicht genauer, nur einfacher. Lehrstück dafür, dass Vorhersagekraft allein noch keine Wahrheit verbürgt.',ziel:'as_ptolem'},
+{j:1150,wer:'Perpetuum mobile',was:'Die Maschine, die nie aufhört',m:'Bhaskara beschreibt um 1150 ein Rad mit Quecksilbergefäßen, das sich ewig drehen soll; über Jahrhunderte folgen tausende Entwürfe. Erst 1775 weist die Pariser Akademie solche Vorschläge grundsätzlich zurück – ohne den Energiesatz zu kennen, allein aus der Erfahrung des Scheiterns. Der Irrtum war produktiv: Aus der Frage, warum es nicht geht, entsteht später der Erste Hauptsatz.',ziel:'w_energie'},
+{j:1667,wer:'Phlogiston',was:'Der Stoff, der beim Verbrennen entweicht',m:'Becher und Stahl erklären das Verbrennen als Abgabe eines Stoffes namens Phlogiston. Die Theorie erklärt vieles richtig und war hundert Jahre Grundlage der Chemie. Sie scheitert an der Waage: Metalle werden beim Verbrennen schwerer, nicht leichter. Manche Anhänger postulierten daraufhin ein negatives Gewicht des Phlogistons. Lavoisier zeigt 1777, dass Sauerstoff aufgenommen wird – die Erklärungsrichtung war genau umgekehrt.',ziel:'q_dalton'},
+{j:1783,wer:'Kalorik',was:'Wärme als unsichtbare Flüssigkeit',m:'Lavoisier selbst führt den nächsten Fehlbegriff ein: Wärme als erhaltener Stoff, der von warm nach kalt fließt. Das Bild funktioniert erstaunlich gut – Carnot leitet 1824 daraus seinen Kreisprozess ab, der bis heute gilt, obwohl seine Grundlage falsch ist. Rumford bemerkt 1798 beim Bohren von Kanonenrohren, dass Wärme offenbar unbegrenzt entsteht, solange man weiterbohrt. Ein Stoff kann nicht unbegrenzt fließen; Wärme ist Bewegung.',ziel:'w_rumford'},
+{j:1800,wer:'Vitalismus',was:'Lebendes gehorcht eigenen Gesetzen',m:'Organische Stoffe könnten nur von Lebewesen erzeugt werden, meint man – es brauche eine besondere Lebenskraft. Wöhler synthetisiert 1828 Harnstoff aus anorganischem Ausgangsmaterial und schreibt an Berzelius, er könne Harnstoff machen, ohne dazu Nieren zu benötigen. Die Grenze zwischen belebt und unbelebt verschiebt sich – ein Muster, das sich bei der Vererbung wiederholen wird.'},
+{j:1810,wer:'Goethe',was:'Farbenlehre gegen Newton',m:'Goethe hält Newtons Zerlegung des weißen Lichts für einen Kunstfehler und entwickelt eine eigene Lehre, in der Farbe aus dem Zusammenspiel von Hell und Dunkel entsteht. Physikalisch ist er widerlegt. Als Beschreibung der Farbwahrnehmung bleibt vieles gültig und wirkt in der Sinnesphysiologie fort. Der Fall zeigt: Ein Irrtum in der Sache kann in einer anderen Frage der richtige Zugang sein.',ziel:'e_newtonoptik'},
+{j:1850,wer:'Lichtäther',was:'Das Medium, das nicht existiert',m:'Wenn Licht eine Welle ist, muss es etwas geben, das schwingt – so die zwingend erscheinende Analogie zum Schall. Der Äther müsste zugleich starrer als Stahl und völlig widerstandslos sein; Maxwell und Kelvin nehmen ihn dennoch ernst. Michelson und Morley finden 1887 keine Spur einer Bewegung der Erde durch ihn. Der Ausweg ist radikaler als erwartet: Nicht das Medium fehlt, sondern der absolute Raum.',ziel:'e_michelson'},
+{j:1903,wer:'N-Strahlen',was:'Eine Entdeckung, die niemand nachvollzog',m:'Nach Röntgens Erfolg meldet der angesehene Physiker Blondlot eine weitere neue Strahlung; über hundert Arbeiten erscheinen. Der Amerikaner Wood entfernt bei einer Vorführung heimlich das entscheidende Prisma aus dem Aufbau – Blondlot sieht die Wirkung weiter. Kein Betrug, sondern Selbsttäuschung an der Wahrnehmungsschwelle. Seither gilt: Wer eine Wirkung nur mit Erwartung sieht, braucht einen Versuch, der ohne diese Erwartung auskommt.',ziel:'q_roentgen'},
+{j:1912,wer:'Piltdown',was:'Ein gefälschter Fund',m:'Ein Menschenschädel mit Affenkiefer, gefunden in England, gilt vierzig Jahre als Bindeglied der Evolution. Er passte zu gut zu dem, was man erwartete – ein europäischer Urmensch mit großem Gehirn. 1953 entlarven Fluortests die Fälschung. Der Fall zeigt, wie Bestätigungserwartung die Prüfung lähmt: Widersprechende afrikanische Funde wurden jahrzehntelang beiseitegeschoben.'},
+{j:1917,wer:'Einstein',was:'Die kosmologische Konstante',m:'Weil seine Gleichungen ein sich änderndes Universum ergeben, fügt Einstein einen Term ein, der es statisch hält. Nach Hubbles Nachweis der Expansion nennt er das seine größte Eselei. Die Pointe kommt 1998: Die beschleunigte Expansion braucht genau so einen Term. Der Fehler lag nicht in der Konstante, sondern im festen Glauben an ein unveränderliches Universum.',ziel:'as_dunkelenergie'},
+{j:1969,wer:'Polywasser',was:'Ein neuer Zustand des Wassers',m:'Sowjetische Forscher berichten von Wasser mit veränderten Eigenschaften; westliche Labore bestätigen es, Fachzeitschriften diskutieren Gefahren für die Weltmeere. Nach vier Jahren steht fest: Es war Verunreinigung aus den engen Glaskapillaren. Bemerkenswert ist der Ausgang – die Beteiligten veröffentlichten die Widerlegung selbst.'},
+{j:1989,wer:'Kalte Fusion',was:'Kernfusion im Wasserglas',m:'Fleischmann und Pons melden Fusionswärme bei Zimmertemperatur – per Pressekonferenz, vor der Begutachtung. Weltweit versuchen Labore die Wiederholung, fast alle scheitern. Der Fall wird zum Standardbeispiel dafür, wozu das Begutachtungsverfahren dient: nicht um Neues zu verhindern, sondern um es prüfbar zu machen.',ziel:'q_kernenergie'},
+{j:2011,wer:'Überlichtschnelle Neutrinos',was:'Wie es richtig läuft',m:'Das OPERA-Experiment misst Neutrinos, die schneller als das Licht scheinen. Die Gruppe veröffentlicht nicht als Entdeckung, sondern als Bitte um Überprüfung. Nach Monaten findet sich die Ursache in einem schlecht sitzenden Glasfaserstecker und einer ungenauen Uhr. Kein Skandal, sondern ein Musterbeispiel: offengelegte Daten, unabhängige Kontrolle, korrigiertes Ergebnis.',ziel:'r_srt'},
+{j:2025,wer:'Bilanz',was:'Was diese Fälle lehren',m:'Vier Muster wiederholen sich: Falsche Theorien können lange richtig rechnen (Epizykel, Kalorik). Der entscheidende Einwand kommt oft aus einer Messung, nicht aus einem Argument (die Waage beim Phlogiston, die Parallaxe bei Tycho). Erwartung verzerrt Wahrnehmung (N-Strahlen, Piltdown). Und ein Irrtum kann fruchtbar sein – aus dem gescheiterten Perpetuum mobile wurde der Energiesatz, aus der verworfenen kosmologischen Konstante die Dunkle Energie. Wissenschaft besteht nicht darin, keine Fehler zu machen, sondern darin, sie auffindbar zu machen.'}
+];
+
 /* ============================================================
    GRAFIKEN – selbst gezeichnete SVG-Diagramme, fest eingebettet.
    Sie brauchen kein Internet, sind beliebig skalierbar und
@@ -2425,6 +2602,64 @@ const svg = (w,h,inhalt) =>
 const GRAFIKEN = {
 
 /* --- Mathematik --- */
+zahlendreieck: svg(300,160,
+  '<text x="10" y="16" class="gt">Das Zahlendreieck</text>'+
+  '<text x="10" y="30" class="gk">jede Zahl ist die Summe der beiden darüber</text>'+
+  (() => {
+    let s = '', z = [1];
+    for (let r = 0; r < 7; r++){
+      const y = 48 + r*15;
+      for (let k = 0; k <= r; k++){
+        const x = 150 + (k - r/2)*32;
+        s += '<circle cx="'+x+'" cy="'+y+'" r="10" class="gf" stroke="#8a4b2a"/>'+
+             '<text x="'+x+'" y="'+(y+3.5)+'" class="gk" text-anchor="middle">'+z[k]+'</text>';
+        if (r < 6){
+          s += '<line x1="'+x+'" y1="'+(y+10)+'" x2="'+(x-16)+'" y2="'+(y+5+10)+'" class="gh"/>'+
+               '<line x1="'+x+'" y1="'+(y+10)+'" x2="'+(x+16)+'" y2="'+(y+5+10)+'" class="gh"/>';
+        }
+      }
+      const n = [1];
+      for (let k = 0; k < z.length-1; k++) n.push(z[k]+z[k+1]);
+      n.push(1); z = n;
+    }
+    return s;
+  })()+
+  '<text x="10" y="154" class="gk">Pingala −200 · al-Karadschi 1000 · Yang Hui 1261 · Pascal 1654</text>'),
+
+kongruenz: svg(300,160,
+  '<text x="10" y="16" class="gt">Rechnen mit Resten: 17 ≡ 5 (mod 12)</text>'+
+  '<circle cx="150" cy="88" r="52" class="gl" fill="none"/>'+
+  (() => {
+    let s = '';
+    for (let k = 0; k < 12; k++){
+      const a = (k/12)*2*Math.PI - Math.PI/2;
+      const x = 150 + Math.cos(a)*52, y = 88 + Math.sin(a)*52;
+      const xt = 150 + Math.cos(a)*66, yt = 88 + Math.sin(a)*66;
+      s += '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="3" fill="'+
+           (k===5?'#8a4b2a':'#b9a684')+'"/>'+
+           '<text x="'+xt.toFixed(1)+'" y="'+(yt+3).toFixed(1)+'" class="gk" text-anchor="middle">'+k+'</text>';
+    }
+    return s;
+  })()+
+  '<path d="M150 36 A52 52 0 1 1 105 114" class="gd"/>'+
+  '<text x="150" y="92" class="gt" text-anchor="middle">mod 12</text>'+
+  '<text x="10" y="150" class="gk">17 Stunden nach 0 Uhr zeigt die Uhr 5 – Gauß 1801</text>'),
+
+vektoren: svg(300,150,
+  '<text x="10" y="16" class="gt">Vektoren addieren sich wie Wege</text>'+
+  '<line x1="40" y1="120" x2="150" y2="120" class="gh"/>'+
+  '<line x1="150" y1="120" x2="200" y2="50" class="gh"/>'+
+  '<line x1="40" y1="120" x2="90" y2="50" class="gh"/>'+
+  '<line x1="90" y1="50" x2="200" y2="50" class="gh"/>'+
+  '<path d="M40 120 L148 120" class="gd"/><path d="M140 116 L150 120 L140 124 Z" fill="#8a4b2a"/>'+
+  '<path d="M40 120 L88 52" class="gd" stroke="#1f6f92"/><path d="M84 58 L90 50 L92 60 Z" fill="#1f6f92"/>'+
+  '<path d="M40 120 L196 52" class="gd" stroke="#2f8055" stroke-width="2.6"/>'+
+  '<path d="M186 52 L200 50 L190 60 Z" fill="#2f8055"/>'+
+  '<text x="92" y="136" class="gk">a</text>'+
+  '<text x="52" y="80" class="gk">b</text>'+
+  '<text x="120" y="76" class="gt" fill="#2f8055">a + b</text>'+
+  '<text x="10" y="144" class="gk">Stevin 1586 · Grassmann 1844 · heutige Schreibweise ab 1880</text>'),
+
 archimedes_pi: svg(300,150,
   '<circle cx="150" cy="75" r="52" class="gl"/>'+
   '<polygon points="150,23 195,49 195,101 150,127 105,101 105,49" class="gd"/>'+
@@ -2702,6 +2937,98 @@ energiebedarf: svg(300,150,
   '<text x="10" y="136" class="gk">Widerstand ~ v², nötige Leistung ~ v³</text>'+
   '<text x="10" y="148" class="gk">Schnelligkeit ist immer teuer erkauft</text>'),
 
+doppler: svg(300,170,
+  '<text x="10" y="16" class="gt">Doppler-Effekt</text>'+
+  '<text x="10" y="30" class="gk">bewegte Quelle: vorn gedrängt, hinten gedehnt</text>'+
+  (() => {
+    // Kreise um wandernde Quellenorte – die Wellenfronten rücken vorn zusammen
+    let s = '';
+    const y = 95;
+    for (let k = 0; k < 5; k++){
+      const xq = 90 + k*22;      // Quelle wandert nach rechts
+      const r  = (5-k)*20;       // ältere Fronten sind weiter gelaufen
+      s += '<circle cx="'+xq+'" cy="'+y+'" r="'+r+'" class="gh"/>';
+    }
+    return s;
+  })()+
+  '<circle cx="178" cy="95" r="4.5" fill="#8a4b2a"/>'+
+  '<path d="M186 95 L214 95" class="gd"/><path d="M208 91 L218 95 L208 99 Z" fill="#8a4b2a"/>'+
+  '<text x="222" y="98" class="gk">v</text>'+
+  '<text x="236" y="80" class="gt" fill="#8a4b2a">höher</text>'+
+  '<text x="24" y="80" class="gt" fill="#1f6f92">tiefer</text>'+
+  '<text x="10" y="150" class="gk">Doppler 1842 · Prüfung 1845 mit Trompetern auf einem Eisenbahnwagen</text>'+
+  '<text x="10" y="163" class="gk">Rotverschiebung · Radar · Ultraschall · Exoplaneten</text>'),
+
+brown: svg(300,160,
+  '<text x="10" y="16" class="gt">Brownsche Bewegung</text>'+
+  '<text x="10" y="30" class="gk">Zickzack durch Stöße unsichtbarer Moleküle</text>'+
+  (() => {
+    // Zufallsweg mit festem Startwert – bei jedem Laden identisch
+    let s = '<path class="gd" d="M150 90', x = 150, y = 90, r = 7;
+    const zufall = () => { r = (r*1103515245 + 12345) % 2147483648; return r/2147483648; };
+    for (let k = 0; k < 40; k++){
+      const w = zufall()*2*Math.PI, l = 6 + zufall()*12;
+      x = Math.max(30, Math.min(270, x + Math.cos(w)*l));
+      y = Math.max(45, Math.min(132, y + Math.sin(w)*l));
+      s += ' L'+x.toFixed(1)+' '+y.toFixed(1);
+    }
+    s += '"/><circle cx="150" cy="90" r="3.5" fill="#1f6f92"/>'+
+         '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="3.5" fill="#8a4b2a"/>';
+    return s;
+  })()+
+  '<text x="10" y="152" class="gk">Einstein 1905: mittlere Entfernung wächst mit der Wurzel der Zeit</text>'),
+
+resonanz: svg(300,160,
+  '<text x="10" y="16" class="gt">Resonanzkurve</text>'+
+  '<line x1="40" y1="128" x2="286" y2="128" class="gl"/>'+
+  '<line x1="40" y1="34" x2="40" y2="128" class="gl"/>'+
+  '<text x="6" y="40" class="gk">A</text>'+
+  '<text x="268" y="142" class="gk">f</text>'+
+  '<line x1="150" y1="34" x2="150" y2="128" class="gh"/>'+
+  '<text x="132" y="146" class="gk">f₀</text>'+
+  '<path d="M44 122 L80 118 L110 108 L132 84 L145 48 L150 42 L155 48 L168 84 L190 108 L220 118 L282 123" class="gd"/>'+
+  '<path d="M44 124 L90 122 L120 116 L140 104 L150 98 L160 104 L180 116 L215 122 L282 125" class="gd" stroke="#1f6f92" stroke-width="1.4"/>'+
+  '<text x="196" y="60" class="gk" fill="#8a4b2a">schwache Dämpfung</text>'+
+  '<text x="196" y="96" class="gk" fill="#1f6f92">starke Dämpfung</text>'+
+  '<text x="10" y="156" class="gk">Anregung mit der Eigenfrequenz – Musikinstrument, Schwingkreis, Tacoma 1940</text>'),
+
+photovoltaik: svg(300,170,
+  '<text x="10" y="16" class="gt">Gezogen oder gegossen</text>'+
+  '<text x="10" y="30" class="gk">warum quadratische Scheiben zählen</text>'+
+  // links: runde Scheiben aus dem Einkristall
+  '<text x="20" y="48" class="gk">Einkristall (Czochralski)</text>'+
+  '<rect x="20" y="54" width="112" height="76" class="gh"/>'+
+  '<circle cx="48" cy="82" r="25" class="gf2" stroke="#1f6f92"/>'+
+  '<circle cx="104" cy="82" r="25" class="gf2" stroke="#1f6f92"/>'+
+  '<circle cx="48" cy="120" r="25" class="gf2" stroke="#1f6f92"/>'+
+  '<circle cx="104" cy="120" r="25" class="gf2" stroke="#1f6f92"/>'+
+  '<text x="26" y="146" class="gk">Lücken bleiben ungenutzt</text>'+
+  // rechts: quadratische Scheiben aus dem gegossenen Block
+  '<text x="168" y="48" class="gk">gegossener Block (SILSO)</text>'+
+  '<rect x="168" y="54" width="112" height="76" class="gh"/>'+
+  '<rect x="170" y="56" width="54" height="36" class="gf" stroke="#8a4b2a"/>'+
+  '<rect x="226" y="56" width="54" height="36" class="gf" stroke="#8a4b2a"/>'+
+  '<rect x="170" y="94" width="54" height="36" class="gf" stroke="#8a4b2a"/>'+
+  '<rect x="226" y="94" width="54" height="36" class="gf" stroke="#8a4b2a"/>'+
+  '<text x="176" y="146" class="gk">lückenlos zum Modul</text>'+
+  '<text x="10" y="164" class="gk">B. Authier, Wacker-Chemitronic Burghausen, Mitte der 1970er Jahre</text>'),
+
+ceres: svg(300,160,
+  '<text x="10" y="16" class="gt">Eine Bahn aus drei Beobachtungen</text>'+
+  '<circle cx="150" cy="92" r="7" fill="#cf9d12"/>'+
+  '<text x="143" y="112" class="gk">Sonne</text>'+
+  '<ellipse cx="150" cy="92" rx="112" ry="58" class="gh"/>'+
+  '<path d="M262 92 A112 58 0 0 0 196 40" class="gd"/>'+
+  '<circle cx="262" cy="92" r="3.5" fill="#8a4b2a"/>'+
+  '<circle cx="243" cy="60" r="3.5" fill="#8a4b2a"/>'+
+  '<circle cx="215" cy="45" r="3.5" fill="#8a4b2a"/>'+
+  '<text x="252" y="108" class="gk">1. Jan.</text>'+
+  '<text x="250" y="52" class="gk">Feb.</text>'+
+  '<text x="196" y="38" class="gk">11. Feb.</text>'+
+  '<path d="M196 40 A112 58 0 1 1 262 92" class="gh" stroke="#8a4b2a" stroke-dasharray="3 4"/>'+
+  '<text x="40" y="66" class="gk" fill="#8a4b2a">berechnet</text>'+
+  '<text x="10" y="150" class="gk">Piazzi beobachtet 41 Tage – Gauß rechnet die ganze Ellipse, 1801</text>'),
+
 dampfmaschine: svg(300,150,
   '<rect x="40" y="52" width="70" height="46" class="gl"/>'+
   '<rect x="46" y="58" width="30" height="34" class="gf"/>'+
@@ -2772,7 +3099,7 @@ const LANDMASSEN = [
    [10.30,34.80],[10.10,34.30],[10.70,33.60],[11.10,33.20],[11.55,32.85],[12.30,32.85],[13.20,32.90],
    [14.20,32.50],[15.20,31.60],[16.60,31.10],[18.20,30.80],[19.20,30.90],[20.10,31.60],[20.20,32.30],
    [21.00,32.80],[22.10,32.90],[23.10,32.50],[24.00,32.00],[25.00,31.60],[26.50,31.30],[27.50,31.20],
-   [28.60,31.00],[29.30,31.10],[29.90,31.20],[31.20,31.40],[32.30,31.10],[32.60,29.90],[33.00,28.50],
+   [28.60,31.00],[29.30,31.10],[29.70,31.32],[31.20,31.40],[32.30,31.10],[32.60,29.90],[33.00,28.50],
    [33.60,27.20],[34.50,25.50],[35.50,23.50],[36.50,21.00],[37.20,18.60],[38.50,17.50],[39.00,15.50],
    [40.00,15.00],[41.00,14.50],[42.50,13.50],[43.00,12.60],[43.30,11.80],[43.90,11.20],[44.90,10.80],
    [46.20,10.60],[47.60,10.80],[48.60,11.20],[49.60,11.40],[50.60,11.60],[51.30,11.80],[51.10,10.00],
@@ -2780,7 +3107,7 @@ const LANDMASSEN = [
    [41.00,-2.50],[40.50,-3.50],[39.70,-4.00],[39.40,-5.50],[39.30,-6.80],[39.80,-8.50],[40.50,-10.50],
    [40.70,-12.50],[40.70,-14.50],[39.50,-16.50],[36.50,-18.50],[35.50,-20.00],[35.00,-21.00],[34.00,-23.50],
    [32.60,-25.90],[32.00,-28.00],[31.00,-29.90],[29.50,-31.50],[27.90,-33.00],[25.50,-33.80],[24.00,-34.00],
-   [22.00,-34.20],[20.00,-34.80],[19.30,-34.60],[18.50,-34.35],[18.30,-34.20],[18.40,-33.90],[17.60,-32.00],
+   [22.00,-34.20],[20.00,-34.80],[19.30,-34.60],[18.50,-34.35],[18.30,-34.20],[18.30,-34.10],[17.60,-32.00],
    [17.00,-30.00],[16.00,-28.50],[15.00,-26.50],[14.50,-24.50],[14.50,-22.90],[13.50,-20.00],[13.00,-18.00],
    [12.30,-16.50],[12.00,-15.00],[13.00,-12.50],[13.20,-8.80],[12.80,-6.50],[12.50,-6.00],[11.90,-4.80],
    [11.00,-2.50],[9.80,-1.00],[9.40,0.40],[9.60,2.50],[9.70,4.00],[9.30,3.90],[8.90,4.00],
@@ -3155,7 +3482,7 @@ const ORTE = [
 {n:'Tikal & Chichén Itzá',o:[-89.62,17.22],a:100,b:900,id:'z_maya',t:'Maya: Stellenwertsystem mit Null, Kalenderastronomie'},
 {n:'Cusco',o:[-71.98,-13.52],a:1400,b:1533,id:'ku_maya',t:'Inka-Hauptstadt, Quipu als Knotenschrift'},
 {n:'Potosí',o:[-65.75,-19.58],a:1545,b:1800,id:'er_entdeckungen',t:'Silberberg – Zwangsarbeit finanziert Europa'},
-{n:'Burghausen',o:[12.83,48.17],a:1180,b:2025,id:'gl_kloster',t:'Längste Burganlage Europas; Salzhandel über die Salzach, ab 1629 Jesuitenkolleg mit Mathematikunterricht'},
+{n:'Burghausen',o:[12.83,48.17],a:1180,b:2025,id:'gl_kloster',t:'Längste Burganlage Europas; Salzhandel über die Salzach, ab 1629 Jesuitenkolleg mit Mathematikunterricht. In der Wacker-Chemitronic entwickelt Bernhard Authier Mitte der 1970er Jahre das Gießverfahren für polykristallines Silizium (SILSO) – die Grundlage bezahlbarer Solarzellen'},
 {n:'Amberg',o:[11.86,49.44],a:1034,b:1800,id:'in_wasserrad',t:'Eisenerz vom Amberger Erzberg; wasserkraftgetriebene Hammerwerke entlang der Vils – 1387 schließen sich 68 Hämmer zur Großen Hammereinigung zusammen. Später Regierungsstadt der Oberen Pfalz.'},
 {n:'Regensburg',o:[12.10,49.02],a:1630,b:1630,id:'as_kepler',t:'Kepler stirbt hier auf einer Reise, um ausstehenden Lohn einzufordern'},
 {n:'Ingolstadt',o:[11.43,48.76],a:1472,b:1800,id:'ku_uni',t:'Erste bayerische Landesuniversität, später nach Landshut und München verlegt'},
@@ -3195,7 +3522,7 @@ const ORTE = [
 const REICHE = [
 {n:'Ägypten',a:-3000,b:-30,f:'#cf9d12',id:'ku_aeg',
  t:'Feldvermessung nach der Nilflut, Sonnenkalender, Monumentalbau',
- p:[[29.30,30.40],[29.90,31.20],[30.62,31.31],[31.20,31.40],[31.78,31.24],[32.30,31.10],[32.60,29.90],
+ p:[[29.30,30.40],[29.70,31.32],[30.62,31.31],[31.20,31.40],[31.78,31.24],[32.30,31.10],[32.60,29.90],
     [33.00,28.50],[33.30,27.60],[33.60,26.50],[34.00,25.50],[34.80,24.50],[35.50,23.50],[34.50,22.20],
     [33.00,22.00],[31.60,22.00],[31.00,22.00],[30.80,23.50],[30.50,24.50],[30.60,25.80],[30.80,27.00],
     [30.60,28.00],[30.20,29.00],[29.60,29.80],[29.30,30.40]]},
@@ -3238,7 +3565,7 @@ const REICHE = [
     [35.00,30.50],[34.30,31.30],[35.50,31.50],[36.00,34.00],[36.00,36.00],[33.00,36.30],[30.00,36.30],
     [27.20,37.00],[26.72,38.38],[26.20,40.20]],
     [[34.30,31.30],[34.98,29.55],[34.40,28.05],[34.25,27.75],[33.30,28.50],[32.60,29.95],[33.06,28.38],
-    [33.64,27.12],[34.50,25.50],[35.50,23.50],[32.50,24.00],[30.80,27.00],[29.90,31.20],[32.35,31.05],
+    [33.64,27.12],[34.50,25.50],[35.50,23.50],[32.50,24.00],[30.80,27.00],[29.70,31.32],[32.35,31.05],
     [34.30,31.30]]]},
 {n:'Hellenistische Reiche',a:-323,b:-30,f:'#3f8fa6',id:'ku_hellenismus',
  t:'Ptolemäer, Seleukiden und Antigoniden. Griechisch (Koine) wird Verkehrssprache von Marseille bis Baktrien – erstmals können Gelehrte über tausende Kilometer hinweg dieselben Texte lesen.',
@@ -3247,8 +3574,8 @@ const REICHE = [
     [67.00,25.00],[62.00,25.20],[58.00,25.50],[57.50,22.00],[56.50,26.00],[52.00,27.50],[48.00,30.20],
     [45.00,31.00],[41.00,31.00],[38.00,31.50],[35.50,32.50],[36.00,34.00],[36.00,36.00],[33.00,36.30],
     [30.00,36.30],[27.20,37.00],[26.72,38.38],[24.00,40.60],[21.00,40.60],[19.50,40.50]],
-    [[29.90,31.20],[32.52,31.07],[34.30,31.30],[35.00,30.00],[34.40,28.05],[35.50,23.50],[32.50,24.00],
-    [30.80,27.00],[29.30,31.10],[29.90,31.20]]]},
+    [[29.70,31.32],[32.52,31.07],[34.30,31.30],[35.00,30.00],[34.40,28.05],[35.50,23.50],[32.50,24.00],
+    [30.80,27.00],[29.30,31.10],[29.70,31.32]]]},
 {n:'Alexanderreich',a:-336,b:-323,f:'#4a5fa8',id:'er_alexander',
  t:'Griechisch wird Wissenschaftssprache von Ägypten bis Baktrien',
  pp:[[[20.50,41.20],[23.00,41.50],[26.20,40.20],[29.00,41.00],[33.00,42.00],[38.00,41.50],[41.60,41.60],
@@ -3258,7 +3585,7 @@ const REICHE = [
     [39.00,29.00],[36.00,29.00],[35.00,30.50],[34.30,31.30],[35.50,31.50],[36.00,34.00],[36.00,36.00],
     [33.00,36.30],[30.00,36.30],[27.20,37.00],[26.72,38.38],[24.00,40.60],[22.00,40.80],[20.50,41.20]],
     [[34.30,31.30],[34.98,29.55],[34.40,28.05],[34.25,27.75],[33.30,28.50],[32.60,29.95],[33.06,28.38],
-    [33.64,27.12],[34.50,25.50],[35.50,23.50],[32.50,24.00],[30.80,27.00],[29.90,31.20],[32.35,31.05],
+    [33.64,27.12],[34.50,25.50],[35.50,23.50],[32.50,24.00],[30.80,27.00],[29.70,31.32],[32.35,31.05],
     [34.30,31.30]]]},
 {n:'Römisches Reich',a:-27,b:395,f:'#8a4b2a',id:'ku_rom',
  t:'Recht, Straßen, Vermessung und Beton – Ingenieurskunst statt Grundlagenforschung',
@@ -3273,10 +3600,10 @@ const REICHE = [
     [29.00,41.00],[31.00,41.20],[33.00,42.00],[35.00,42.00],[36.50,41.20],[38.00,41.50],[40.00,41.00],
     [41.60,41.60],[42.50,40.00],[43.00,39.00],[42.00,38.00],[41.00,37.00],[40.00,35.00],[39.00,34.50],
     [38.50,34.00],[37.50,33.00],[37.00,32.50],[36.50,31.80],[36.00,31.00],[35.00,30.50],[34.30,31.30],
-    [33.01,31.13],[32.52,31.07],[31.20,31.40],[29.90,31.20],[30.20,29.00],[31.20,30.00],[30.80,27.00],
-    [32.90,27.00],[32.50,24.00],[31.00,25.00],[30.00,26.00],[28.50,27.50],[27.00,29.00],[25.48,31.50],
-    [23.00,32.50],[21.50,32.80],[20.17,32.08],[17.49,30.93],[15.50,31.50],[13.20,32.90],[11.10,33.20],
-    [10.80,35.60],[10.10,34.30],[10.70,33.60],[10.80,35.60],[11.00,36.80],[10.37,37.02],[9.50,37.30],
+    [33.01,31.13],[32.52,31.07],[31.20,31.40],[31.50,30.20],[31.80,28.50],[32.75,26.00],[33.20,24.20],
+    [30.50,25.00],[28.00,27.50],[26.20,30.00],[25.80,31.30],[25.48,31.55],[23.00,32.50],
+    [21.50,32.80],[20.17,32.08],[17.49,30.93],[15.50,31.50],[13.20,32.90],[11.10,33.20],[10.10,35.60],
+    [10.10,34.30],[10.70,33.60],[10.10,35.60],[10.10,36.20],[10.20,37.00],[10.37,37.02],[9.50,37.30],
     [8.00,37.00],[5.50,36.90],[3.00,36.90],[1.50,36.60],[0.00,36.00],[-2.00,35.50],[-4.50,35.80],
     [-5.80,35.90],[-5.60,36.00]],
     [[-5.20,50.10],[-3.50,50.60],[-1.00,50.70],[0.70,50.75],[1.40,51.00],[1.20,51.80],[1.70,52.80],
@@ -3294,22 +3621,24 @@ const REICHE = [
     [19.30,41.30]]},
 {n:'Kalifat (Abbasiden)',a:750,b:1258,f:'#2f8055',id:'ku_islam',
  t:'Übersetzung und Weiterentwicklung: Algebra, Optik, Trigonometrie',
- p:[[-8.90,37.00],[-7.40,37.18],[-6.30,36.80],[-4.50,35.80],[-2.00,35.50],[0.00,36.00],[3.00,36.90],
-    [5.50,36.90],[8.00,37.00],[10.37,37.02],[11.00,36.80],[10.80,35.60],[10.10,34.30],[10.70,33.60],
-    [11.55,32.85],[13.20,32.90],[15.50,31.50],[17.49,30.93],[20.17,32.08],[23.00,32.50],[25.48,31.50],
-    [27.50,31.20],[29.90,31.20],[31.20,31.40],[32.52,31.07],[34.30,31.30],[35.50,33.50],[36.00,36.00],
-    [37.00,36.80],[38.50,37.00],[41.00,37.50],[43.20,36.40],[45.00,37.50],[46.00,38.00],[48.00,38.00],
-    [50.00,37.50],[52.00,37.00],[54.00,37.00],[56.00,37.50],[58.00,38.00],[60.00,38.50],[62.00,38.50],
-    [64.00,38.40],[66.00,38.00],[67.50,37.40],[69.00,37.00],[70.00,36.50],[71.00,34.50],[71.50,33.00],
-    [70.50,31.50],[70.00,30.00],[68.50,27.00],[67.00,25.00],[65.00,25.20],[62.00,25.20],[60.00,25.30],
-    [58.00,25.50],[59.80,22.50],[57.50,20.00],[56.30,25.00],[56.50,26.00],[54.50,26.50],[52.00,27.50],
-    [50.50,28.50],[50.00,29.00],[48.50,28.50],[50.00,27.00],[51.50,24.00],[54.00,24.20],[55.00,23.50],
-    [57.00,20.00],[55.00,17.00],[52.00,15.00],[48.00,14.00],[45.00,12.80],[43.00,12.60],[41.50,17.50],
-    [39.00,21.00],[37.00,25.00],[35.18,28.02],[34.40,28.05],[32.90,27.00],[31.50,25.00],[30.00,26.00],
-    [27.00,29.00],[25.00,29.00],[22.00,29.20],[20.00,29.50],[17.50,29.00],[15.00,29.00],[12.50,29.80],
-    [10.00,30.50],[7.50,31.00],[5.00,31.50],[2.50,32.00],[0.00,32.50],[-2.50,33.00],[-5.00,33.30],
-    [-7.50,32.00],[-9.60,30.40],[-9.02,31.90],[-8.08,33.17],[-6.84,34.45],[-5.80,35.90],[-6.30,36.80],
-    [-8.90,37.00]]},
+ pp:[[[0.00,36.00],[3.00,36.90],[5.50,36.90],[8.00,37.00],[10.37,37.02],[11.00,36.80],[10.80,35.60],
+    [10.10,34.30],[10.70,33.60],[11.55,32.85],[13.20,32.90],[15.50,31.50],[17.49,30.93],[20.17,32.08],
+    [23.00,32.50],[25.48,31.50],[27.50,31.20],[29.70,31.32],[31.20,31.40],[32.52,31.07],[34.30,31.30],
+    [35.50,33.50],[36.00,36.00],[37.00,36.80],[38.50,37.00],[41.00,37.50],[43.20,36.40],[45.00,37.50],
+    [46.00,38.00],[48.00,38.00],[50.00,37.50],[52.00,37.00],[54.00,37.00],[56.00,37.50],[58.00,38.00],
+    [60.00,38.50],[62.00,38.50],[64.00,38.40],[66.00,38.00],[67.50,37.40],[69.00,37.00],[70.00,36.50],
+    [71.00,34.50],[71.50,33.00],[70.50,31.50],[70.00,30.00],[68.50,27.00],[67.00,25.00],[65.00,25.20],
+    [62.00,25.20],[60.00,25.30],[58.00,25.50],[59.80,22.50],[57.50,20.00],[56.30,25.00],[56.50,26.00],
+    [54.50,26.50],[52.00,27.50],[50.50,28.50],[50.00,29.00],[48.50,28.50],[50.00,27.00],[51.50,24.00],
+    [54.00,24.20],[55.00,23.50],[57.00,20.00],[55.00,17.00],[52.00,15.00],[48.00,14.00],[45.00,12.80],
+    [43.00,12.60],[41.50,17.50],[39.00,21.00],[37.00,25.00],[35.18,28.02],[34.40,28.05],[32.90,27.00],
+    [31.50,25.00],[30.00,26.00],[27.00,29.00],[25.00,29.00],[22.00,29.20],[20.00,29.50],[17.50,29.00],
+    [15.00,29.00],[12.50,29.80],[10.00,30.50],[7.50,31.00],[5.00,31.50],[2.50,32.00],[0.00,32.50],
+    [-2.50,33.00],[-5.00,33.30],[-7.50,32.00],[-9.60,30.40],[-9.02,31.90],[-8.08,33.17],[-6.84,34.45],
+    [-5.80,35.90],[0.00,36.00]],
+    [[-5.60,36.00],[-4.50,36.60],[-2.50,36.70],[-0.90,37.60],[0.50,39.50],[-0.50,40.20],[-2.00,40.60],
+    [-3.50,40.80],[-5.50,40.60],[-7.00,40.30],[-8.60,39.60],[-9.20,38.42],[-8.80,38.00],[-8.90,37.00],
+    [-7.40,37.18],[-6.30,36.80],[-5.60,36.00]]]},
 {n:'Fränkisches Reich',a:768,b:987,f:'#7a6a8a',id:'gl_kloster',
  t:'Karls Bildungsreform: Klosterschulen und Textabschriften',
  p:[[-1.80,43.35],[-0.50,43.00],[0.50,42.70],[1.80,42.60],[3.00,42.50],[3.30,41.60],[4.00,43.50],
@@ -3367,47 +3696,70 @@ const REICHE = [
     [15.00,49.60],[14.20,50.60],[13.00,50.60],[12.20,50.20],[12.50,49.30],[13.40,48.60],[13.00,48.30],
     [12.00,47.70],[10.50,47.55],[9.55,47.55]]},
 {n:'NATO-Staaten',a:1949,b:1991,f:'#2f6fd0',id:'er_kalterkrieg',
- t:'Der westliche Block: 1949 von zwölf Staaten gegründet, 1955 tritt die Bundesrepublik bei. Der Systemwettstreit finanziert Kernphysik, Rechnerbau und Raumfahrt in bis dahin unbekanntem Umfang.',
- pp:[[[-9.42,38.70],[-8.90,37.00],[-6.30,36.80],[-5.20,36.30],[-2.50,36.70],[-0.90,37.60],[0.50,39.50],
-    [1.00,40.90],[3.30,41.60],[4.00,43.50],[6.00,43.10],[7.00,43.70],[7.60,43.79],[7.50,45.90],
-    [7.00,46.20],[8.20,47.00],[8.60,47.60],[9.60,47.60],[10.20,47.40],[11.50,47.60],[13.00,48.30],
-    [13.40,48.60],[12.50,49.30],[12.20,50.20],[13.00,50.60],[14.20,50.60],[14.50,51.50],[14.70,52.80],
-    [14.20,53.90],[12.10,54.20],[10.80,54.30],[10.20,54.90],[10.00,55.30],[10.20,56.70],[10.40,57.30],
-    [10.55,57.74],[9.60,57.60],[8.60,57.10],[8.30,55.60],[8.10,55.00],[9.00,54.60],[8.50,53.60],
-    [6.80,53.45],[5.60,53.30],[4.80,52.90],[4.10,52.00],[2.90,51.20],[1.90,51.00],[0.20,49.40],
-    [-1.60,49.70],[-2.90,48.70],[-4.77,48.45],[-4.30,47.80],[-2.20,47.20],[-1.20,46.20],[-1.25,44.50],
-    [-1.80,43.35],[-3.00,43.40],[-5.60,43.60],[-8.40,43.40],[-9.30,42.90],[-8.70,41.10],[-8.87,40.14],
-    [-9.42,38.70]],
-    [[7.60,43.79],[8.93,44.40],[9.85,44.10],[10.30,43.55],[11.13,42.40],[12.23,41.75],[13.57,41.20],
-    [14.25,40.85],[14.75,40.68],[15.63,40.07],[16.05,39.36],[16.10,38.95],[15.85,38.55],[15.65,38.10],
-    [16.10,37.98],[17.20,38.95],[18.35,39.79],[18.52,40.13],[17.25,40.47],[16.85,41.13],[15.60,41.92],
-    [14.20,42.50],[13.52,43.62],[12.25,44.40],[12.30,45.40],[13.50,45.20],[13.60,46.40],[12.20,46.80],
-    [11.00,47.00],[10.20,47.40],[9.60,47.60],[8.60,47.60],[8.20,47.00],[7.50,45.90],[7.60,43.79]],
+ t:'Der westliche Block: 1949 von zwölf Staaten gegründet – die USA und Kanada gehören von Anfang an dazu, das Bündnis ist ausdrücklich transatlantisch. 1952 kommen Griechenland und die Türkei hinzu, 1955 die Bundesrepublik, 1982 Spanien. Der Systemwettstreit finanziert Kernphysik, Rechnerbau und Raumfahrt in bis dahin unbekanntem Umfang.',
+ pp:[[[-124.20,43.00],[-124.00,40.50],[-122.50,37.50],[-120.50,34.50],[-117.20,32.50],[-114.50,32.70],[-111.00,31.30],
+    [-108.20,31.30],[-106.50,31.80],[-103.00,29.00],[-99.50,27.60],[-97.50,25.90],[-97.00,27.80],[-95.50,28.90],
+    [-93.50,29.70],[-90.00,29.00],[-88.00,30.30],[-84.48,30.10],[-82.50,27.50],[-80.10,26.00],[-81.00,29.00],
+    [-81.50,31.00],[-79.00,33.00],[-76.00,36.80],[-75.50,38.00],[-74.00,40.50],[-71.00,41.80],[-68.00,44.20],
+    [-67.80,47.10],[-71.00,45.00],[-76.00,44.00],[-79.00,43.30],[-82.50,45.30],[-84.60,46.80],[-88.00,48.30],
+    [-95.00,49.00],[-110.00,49.00],[-123.00,48.50],[-124.20,43.00]],
+    [[-141.00,60.10],[-141.00,69.60],[-153.00,70.80],[-161.00,70.30],[-165.00,68.50],[-168.00,66.00],[-164.00,60.00],
+    [-158.00,58.00],[-152.00,58.50],[-148.00,60.00],[-141.00,60.10]],
+    [[-123.00,48.50],[-124.50,50.00],[-131.00,54.00],[-137.00,59.00],[-141.00,60.10],[-141.00,69.60],[-130.00,70.50],
+    [-115.00,69.20],[-100.00,69.00],[-89.00,69.20],[-80.00,73.00],[-70.00,73.00],[-64.00,60.00],[-63.00,55.00],
+    [-55.50,51.50],[-56.50,49.50],[-61.50,46.50],[-66.00,44.80],[-67.80,47.10],[-71.00,45.00],[-76.00,44.00],
+    [-79.00,43.30],[-82.50,45.30],[-84.60,46.80],[-88.00,48.30],[-95.00,49.00],[-110.00,49.00],[-123.00,48.50]],
+    [[-9.42,38.70],[-8.90,37.00],[-6.30,36.80],[-5.20,36.30],[-2.50,36.70],[-0.90,37.60],[0.50,39.50],
+    [1.00,40.90],[3.30,41.60],[4.00,43.50],[6.00,43.10],[6.73,43.54],[7.14,43.72],[7.34,43.75],
+    [7.55,43.78],[7.55,43.80],[7.00,44.20],[6.90,45.00],[7.00,45.55],[6.80,45.90],[6.10,46.15],
+    [6.00,46.40],[6.45,46.80],[7.00,47.35],[7.60,47.58],[8.20,47.62],[8.60,47.60],[9.60,47.60],
+    [10.20,47.40],[11.50,47.60],[13.00,48.30],[13.40,48.60],[12.50,49.30],[12.20,50.20],[10.90,50.30],
+    [10.20,51.30],[10.90,52.30],[10.70,53.60],[11.30,54.30],[10.80,54.30],[10.20,54.90],[10.00,55.30],
+    [10.20,56.70],[10.40,57.30],[10.55,57.74],[9.60,57.60],[8.60,57.10],[8.30,55.60],[8.10,55.00],
+    [9.00,54.60],[8.50,53.60],[6.80,53.45],[5.60,53.30],[4.80,52.90],[4.10,52.00],[2.90,51.20],
+    [1.90,51.00],[0.20,49.40],[-1.60,49.70],[-2.90,48.70],[-4.77,48.45],[-4.30,47.80],[-2.20,47.20],
+    [-1.20,46.20],[-1.25,44.50],[-1.80,43.35],[-3.00,43.40],[-5.60,43.60],[-8.40,43.40],[-9.30,42.90],
+    [-8.70,41.10],[-8.87,40.14],[-9.42,38.70]],
+    [[7.55,43.80],[7.00,44.20],[6.90,45.00],[7.00,45.55],[7.55,45.95],[8.10,46.15],[8.80,46.10],
+    [9.30,46.50],[10.10,46.60],[10.50,46.85],[11.10,46.95],[12.20,46.80],[13.70,46.50],[13.60,45.80],
+    [13.50,45.20],[12.30,45.40],[12.25,44.40],[13.52,43.62],[14.20,42.50],[15.60,41.92],[16.85,41.13],
+    [17.25,40.47],[18.52,40.13],[18.35,39.79],[17.20,38.95],[16.10,37.98],[15.65,38.10],[15.85,38.55],
+    [16.10,38.95],[16.05,39.36],[15.63,40.07],[14.75,40.68],[14.25,40.85],[13.57,41.20],[12.23,41.75],
+    [11.13,42.40],[10.30,43.55],[9.85,44.10],[8.93,44.40],[7.55,43.80]],
     [[12.40,37.80],[13.40,38.15],[15.20,38.12],[15.42,38.02],[15.10,36.65],[12.40,37.80]],
     [[8.20,39.10],[9.60,39.20],[9.80,41.00],[8.20,41.10],[8.20,39.10]],
     [[-5.20,50.10],[-1.00,50.70],[1.40,51.00],[1.70,52.80],[0.10,54.10],[-1.10,55.00],[-2.50,57.50],
     [-3.00,58.60],[-5.00,58.60],[-5.80,57.50],[-5.60,56.00],[-4.80,54.60],[-3.10,53.40],[-4.70,52.80],
     [-5.30,51.70],[-3.60,50.60],[-5.20,50.10]],
-    [[26.20,40.20],[29.00,41.00],[33.00,42.00],[36.50,41.20],[38.00,41.50],[41.60,41.60],[43.00,41.00],
-    [44.50,39.70],[44.00,37.50],[42.00,37.20],[40.00,37.00],[38.00,36.80],[36.00,36.00],[35.03,36.72],
-    [33.00,36.30],[31.40,36.80],[29.10,36.60],[27.20,37.00],[26.72,38.38],[26.20,40.20]],
-    [[5.70,59.00],[5.10,61.50],[8.50,63.00],[11.67,64.55],[14.40,67.30],[18.94,69.64],[23.50,70.60],
-    [25.78,71.17],[30.10,70.40],[29.00,69.40],[24.00,68.60],[20.00,68.40],[17.00,67.20],[14.00,65.00],
-    [12.20,63.00],[12.00,61.00],[11.50,59.50],[10.75,59.91],[9.40,58.75],[7.05,57.98],[5.70,59.00]],
+    [[26.20,40.20],[26.60,41.30],[28.00,41.60],[29.16,41.28],[29.00,41.00],[33.00,42.00],[36.50,41.20],
+    [38.00,41.50],[41.60,41.60],[43.00,41.00],[44.50,39.70],[44.00,37.50],[42.00,37.20],[40.00,37.00],
+    [38.00,36.80],[36.00,36.00],[35.03,36.72],[33.00,36.30],[31.40,36.80],[29.10,36.60],[27.20,37.00],
+    [26.72,38.38],[26.20,40.20],[26.20,40.20]],
+    [[5.70,59.00],[5.14,59.87],[5.10,60.60],[4.95,61.50],[6.20,62.50],[8.50,63.00],[10.40,63.40],
+    [11.67,64.55],[14.40,67.30],[18.94,69.64],[23.50,70.60],[25.78,71.17],[30.10,70.40],[29.00,69.40],
+    [24.00,68.60],[20.00,68.40],[17.00,67.20],[14.00,65.00],[12.20,63.00],[12.00,61.00],[11.90,59.60],
+    [11.20,59.20],[10.60,60.10],[9.40,58.75],[7.05,57.98],[5.70,59.00]],
     [[-24.50,64.40],[-22.00,63.40],[-15.50,64.00],[-14.50,65.80],[-20.00,66.40],[-24.50,65.50],[-24.50,64.40]],
     [[19.50,40.50],[21.00,40.60],[23.00,41.20],[25.20,41.30],[26.20,40.20],[24.05,38.20],[23.20,37.45],
     [22.00,36.70],[21.40,37.20],[20.60,39.10],[19.50,40.50]]]},
 {n:'Warschauer Pakt',a:1955,b:1991,f:'#c0392b',id:'er_kalterkrieg',
- t:'Der Ostblock unter Führung der Sowjetunion. Die Sperrung der Grenzen – 1961 die Berliner Mauer – trennt auch Forschung und Lehre; östliche Ergebnisse erreichen den Westen oft mit Jahren Verzug.',
+ t:'Der Ostblock unter Führung der Sowjetunion – diese reicht vom Baltikum bis zum Pazifik und stellt allein rund ein Sechstel der Landfläche der Erde. Nicht jeder sozialistische Staat gehörte dazu: Jugoslawien blieb blockfrei, Albanien trat 1968 aus. Die Sperrung der Grenzen, 1961 die Berliner Mauer, trennt auch Forschung und Lehre; östliche Ergebnisse erreichen den Westen oft mit Jahren Verzug.',
  p:[[10.60,54.70],[12.10,54.20],[14.20,53.90],[16.20,54.55],[18.30,54.85],[19.60,54.70],[21.00,55.30],
     [23.20,57.10],[24.10,57.80],[24.50,59.50],[27.50,60.30],[30.30,60.00],[30.00,65.00],[29.50,67.00],
     [30.10,69.70],[33.00,69.30],[38.00,67.80],[43.50,66.40],[50.00,68.20],[57.00,68.80],[66.00,70.00],
-    [64.00,67.50],[60.00,60.00],[56.00,52.00],[52.00,47.00],[50.00,44.50],[47.50,42.60],[42.40,43.60],
-    [38.60,44.60],[37.40,44.90],[38.50,45.50],[36.00,45.30],[33.37,45.28],[30.20,46.00],[28.70,45.20],
-    [28.00,43.20],[27.90,41.80],[26.20,41.70],[25.00,41.30],[23.50,41.40],[22.50,42.30],[22.50,44.20],
-    [21.50,45.00],[20.50,45.20],[19.00,45.20],[17.50,45.60],[16.20,45.90],[16.50,47.00],[17.10,48.00],
-    [16.95,48.80],[15.60,48.90],[14.20,50.60],[12.20,50.20],[10.90,50.30],[10.20,51.30],[10.90,52.30],
-    [10.70,53.60],[11.30,54.30],[10.60,54.70]]},
+    [73.00,73.00],[80.00,74.00],[90.00,76.00],[100.00,77.00],[110.00,76.00],[120.00,74.00],[130.00,73.50],
+    [140.00,73.00],[150.00,72.00],[160.00,70.00],[170.00,69.00],[179.00,66.00],[175.00,63.00],[165.00,60.50],
+    [160.00,58.00],[156.70,50.90],[150.80,59.60],[143.20,59.40],[138.40,56.50],[140.70,53.20],[140.30,48.90],
+    [135.00,43.80],[131.90,43.10],[130.50,42.50],[130.00,42.90],[127.00,43.50],[122.00,45.50],[119.00,47.50],
+    [116.00,49.50],[113.00,50.00],[108.00,49.50],[102.00,50.50],[98.00,51.50],[94.00,50.50],[89.00,49.50],
+    [87.00,49.00],[85.00,47.00],[82.00,45.50],[80.00,45.00],[76.00,43.00],[73.00,42.50],[70.00,42.50],
+    [67.00,41.00],[64.00,40.00],[61.00,41.00],[58.00,42.50],[55.00,45.00],[52.00,45.50],[51.50,46.50],
+    [49.00,46.50],[47.20,45.50],[47.50,42.60],[50.00,44.50],[47.20,45.50],[40.00,44.50],[38.60,44.60],
+    [37.40,44.90],[38.50,45.50],[36.00,45.30],[33.37,45.28],[30.20,46.00],[28.70,45.20],[28.00,43.20],
+    [27.90,41.80],[26.20,41.70],[25.00,41.30],[23.50,41.40],[22.50,42.30],[22.50,44.20],[21.50,45.00],
+    [20.50,45.20],[19.00,45.20],[17.50,45.60],[16.20,45.90],[16.50,47.00],[17.10,48.00],[16.95,48.80],
+    [15.00,48.95],[14.00,48.60],[12.90,48.80],[12.40,49.30],[12.10,50.30],[13.00,50.60],[14.20,50.60],
+    [14.70,51.00],[10.90,50.30],[10.20,51.30],[10.90,52.30],[10.70,53.60],[11.30,54.30],[10.60,54.70]]},
 {n:'Osmanisches Reich',a:1450,b:1918,f:'#c07d10',id:'er_konstfall',
  t:'1453 fällt Konstantinopel – der Landweg nach Asien wird blockiert',
  pp:[[[19.00,42.50],[20.50,44.50],[22.50,45.50],[25.00,45.50],[28.70,45.20],[31.00,46.50],[33.00,46.00],
@@ -3416,8 +3768,10 @@ const REICHE = [
     [44.00,29.50],[42.00,27.00],[44.00,24.00],[46.00,20.00],[47.00,16.00],[45.00,13.50],[43.00,12.60],
     [41.50,17.50],[39.00,21.00],[38.80,22.20],[37.00,25.00],[35.18,28.02],[34.98,29.55],[34.30,31.30],
     [35.50,33.50],[36.00,36.00],[35.03,36.72],[33.00,36.30],[32.05,36.37],[29.10,36.60],[27.20,37.00],
-    [26.72,38.38],[26.20,40.20],[24.00,40.60],[22.00,40.60],[20.00,41.00],[19.30,41.30],[19.00,42.50]],
-    [[32.35,31.05],[29.90,31.20],[27.50,31.20],[25.48,31.50],[23.00,32.50],[21.50,32.80],[20.17,32.08],
+    [26.72,38.38],[26.20,40.20],[25.20,40.50],[24.00,40.60],[23.30,40.30],[23.05,38.45],[24.05,38.20],
+    [23.20,37.45],[22.00,36.70],[21.40,37.20],[20.60,39.10],[19.50,40.50],[20.00,41.00],[21.00,41.50],
+    [22.50,41.60],[24.00,41.40],[26.20,41.70],[19.00,42.50]],
+    [[32.35,31.05],[29.70,31.32],[27.50,31.20],[25.48,31.50],[23.00,32.50],[21.50,32.80],[20.17,32.08],
     [17.49,30.93],[15.50,31.50],[13.20,32.90],[11.55,32.85],[11.10,33.20],[10.70,33.60],[10.10,34.30],
     [10.80,35.60],[11.00,36.80],[10.37,37.02],[9.50,37.30],[8.60,36.90],[9.00,35.50],[9.50,33.80],
     [10.20,32.00],[13.00,30.50],[16.00,29.50],[20.00,28.80],[24.00,27.50],[28.00,26.50],[30.80,27.00],
@@ -3469,14 +3823,15 @@ const REICHE = [
     [74.50,34.00],[73.00,32.50],[71.50,30.00],[70.00,27.50],[68.50,26.00],[67.00,25.00]],
     [[79.80,9.80],[81.90,6.90],[80.20,5.90],[79.70,7.50],[79.80,9.80]],
     [[113.20,-22.00],[115.20,-32.00],[117.00,-35.00],[124.00,-33.00],[131.00,-31.50],[136.00,-35.00],[141.00,-38.30],
-    [145.00,-38.50],[150.00,-36.00],[153.50,-28.00],[153.00,-25.50],[149.00,-21.00],[146.00,-17.50],[142.50,-11.00],
-    [140.00,-17.00],[136.50,-12.50],[130.50,-12.50],[126.00,-14.00],[122.00,-18.00],[117.50,-20.50],[113.20,-22.00]],
+    [145.00,-38.50],[149.91,-36.14],[151.30,-33.80],[152.50,-32.00],[153.50,-28.00],[153.00,-25.50],[149.00,-21.00],
+    [146.00,-17.50],[142.50,-11.00],[140.00,-17.00],[136.50,-12.50],[130.50,-12.50],[126.00,-14.00],[122.00,-18.00],
+    [117.50,-20.50],[113.20,-22.00]],
     [[144.60,-40.70],[148.30,-40.80],[147.90,-43.50],[145.20,-42.60],[144.60,-40.70]],
     [[172.70,-34.40],[178.50,-38.00],[176.00,-40.50],[173.00,-41.00],[173.50,-38.00],[172.70,-34.40]],
     [[172.60,-40.50],[174.20,-41.40],[172.80,-44.50],[168.50,-46.60],[166.50,-45.90],[171.00,-42.50],[172.60,-40.50]],
-    [[16.00,-28.50],[17.60,-32.00],[18.40,-33.90],[20.00,-34.80],[25.50,-33.80],[27.90,-33.00],[31.00,-29.90],
+    [[16.00,-28.50],[17.60,-32.00],[18.30,-34.10],[20.00,-34.80],[25.50,-33.80],[27.90,-33.00],[31.00,-29.90],
     [32.00,-28.00],[31.30,-25.80],[29.30,-22.10],[25.00,-22.00],[20.00,-24.80],[19.00,-28.50],[16.00,-28.50]],
-    [[24.00,32.00],[29.90,31.20],[32.35,31.05],[34.30,31.30],[34.98,29.55],[34.25,27.75],[35.50,23.50],
+    [[24.00,32.00],[29.70,31.32],[32.35,31.05],[34.30,31.30],[34.98,29.55],[34.25,27.75],[35.50,23.50],
     [37.20,18.60],[38.50,17.50],[36.00,13.00],[33.00,10.00],[27.00,10.00],[24.00,14.00],[24.00,22.00],
     [24.00,32.00]],
     [[2.60,6.30],[5.60,4.30],[8.60,4.50],[9.70,4.00],[13.00,10.00],[13.50,13.50],[11.00,13.30],
@@ -3504,7 +3859,7 @@ const WEGE = [
     [5.3,44.3],[5.8,44.6],[6.5,45.0],[7.0,45.1],[7.7,45.1],[8.6,45.1],[9.5,45.2],[11.0,45.0],
     [12.5,43.5],[13.5,42.0],[15.9,41.3],[16.1,41.3]],
  t:'Von Neukarthago über Ebro, Pyrenäen und Rhône mit 37 Kriegselefanten über die Alpen – etwa die Hälfte des Heeres überlebt den Übergang. 216 v.Chr. folgt Cannae. Rom lernt daraus Logistik und Belagerungstechnik; die Auseinandersetzung macht es zur Seemacht.'},
-{n:'Alexanderzug',a:-336,b:-323,art:'wanderung',id:'er_alexander',
+{n:'Alexanderzug',a:-334,b:-324,art:'wanderung',id:'er_alexander',
  p:[[23,40],[30,37],[36,36],[35,31],[30,31],[40,33],[47,32],[54,32],[62,34],[70,33],[72,31]],
  t:'Der folgenreichste Wissenstransfer der Antike: Griechische Sprache und Beweismathematik treffen auf babylonische Beobachtungsreihen von 1500 Jahren und auf indische Rechenkunst. Alexandria wird zum Sammelpunkt – Euklid, Eratosthenes und Ptolemäus arbeiten dort mit Daten aus drei Kulturen.'},
 {n:'Persische Königsstraße',a:-500,b:-330,art:'wissen',id:'ku_perser',
@@ -3612,6 +3967,10 @@ const FLUESSE = [
 {n:'Naab', ab:16, p:[[12.2,49.9],[12.05,49.6],[12.1,49.3],[12.0,49.05]]},
 {n:'Weichsel', ab:5, p:[[19.0,49.7],[19.9,50.1],[21.0,51.5],[20.5,52.3],[18.9,53.0],[18.8,53.9],[18.62,54.72]]},
 {n:'Wolga', ab:2, p:[[36.0,57.0],[40.0,57.5],[44.0,56.3],[47.5,54.0],[47.0,51.0],[46.0,48.5],[47.0,46.8],[47.15,45.7]]},
+{n:'Amazonas', ab:2, p:[[-77.50,-9.50],[-74.00,-8.50],[-70.00,-6.50],[-66.00,-4.50],
+  [-62.00,-3.50],[-58.00,-3.30],[-55.00,-2.60],[-52.00,-1.60],[-50.20,-0.40]]},
+{n:'Mississippi', ab:3, p:[[-95.00,47.20],[-93.50,45.00],[-91.20,43.50],[-90.20,41.50],
+  [-90.60,39.00],[-89.60,37.00],[-90.20,35.10],[-91.20,32.50],[-91.20,30.50],[-89.60,29.20]]},
 {n:'Nil', ab:2, p:[[32.5,24.0],[32.9,27.0],[31.2,30.0],[31.0,31.4]]},
 {n:'Euphrat', ab:2, p:[[38.5,37.5],[40.0,35.5],[42.5,33.5],[44.5,32.0],[46.8,31.1],[47.6,30.6]]},
 {n:'Tigris', ab:2, p:[[41.0,37.5],[43.2,36.4],[44.4,33.3],[46.0,31.5],[47.2,30.8],[48.05,30.2]]},
@@ -3627,6 +3986,11 @@ const GEBIRGE = [
 {n:'Pyrenäen', ab:3, p:[[-1.45,43.05],[-0.20,42.85],[1.00,42.65],[2.20,42.45],[2.85,42.45]]},
 {n:'Karpaten', ab:3, p:[[19.0,49.3],[21.0,49.4],[23.0,48.5],[25.0,47.5],[26.0,46.0],[24.5,45.5],[22.5,45.3]]},
 {n:'Apennin', ab:5, p:[[9.30,44.45],[10.20,44.20],[11.20,43.75],[12.50,43.00],[13.30,42.40],[14.00,41.80],[15.00,40.90],[15.80,40.30],[16.30,39.60]]},
+{n:'Anden', ab:2, p:[[-72.50,10.50],[-73.50,7.00],[-75.50,4.50],[-77.00,1.00],[-78.50,-2.00],
+  [-77.50,-6.00],[-76.00,-10.00],[-72.00,-14.50],[-68.50,-18.00],[-67.50,-22.00],[-68.50,-27.00],
+  [-70.00,-33.00],[-71.00,-38.00],[-72.00,-43.00],[-72.50,-48.00],[-72.50,-52.00]]},
+{n:'Rocky Mountains', ab:2, p:[[-124.00,60.00],[-120.00,55.50],[-116.50,51.50],[-113.50,48.50],
+  [-110.50,45.00],[-108.00,42.00],[-106.50,39.00],[-105.50,36.00],[-107.00,33.00]]},
 {n:'Ural', ab:2, p:[[66.5,68.5],[65.0,67.0],[62.0,65.5],[60.5,63.0],[59.8,60.5],[59.5,58.0],
   [58.8,56.0],[58.0,54.0],[57.5,52.5],[57.0,51.0]]},
 {n:'Kaukasus', ab:3, p:[[38.90,44.45],[39.60,44.20],[40.20,43.98],[41.20,43.60],[42.44,43.35],
@@ -5008,9 +5372,9 @@ const CHRONIKEN = [
    titel:'Chronik der optischen Ger\u00e4te',
    note:'Vom Lesestein zum Weltraumteleskop. Bemerkenswert oft ging das Handwerk der Theorie voraus – die Brille gab es 300 Jahre vor dem Brechungsgesetz –, und fast jedes neue Ger\u00e4t zeigte Dinge, die keine Theorie vorhergesagt hatte.',
    daten: OPTIK_CHRONIK},
-  {id:'weltbild', gruppe:'Astronomie', tab:'Weltbilder', anker:'as_kopernikus',
+  {id:'weltbild', gruppe:'Astronomie', tab:'Weltbilder', anker:'as_kopernikus', retro:true,
    titel:'Chronik der Weltbilder: geozentrisch und heliozentrisch',
-   note:'Das geozentrische System war nicht dumm, sondern gut begründet: Es sagte Planetenpositionen brauchbar vorher, und der Haupteinwand gegen die Erdbewegung – die fehlende Sternparallaxe – war messtechnisch korrekt. Es fiel über drei Jahrhunderte: erst Einfachheit (Kopernikus), dann bessere Daten (Kepler), dann eine physikalische Ursache (Newton), zuletzt direkte Messungen (Bradley 1728, Bessel 1838, Foucault 1851).',
+   note:'Das geozentrische System war nicht dumm, sondern gut begründet: Es sagte Planetenpositionen brauchbar vorher, und der Haupteinwand gegen die Erdbewegung – die fehlende Sternparallaxe – war messtechnisch korrekt. Es fiel über drei Jahrhunderte: erst Einfachheit (Kopernikus), dann bessere Daten (Kepler), dann eine physikalische Ursache (Newton), zuletzt direkte Messungen (Bradley 1728, Bessel 1838, Foucault 1851). Der Vergleich oben zeigt, warum das so lange dauerte: Beide Modelle erzeugen dieselbe scheinbare Bahn am Himmel – heliozentrisch als Folge der Blickrichtung, geozentrisch als Schleife des Epizykels.',
    daten: WELTBILD_CHRONIK},
   {id:'instrumente', gruppe:'Astronomie', tab:'Instrumente', anker:'in_fernrohr',
    titel:'Chronik der astronomischen Instrumente',
@@ -5096,6 +5460,10 @@ const CHRONIKEN = [
    titel:'Chronik der Wissenschaft in Bayern',
    note:'Von römischer Vermessung über Klosterbibliotheken und jesuitische Kollegien zu Fraunhofers Glasschmelze in Benediktbeuern, Ohm, Röntgen in Würzburg und Sommerfelds Münchner Schule. Die Linie bis zu heutigen Laserlaboren ist keine zufällige.',
    daten: BAYERN_CHRONIK},
+  {id:'irrtuemer', gruppe:'Kontext', tab:'Irrtümer', anker:'l_beweis',
+   titel:'Chronik der Irrtümer: verworfene Theorien und wie sie fielen',
+   note:'Jede Zeitleiste erweckt den Eindruck, alles habe auf das Heutige zugelaufen. Diese Chronik hält dagegen: Epizykel, Phlogiston, Kalorik und Äther waren keine Dummheiten, sondern gut begründete Theorien, die vieles richtig erklärten. Vier Muster wiederholen sich – falsche Theorien können lange richtig rechnen, der entscheidende Einwand kommt meist aus einer Messung, Erwartung verzerrt Wahrnehmung, und mancher Irrtum wird fruchtbar.',
+   daten: IRRTUM_CHRONIK},
   {id:'wissen', gruppe:'Kontext', tab:'Wissensspeicherung', anker:'in_druck',
    titel:'Chronik der Wissensspeicherung',
    note:'Mündlich, bildlich, geschrieben, gedruckt, digital: Jede Speicherform bringt eigene Möglichkeiten und eigene Verluste mit. Auffällig ist das jüngste Paradox – eine Tontafel aus Uruk ist nach 5000 Jahren lesbar, eine Diskette von 1995 oft nicht mehr.',
@@ -5183,6 +5551,8 @@ function zeigeUebersicht(){
   piChartUnter.style.display = 'none';
   skalaReise.style.display = 'none';
   skalaStopp();
+  retroBox.style.display = 'none';
+  retroStopp();
   chronikkopf.style.display = 'none';
   piTitel.textContent = 'Chroniken';
   piNote.textContent = CHRONIKEN.length + ' vertiefende Zeittafeln mit insgesamt ' +
@@ -5208,6 +5578,8 @@ function zeigeChronik(id){
   piChartUnter.style.display = c.chart ? 'block' : 'none';
   skalaReise.style.display = c.skala ? 'block' : 'none';
   if (!c.skala) skalaStopp();
+  retroBox.style.display = c.retro ? 'block' : 'none';
+  if (!c.retro) retroStopp();
   piliste.innerHTML = '';
   piliste.style.display = c.skala ? 'none' : 'block';
   for (const e of c.daten){
@@ -5255,7 +5627,236 @@ function zeigeChronik(id){
   if (inChronikAnsicht()){ zeichneGruppentabs(); zeichneSpurleiste(); }
   if (c.chart) requestAnimationFrame(zeichnePiChart);
   if (c.skala) requestAnimationFrame(() => { zeigeSkalaStufe(skalaIndex); zeichneSkala(); });
+  if (c.retro) requestAnimationFrame(() => retroSetze(retroT));
 }
+
+/* ------------------------------------------------------------
+   Rückläufige Bewegung: heliozentrisch und geozentrisch im Vergleich
+
+   Beide Modelle sind kinematisch gleichwertig. Der Ort des Mars
+   relativ zur Erde ist
+       M − E = 1,524·(cos θM, sin θM) − (cos θE, sin θE).
+   Der erste Summand ist im geozentrischen Bild der Deferent, der
+   zweite der Epizykel: derselbe Vektor, anders zerlegt. Deshalb
+   entsteht in beiden Bildern exakt dieselbe scheinbare Bahn.
+   ------------------------------------------------------------ */
+const retroBox    = document.getElementById('retro');
+const retroCanvas = document.getElementById('retrocanvas');
+const rctx        = retroCanvas.getContext('2d');
+const retroRegler = document.getElementById('retroRegler');
+const retroZeit   = document.getElementById('retroZeit');
+const retroText   = document.getElementById('retroText');
+const retroLauf   = document.getElementById('retroLauf');
+
+const T_ERDE = 1.0, T_MARS = 1.881, A_MARS = 1.524;   // Jahre und Astronomische Einheiten
+const RETRO_DAUER = 4.0;                              // dargestellter Zeitraum in Jahren
+let retroT = 0, retroLaeuft = false, retroAnim = null, retroSpur = [];
+
+/* Zeitversatz, damit die Darstellung nicht mitten in einer Schleife beginnt:
+   die erste Opposition liegt so bei etwa 1,1 Jahren. */
+const RETRO_VERSATZ = 1.0;
+
+function marsErde(t){
+  const z = t + RETRO_VERSATZ;
+  const tE = 2*Math.PI*z/T_ERDE, tM = 2*Math.PI*z/T_MARS;
+  const E = [Math.cos(tE), Math.sin(tE)];
+  const M = [A_MARS*Math.cos(tM), A_MARS*Math.sin(tM)];
+  return {E, M, tE, tM, rel:[M[0]-E[0], M[1]-E[1]]};
+}
+// Scheinbare Länge des Mars am Himmel, fortlaufend ohne Sprung bei 360°
+function laenge(t){
+  const {rel} = marsErde(t);
+  return Math.atan2(rel[1], rel[0]);
+}
+function laengeStetig(t){
+  let l = laenge(0), summe = l, vor = l;
+  const schritt = 0.004;
+  for (let x = schritt; x <= t + 1e-9; x += schritt){
+    const akt = laenge(x);
+    let d = akt - vor;
+    while (d >  Math.PI) d -= 2*Math.PI;
+    while (d < -Math.PI) d += 2*Math.PI;
+    summe += d; vor = akt;
+  }
+  return summe;
+}
+
+function zeichneRetro(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  const W = retroCanvas.clientWidth, H = retroCanvas.clientHeight;
+  if (!W) return;
+  if (retroCanvas.width !== Math.round(W*dpr)){
+    retroCanvas.width = Math.round(W*dpr); retroCanvas.height = Math.round(H*dpr);
+  }
+  rctx.setTransform(dpr,0,0,dpr,0,0);
+  rctx.clearRect(0,0,W,H);
+  rctx.font = '10px -apple-system,Segoe UI,Roboto,sans-serif';
+  rctx.textBaseline = 'alphabetic';
+
+  const {E, M, tE, tM, rel} = marsErde(retroT);
+  const oben = 26, hoehe = H - 108;
+  const halb = W/2;
+  const s = Math.min(halb, hoehe) * 0.30;          // Maßstab: 1 AE in Pixeln
+
+  // ---------- linke Hälfte: heliozentrisch ----------
+  const cx1 = halb/2, cy1 = oben + hoehe/2;
+  rctx.fillStyle = '#3a3228'; rctx.textAlign = 'center';
+  rctx.font = '600 12px -apple-system,Segoe UI,Roboto,sans-serif';
+  rctx.fillText('heliozentrisch', cx1, 16);
+  rctx.font = '10px -apple-system,Segoe UI,Roboto,sans-serif';
+  rctx.strokeStyle = '#b9a684'; rctx.lineWidth = 1; rctx.setLineDash([3,3]);
+  rctx.beginPath(); rctx.arc(cx1, cy1, s, 0, 7); rctx.stroke();
+  rctx.beginPath(); rctx.arc(cx1, cy1, s*A_MARS, 0, 7); rctx.stroke();
+  rctx.setLineDash([]);
+  rctx.fillStyle = '#cf9d12';
+  rctx.beginPath(); rctx.arc(cx1, cy1, 6, 0, 7); rctx.fill();
+  const eX = cx1 + E[0]*s, eY = cy1 - E[1]*s;
+  const mX = cx1 + M[0]*s, mY = cy1 - M[1]*s;
+  // Blickrichtung Erde → Mars, verlängert zum Sternenhintergrund
+  rctx.strokeStyle = 'rgba(138,75,42,.55)'; rctx.lineWidth = 1;
+  rctx.beginPath(); rctx.moveTo(eX, eY);
+  rctx.lineTo(eX + rel[0]*s*4, eY - rel[1]*s*4); rctx.stroke();
+  rctx.fillStyle = '#1f6f92';
+  rctx.beginPath(); rctx.arc(eX, eY, 4.5, 0, 7); rctx.fill();
+  rctx.fillStyle = '#8a4b2a';
+  rctx.beginPath(); rctx.arc(mX, mY, 5, 0, 7); rctx.fill();
+  rctx.fillStyle = '#5b5145';
+  rctx.fillText('Sonne', cx1, cy1 + 18);
+  rctx.fillText('Erde', eX, eY - 9);
+  rctx.fillText('Mars', mX, mY - 9);
+
+  // ---------- rechte Hälfte: geozentrisch ----------
+  const cx2 = halb + halb/2, cy2 = cy1;
+  rctx.fillStyle = '#3a3228';
+  rctx.font = '600 12px -apple-system,Segoe UI,Roboto,sans-serif';
+  rctx.fillText('geozentrisch (Epizykel)', cx2, 16);
+  rctx.font = '10px -apple-system,Segoe UI,Roboto,sans-serif';
+  rctx.strokeStyle = '#b9a684'; rctx.setLineDash([3,3]);
+  rctx.beginPath(); rctx.arc(cx2, cy2, s*A_MARS, 0, 7); rctx.stroke();   // Deferent
+  rctx.setLineDash([]);
+  // Mittelpunkt des Epizykels läuft auf dem Deferenten
+  const dX = cx2 + A_MARS*Math.cos(tM)*s, dY = cy2 - A_MARS*Math.sin(tM)*s;
+  rctx.strokeStyle = '#b9a684';
+  rctx.beginPath(); rctx.arc(dX, dY, s, 0, 7); rctx.stroke();            // Epizykel
+  rctx.strokeStyle = 'rgba(58,50,40,.5)';
+  rctx.beginPath(); rctx.moveTo(cx2, cy2); rctx.lineTo(dX, dY); rctx.stroke();
+  // Planet auf dem Epizykel: dieselbe Zerlegung, nur andersherum
+  const pX = dX - Math.cos(tE)*s, pY = dY + Math.sin(tE)*s;
+  rctx.beginPath(); rctx.moveTo(dX, dY); rctx.lineTo(pX, pY); rctx.stroke();
+  rctx.strokeStyle = 'rgba(138,75,42,.55)';
+  rctx.beginPath(); rctx.moveTo(cx2, cy2);
+  rctx.lineTo(cx2 + rel[0]*s*4, cy2 - rel[1]*s*4); rctx.stroke();
+  rctx.fillStyle = '#1f6f92';
+  rctx.beginPath(); rctx.arc(cx2, cy2, 5.5, 0, 7); rctx.fill();
+  rctx.fillStyle = 'rgba(58,50,40,.55)';
+  rctx.beginPath(); rctx.arc(dX, dY, 2.5, 0, 7); rctx.fill();
+  rctx.fillStyle = '#8a4b2a';
+  rctx.beginPath(); rctx.arc(pX, pY, 5, 0, 7); rctx.fill();
+  rctx.fillStyle = '#5b5145';
+  rctx.fillText('Erde', cx2, cy2 + 18);
+  rctx.fillText('Mars', pX, pY - 9);
+
+  rctx.strokeStyle = 'rgba(185,166,132,.8)'; rctx.lineWidth = 1;
+  rctx.beginPath(); rctx.moveTo(halb, 22); rctx.lineTo(halb, oben + hoehe); rctx.stroke();
+
+  // ---------- unten: scheinbare Bahn am Fixsternhimmel ----------
+  const yB = H - 66, hB = 44;
+  rctx.fillStyle = '#20283a';
+  rctx.fillRect(10, yB, W-20, hB);
+  // Sterne als fester Hintergrund
+  let seed = 99;
+  const zuf = () => { seed = (seed*1103515245 + 12345) % 2147483648; return seed/2147483648; };
+  rctx.fillStyle = 'rgba(255,255,255,.55)';
+  for (let k = 0; k < 70; k++){
+    const x = 12 + zuf()*(W-24), y = yB + 3 + zuf()*(hB-6);
+    rctx.beginPath(); rctx.arc(x, y, zuf()*1.1 + .4, 0, 7); rctx.fill();
+  }
+  // Bahn: fortlaufende Länge über die Zeit, waagerecht aufgetragen
+  const l0 = laengeStetig(0), lEnd = laengeStetig(RETRO_DAUER);
+  const xVon = l => 20 + (l - l0)/(lEnd - l0) * (W - 40);
+  rctx.strokeStyle = 'rgba(255,255,255,.30)'; rctx.lineWidth = 1.5;
+  rctx.beginPath();
+  let lauf = l0, vor = laenge(0);
+  for (let t = 0; t <= RETRO_DAUER + 1e-9; t += 0.01){
+    const akt = laenge(t);
+    let d = akt - vor; while (d > Math.PI) d -= 2*Math.PI; while (d < -Math.PI) d += 2*Math.PI;
+    lauf += d; vor = akt;
+    const x = xVon(lauf), y = yB + hB/2 + Math.sin(t*2.1)*9;
+    t ? rctx.lineTo(x,y) : rctx.moveTo(x,y);
+  }
+  rctx.stroke();
+  // zurückgelegter Teil hervorheben, Rückläufigkeit farbig
+  lauf = l0; vor = laenge(0);
+  let vorX = null, vorY = null;
+  rctx.lineWidth = 2.4;
+  for (let t = 0; t <= retroT + 1e-9; t += 0.01){
+    const akt = laenge(t);
+    let d = akt - vor; while (d > Math.PI) d -= 2*Math.PI; while (d < -Math.PI) d += 2*Math.PI;
+    lauf += d; vor = akt;
+    const x = xVon(lauf), y = yB + hB/2 + Math.sin(t*2.1)*9;
+    if (vorX !== null){
+      rctx.strokeStyle = d < 0 ? '#e07a3a' : 'rgba(255,255,255,.9)';
+      rctx.beginPath(); rctx.moveTo(vorX, vorY); rctx.lineTo(x, y); rctx.stroke();
+    }
+    vorX = x; vorY = y;
+  }
+  if (vorX !== null){
+    rctx.fillStyle = '#e07a3a';
+    rctx.beginPath(); rctx.arc(vorX, vorY, 4, 0, 7); rctx.fill();
+  }
+  rctx.fillStyle = '#8a7d68'; rctx.textAlign = 'left';
+  rctx.fillText('scheinbare Bahn vor den Fixsternen – orange: rückläufig', 12, yB - 6);
+  rctx.fillText('die Wanderung gab den Planeten ihren Namen: Wandelstern', 12, H - 6);
+  rctx.textAlign = 'right';
+  rctx.fillText('beide Modelle ergeben dieselbe Kurve', W - 12, yB - 6);
+}
+
+function retroSetze(t){
+  retroT = Math.max(0, Math.min(RETRO_DAUER, t));
+  retroRegler.value = String(Math.round(retroT/RETRO_DAUER*1000));
+  retroZeit.textContent = retroT.toFixed(2).replace('.', ',') + ' J';
+  // Ist die Bewegung gerade rückläufig?
+  const d = laenge(retroT + 0.01) - laenge(retroT);
+  const dd = d > Math.PI ? d - 2*Math.PI : d < -Math.PI ? d + 2*Math.PI : d;
+  const rueck = dd < 0;
+  retroText.innerHTML =
+    '<h4>' + (rueck ? 'Mars läuft rückwärts' : 'Mars läuft rechtläufig') + '</h4>' +
+    '<span class="groesse">' + retroT.toFixed(2).replace('.', ',') + ' Jahre nach dem Start</span>' +
+    '<p>' + (rueck
+      ? 'Die Erde überholt den Mars auf der Innenbahn. Von der Erde aus scheint er deshalb kurzzeitig rückwärts zu ziehen – heliozentrisch ein Effekt der Blickrichtung, geozentrisch die Schleife des Epizykels. Beide Bilder liefern dieselbe Kurve am Himmel; das ist der Grund, warum sich das ptolemäische System so lange hielt.'
+      : 'Mars zieht wie gewohnt nach Osten weiter. Alle 2,14 Jahre holt die Erde ihn ein – dann kehrt sich die Bewegung für einige Wochen scheinbar um. Diese Wanderung gab den Planeten ihren Namen: griechisch planḗtēs astḗr, umherirrender Stern, im Deutschen früher Wandelstern.') +
+    '</p>';
+  zeichneRetro();
+}
+function retroStopp(){
+  retroLaeuft = false;
+  if (retroAnim) cancelAnimationFrame(retroAnim);
+  retroAnim = null;
+  retroLauf.textContent = '▶';
+  retroLauf.setAttribute('aria-label','Bewegung starten');
+}
+function retroStart(){
+  if (retroLaeuft){ retroStopp(); return; }
+  retroLaeuft = true;
+  retroLauf.textContent = '❚❚';
+  retroLauf.setAttribute('aria-label','Bewegung anhalten');
+  let letzte = performance.now();
+  (function lauf(jetzt){
+    if (!retroLaeuft) return;
+    const dt = Math.min(0.05, (jetzt - letzte)/1000); letzte = jetzt;
+    let t = retroT + dt * 0.45;                 // knapp ein halbes Jahr je Sekunde
+    if (t > RETRO_DAUER) t = 0;
+    retroSetze(t);
+    retroAnim = requestAnimationFrame(lauf);
+  })(letzte);
+}
+beiTipp(retroLauf, retroStart);
+beiTipp(document.getElementById('retroZurueck'), () => { retroStopp(); retroSetze(retroT - 0.08); });
+beiTipp(document.getElementById('retroVor'),     () => { retroStopp(); retroSetze(retroT + 0.08); });
+retroRegler.addEventListener('input', () => {
+  retroStopp(); retroSetze(Number(retroRegler.value)/1000 * RETRO_DAUER);
+});
+window.addEventListener('resize', () => { if (retroBox.style.display !== 'none') zeichneRetro(); });
 
 /* ------------------------------------------------------------
    Zehnerpotenzenreise: Längenskala
@@ -5501,7 +6102,9 @@ window.__zl = {state, ITEMS, LINKS, SPUREN, SPUR_VON_ID, GRUPPEN, CHRONIKEN, CHR
   inChronikAnsicht, chronikGruppen,
   zeichneGruppentabs, zeichneSpurleiste, waehleReiter, verlauf, verlaufSpringe, zeigeUebersicht,
   render, waehle, geheZu, holeInsBild, springeZu, baueLayout, maxOffsetY, ITEM_VON_ID, suchen, oeffnePi, schliessePi, zeigeChronik,
-  schrittPaar, normal, baueKartenIndex, LAENGEN_SKALA, zeigeSkalaStufe, skalaStart, skalaStopp,
+  schrittPaar, normal, baueKartenIndex, LAENGEN_SKALA,
+  retroSetze, retroStart, retroStopp, laenge, marsErde,
+  retroZustand: () => ({t: retroT, laeuft: retroLaeuft}), zeigeSkalaStufe, skalaStart, skalaStopp,
   skalaZustand: () => ({index: skalaIndex, laeuft: skalaLaeuft})};
 
 /* ============================================================
