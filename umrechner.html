@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Einheitenumrechner</title>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#1f2430;overflow:hidden;}
+  #wrap{height:100%;display:flex;flex-direction:column;padding:10px;gap:8px;}
+  select,input{font-size:16px;padding:7px 8px;border:1px solid #cfd6e0;border-radius:9px;font-family:inherit;background:#fff;color:#1f2430;}
+  #q{font-weight:700;}
+  #inrow{display:flex;gap:8px;}
+  #val{flex:1;min-width:0;-webkit-user-select:text;user-select:text;text-align:right;font-weight:700;}
+  #from{flex:none;min-width:96px;}
+  #list{flex:1;min-height:0;overflow:auto;border:1px solid #e2e7ef;border-radius:10px;}
+  .r{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid #eef2f8;font-size:16px;}
+  .r:last-child{border-bottom:none;}
+  .r.act{background:#eff6ff;}
+  .r .u{color:#334155;font-weight:600;}
+  .r .v{font-variant-numeric:tabular-nums;font-weight:700;}
+  .r.act .v{color:#2563eb;}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <select id="q"></select>
+  <div id="inrow"><input id="val" type="text" inputmode="decimal" value="1"><select id="from"></select></div>
+  <div id="list"></div>
+</div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const F=f=>({to:x=>x*f, from:b=>b/f});
+const Q={
+  'Dichte (kg/m³)':[['kg/m³',F(1)],['g/cm³',F(1000)],['kg/L',F(1000)],['g/mL',F(1000)],['g/L',F(1)]],
+  'Stromstärke (A)':[['A',F(1)],['mA',F(1e-3)],['µA',F(1e-6)],['kA',F(1000)]],
+  'Spannung (V)':[['V',F(1)],['mV',F(1e-3)],['kV',F(1000)],['µV',F(1e-6)]],
+  'Widerstand (Ω)':[['Ω',F(1)],['mΩ',F(1e-3)],['kΩ',F(1000)],['MΩ',F(1e6)]],
+  'Länge (m)':[['km',F(1000)],['m',F(1)],['dm',F(.1)],['cm',F(.01)],['mm',F(1e-3)],['µm',F(1e-6)]],
+  'Fläche (m²)':[['km²',F(1e6)],['ha',F(1e4)],['a',F(100)],['m²',F(1)],['dm²',F(.01)],['cm²',F(1e-4)],['mm²',F(1e-6)]],
+  'Volumen (m³)':[['m³',F(1)],['L',F(1e-3)],['dm³',F(1e-3)],['mL',F(1e-6)],['cm³',F(1e-6)],['mm³',F(1e-9)],['hl',F(.1)]],
+  'Masse (kg)':[['t',F(1000)],['kg',F(1)],['g',F(1e-3)],['mg',F(1e-6)],['µg',F(1e-9)]],
+  'Geschwindigkeit (m/s)':[['m/s',F(1)],['km/h',F(1/3.6)],['km/s',F(1000)],['cm/s',F(.01)]],
+  'Beschleunigung (m/s²)':[['m/s²',F(1)],['cm/s²',F(.01)],['g (9,81)',F(9.81)]],
+  'Kraft (N)':[['N',F(1)],['kN',F(1000)],['mN',F(1e-3)],['MN',F(1e6)]],
+  'Temperatur':[['°C',{to:x=>x+273.15,from:b=>b-273.15}],['K',{to:x=>x,from:b=>b}],['°F',{to:x=>(x-32)*5/9+273.15,from:b=>(b-273.15)*9/5+32}]],
+  'Impuls (kg·m/s)':[['kg·m/s',F(1)],['g·m/s',F(1e-3)],['t·m/s',F(1000)]],
+  'Wärmekapazität (J/K)':[['J/K',F(1)],['kJ/K',F(1000)],['cal/K',F(4.184)]],
+  'Kapazität (F)':[['F',F(1)],['mF',F(1e-3)],['µF',F(1e-6)],['nF',F(1e-9)],['pF',F(1e-12)]],
+  'Ladung (C)':[['C',F(1)],['mC',F(1e-3)],['µC',F(1e-6)],['nC',F(1e-9)],['Ah',F(3600)],['mAh',F(3.6)]],
+  'Leistung (W)':[['W',F(1)],['kW',F(1000)],['MW',F(1e6)],['mW',F(1e-3)],['PS',F(735.49875)]],
+  'Magn. Flussdichte (T)':[['T',F(1)],['mT',F(1e-3)],['µT',F(1e-6)],['nT',F(1e-9)],['G',F(1e-4)]],
+  'Energie (J)':[['J',F(1)],['kJ',F(1000)],['MJ',F(1e6)],['mJ',F(1e-3)],['Wh',F(3600)],['kWh',F(3.6e6)],['cal',F(4.184)],['kcal',F(4184)],['eV',F(1.602176634e-19)]]
+};
+let data={ q:'Dichte (kg/m³)', from:'kg/m³', val:'1' };
+function fmt(v){ if(!isFinite(v))return '–'; if(v===0)return '0';
+  const a=Math.abs(v); let s = (a>=1e7||a<1e-4) ? v.toExponential(4) : String(Math.round(v*1e8)/1e8);
+  return s.replace('.',','); }
+function units(){ return Q[data.q]||Q['Länge (m)']; }
+function fillQ(){ $('q').innerHTML=Object.keys(Q).map(k=>'<option'+(k===data.q?' selected':'')+'>'+k+'</option>').join(''); }
+function fillFrom(){ const us=units(); if(!us.some(u=>u[0]===data.from)) data.from=us[0][0];
+  $('from').innerHTML=us.map(u=>'<option'+(u[0]===data.from?' selected':'')+'>'+u[0]+'</option>').join(''); }
+function calc(){ const us=units(); const fromU=us.find(u=>u[0]===data.from)||us[0];
+  const x=parseFloat(String(data.val).replace(',','.')); const base=isFinite(x)?fromU[1].to(x):NaN;
+  $('list').innerHTML=us.map(u=>{ const v=u[1].from(base); return '<div class="r'+(u[0]===data.from?' act':'')+'"><span class="u">'+u[0]+'</span><span class="v">'+fmt(v)+'</span></div>'; }).join(''); }
+function render(){ fillQ(); fillFrom(); $('val').value=data.val; calc(); }
+$('q').onchange=()=>{ data.q=$('q').value; const us=units(); data.from=us[0][0]; fillFrom(); calc(); sync(); };
+$('from').onchange=()=>{ data.from=$('from').value; calc(); sync(); };
+$('val').addEventListener('input',()=>{ data.val=$('val').value.replace(/[^0-9,.\-]/g,''); if($('val').value!==data.val)$('val').value=data.val; calc(); sync(); });
+function sync(){ try{ parent.postMessage({type:'embed-data',data},'*'); }catch(e){} }
+addEventListener('message',e=>{ if(e.data&&e.data.type==='embed-data'&&e.data.data){ const d=e.data.data;
+  data={ q:Q[d.q]?d.q:'Dichte (kg/m³)', from:d.from||'', val:(d.val!=null?String(d.val):'1') }; render(); } });
+window.addEventListener('load',()=>{ render(); try{ parent.postMessage({type:'embed-ready'},'*'); }catch(e){} });
+</script>
+</body>
+</html>

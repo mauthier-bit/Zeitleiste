@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Würfel</title>
+<style>
+  *{box-sizing:border-box;-webkit-user-select:none;user-select:none;}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#1f2430;overflow:hidden;}
+  #wrap{height:100%;display:flex;flex-direction:column;padding:10px;gap:10px;}
+  #ctrl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px;}
+  #ctrl label{display:flex;gap:5px;align-items:center;}
+  select{font-size:15px;padding:4px 6px;border:1px solid #cfd6e0;border-radius:8px;font-family:inherit;}
+  #dice{flex:1;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;min-height:0;}
+  .die{background:#fff;border:2px solid #1f2430;border-radius:14%;box-shadow:0 2px 6px rgba(0,0,0,.12);display:grid;
+    grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:7%;flex:none;cursor:pointer;transition:background .12s ease,border-color .12s ease,color .12s ease;}
+  .die.num{display:flex;align-items:center;justify-content:center;font-weight:800;}
+  .die>span{display:flex;align-items:center;justify-content:center;}
+  .pip{width:82%;aspect-ratio:1;border-radius:50%;background:#1f2430;}
+  #roll{font-size:19px;font-weight:800;padding:12px;border:none;border-radius:14px;background:#3b82f6;color:#fff;cursor:pointer;}
+  #sum{text-align:center;font-size:16px;color:#334155;min-height:22px;font-weight:700;}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="ctrl">
+    <label>Anzahl <select id="n"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label>
+    <label>Seiten <select id="sides"><option>2</option><option>4</option><option selected>6</option><option>8</option><option>10</option><option>12</option><option>20</option></select></label>
+  </div>
+  <div id="dice"></div>
+  <div id="sum"></div>
+  <button id="roll">🎲 Würfeln</button>
+</div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+let data={ n:1, sides:6, colors:[0] };
+const PIPS={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+const COLORS=[{bg:'#ffffff',fg:'#1f2430'},{bg:'#fee2e2',fg:'#dc2626'},{bg:'#ffedd5',fg:'#ea580c'},{bg:'#fef9c3',fg:'#ca8a04'},{bg:'#dcfce7',fg:'#16a34a'},{bg:'#dbeafe',fg:'#2563eb'},{bg:'#ede9fe',fg:'#7c3aed'},{bg:'#fce7f3',fg:'#db2777'}];
+function ensureColors(){ if(!Array.isArray(data.colors))data.colors=[]; for(let i=0;i<data.n;i++) if(data.colors[i]==null)data.colors[i]=0; data.colors.length=data.n; }
+function applyDieColor(d,idx){ const c=COLORS[(data.colors[idx]||0)%COLORS.length]; d.style.background=c.bg; }   // nur die Würfelfläche färben; Punkte/Zahl bleiben schwarz
+function dieEl(val,sides,size,idx){ const d=document.createElement('div');
+  d.className='die'; d.style.width=size+'px'; d.style.height=size+'px';
+  if(sides===6){ for(let i=0;i<9;i++){ const cell=document.createElement('span'); if(PIPS[val].includes(i)){ const p=document.createElement('span'); p.className='pip'; cell.appendChild(p);} d.appendChild(cell);} }
+  else { d.classList.add('num'); d.style.fontSize=(size*0.5)+'px'; d.textContent=val; }
+  applyDieColor(d,idx);
+  d.onclick=()=>{ data.colors[idx]=((data.colors[idx]||0)+1)%COLORS.length; applyDieColor(d,idx); sync(); };   // Antippen = nächste Farbe
+  return d; }
+let lastVals=[1];
+function render(vals){ lastVals=vals; ensureColors(); const box=$('dice'); box.innerHTML='';
+  const n=vals.length, cols=Math.ceil(Math.sqrt(n)), rows=Math.ceil(n/cols), gap=14;
+  const cw=box.clientWidth||280, ch=box.clientHeight||220;
+  const size=Math.max(44, Math.floor(Math.min((cw-gap*(cols+1))/cols, (ch-gap*(rows+1))/rows)));
+  vals.forEach((v,i)=>box.appendChild(dieEl(v,data.sides,size,i)));
+  const sum=vals.reduce((a,b)=>a+b,0); $('sum').textContent = vals.length>1 ? ('Summe: '+sum) : ''; }
+window.addEventListener('resize',()=>render(lastVals));
+let rolling=false;
+function roll(){ if(rolling)return; rolling=true; const n=data.n, sides=data.sides; let ticks=0;
+  const iv=setInterval(()=>{ render(Array.from({length:n},()=>1+Math.floor(Math.random()*sides))); if(++ticks>=10){ clearInterval(iv); rolling=false; } },55); }
+$('n').onchange=()=>{ data.n=+$('n').value; ensureColors(); render(Array.from({length:data.n},()=>1)); sync(); };
+$('sides').onchange=()=>{ data.sides=+$('sides').value; render(Array.from({length:data.n},()=>1)); sync(); };
+$('roll').onclick=roll;
+function sync(){ try{ parent.postMessage({type:'embed-data',data},'*'); }catch(e){} }
+addEventListener('message',e=>{ if(e.data&&e.data.type==='embed-data'&&e.data.data){ const d=e.data.data;
+  data={ n:Math.max(1,Math.min(6,d.n||1)), sides:Math.max(2,d.sides||6), colors:Array.isArray(d.colors)?d.colors.slice():[] };
+  ensureColors(); $('n').value=data.n; $('sides').value=data.sides; render(Array.from({length:data.n},()=>1)); } });
+window.addEventListener('load',()=>{ render([1]);
+  if(window.ResizeObserver){ new ResizeObserver(()=>render(lastVals)).observe($('dice')); }
+  try{ parent.postMessage({type:'embed-ready'},'*'); }catch(e){} });
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>GeoGebra</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#fff;}#ggb{width:100%;height:100%;}
+#hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#8a93a2;font-family:-apple-system,sans-serif;font-size:14px;text-align:center;padding:20px;}</style>
+<script src="https://www.geogebra.org/apps/deployggb.js"></script>
+</head>
+<body>
+<div id="hint">GeoGebra wird geladen … (benötigt Internet)</div>
+<div id="ggb"></div>
+<script>
+"use strict";
+var api=null;
+function dims(){ return { w:Math.max(200,Math.floor(window.innerWidth)), h:Math.max(200,Math.floor(window.innerHeight)) }; }
+window.addEventListener('load',function(){
+  if(typeof GGBApplet==='undefined'){ document.getElementById('hint').textContent='GeoGebra konnte nicht geladen werden (kein Internet?).'; return; }
+  var d=dims();
+  var app=new GGBApplet({ appName:'graphing', width:d.w, height:d.h, showToolBar:true, showAlgebraInput:true, showMenuBar:false,
+    showResetIcon:true, enableRightClick:true, borderColor:'#ffffff', scaleContainerClass:'',
+    appletOnLoad:function(a){ api=a; var h=document.getElementById('hint'); if(h)h.style.display='none'; } }, true);
+  app.inject('ggb');
+});
+window.addEventListener('resize',function(){ if(api){ var d=dims(); try{ api.setSize(d.w,d.h); }catch(e){} } });
+</script>
+</body>
+</html>

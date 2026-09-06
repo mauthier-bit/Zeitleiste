@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Bruch</title>
+<style>
+  *{box-sizing:border-box;-webkit-user-select:none;user-select:none;}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#1f2430;overflow:hidden;}
+  #wrap{height:100%;display:flex;gap:10px;padding:12px;align-items:center;}
+  #left{display:flex;flex-direction:column;align-items:center;gap:6px;flex:none;}
+  .fin{width:88px;text-align:center;font-size:34px;font-weight:800;border:1px solid #cfd6e0;border-radius:10px;padding:4px 2px;font-family:inherit;color:#1f2430;-webkit-user-select:text;user-select:text;}
+  #bar{width:100px;height:5px;background:#1f2430;border-radius:3px;}
+  #dec{font-size:15px;color:#475569;font-weight:600;min-height:20px;text-align:center;}
+  #cv{flex:1;min-width:0;height:100%;}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="left">
+    <input id="z" class="fin" type="number" min="0" value="1">
+    <div id="bar"></div>
+    <input id="n" class="fin" type="number" min="1" value="2">
+    <div id="dec"></div>
+  </div>
+  <canvas id="cv"></canvas>
+</div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+let data={ z:1, n:2 };
+const cv=$('cv'); const ctx=cv.getContext('2d');
+function fmt(v){ return String(Math.round(v*1000)/1000).replace('.',','); }
+function resize(){ const dpr=window.devicePixelRatio||1, w=cv.clientWidth||300, h=cv.clientHeight||300;
+  cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); draw(); }
+function draw(){ const w=cv.clientWidth, h=cv.clientHeight; ctx.clearRect(0,0,w,h);
+  const n=Math.max(1,Math.floor(Math.abs(data.n))||1), z=Math.max(0,Math.floor(Math.abs(data.z)));
+  const circles=Math.min(12, Math.max(1, Math.ceil(z/n)||1));
+  const cols=Math.ceil(Math.sqrt(circles)), rows=Math.ceil(circles/cols), gap=10;
+  const R=Math.max(20, Math.min((w-gap*(cols+1))/cols, (h-gap*(rows+1))/rows)/2);
+  let done=0;
+  for(let ci=0;ci<circles;ci++){ const cx=gap+R+(ci%cols)*(2*R+gap), cy=gap+R+Math.floor(ci/cols)*(2*R+gap);
+    const fillHere=Math.max(0,Math.min(n, z-ci*n)); const seg=2*Math.PI/n;
+    for(let i=0;i<n;i++){ const a0=-Math.PI/2+i*seg, a1=a0+seg;
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R,a0,a1); ctx.closePath();
+      ctx.fillStyle = i<fillHere ? '#3b82f6' : '#eef2f8'; ctx.fill();
+      ctx.strokeStyle='#1f2430'; ctx.lineWidth=1.5; ctx.stroke(); }
+    ctx.beginPath(); ctx.arc(cx,cy,R,0,7); ctx.lineWidth=2; ctx.stroke();
+  }
+}
+function update(){ data.z=Math.max(0,Math.floor(+$('z').value||0)); data.n=Math.max(1,Math.floor(+$('n').value||1));
+  $('dec').textContent = data.n ? ('= '+fmt(data.z/data.n)) : ''; draw(); }
+$('z').addEventListener('input',()=>{ update(); sync(); });
+$('n').addEventListener('input',()=>{ update(); sync(); });
+function sync(){ try{ parent.postMessage({type:'embed-data',data},'*'); }catch(e){} }
+addEventListener('message',e=>{ if(e.data&&e.data.type==='embed-data'&&e.data.data){ const d=e.data.data;
+  data={ z:Math.max(0,d.z|0), n:Math.max(1,d.n|0||2) }; $('z').value=data.z; $('n').value=data.n; update(); } });
+window.addEventListener('resize',resize);
+window.addEventListener('load',()=>{ update(); resize();
+  if(window.ResizeObserver){ new ResizeObserver(resize).observe(cv); }
+  try{ parent.postMessage({type:'embed-ready'},'*'); }catch(e){} });
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Gleichungslöser</title>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#1f2430;overflow:auto;}
+  #wrap{padding:12px;display:flex;flex-direction:column;gap:10px;height:100%;}
+  .frow{display:flex;gap:8px;align-items:center;}
+  .frow b{font-size:18px;}
+  #eq{flex:1;padding:9px 10px;border:1px solid #cfd6e0;border-radius:9px;font-size:18px;font-family:inherit;-webkit-user-select:text;user-select:text;}
+  #sol{font-size:20px;font-weight:700;color:#2563eb;min-height:26px;}
+  #steps{font-size:14px;color:#475569;line-height:1.6;white-space:pre-wrap;}
+  .hint{font-size:12px;color:#8a93a2;line-height:1.4;}
+  .ex{font-size:12px;color:#2563eb;cursor:pointer;text-decoration:underline;margin-right:10px;}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div class="frow"><b>Gleichung:</b><input id="eq" placeholder="z. B. 2x+3 = 7   oder   x^2-5x+6=0" value=""></div>
+  <div><span class="ex" data-e="2x+3=7">2x+3=7</span><span class="ex" data-e="x^2-5x+6=0">x²−5x+6=0</span><span class="ex" data-e="3(x-1)=x+5">3(x−1)=x+5</span></div>
+  <div id="sol">–</div>
+  <div id="steps"></div>
+  <div class="hint">Löst lineare und quadratische Gleichungen (Variable x). „^" = Potenz, „*" optional. Ist die Gleichung nicht linear/quadratisch, wird das gemeldet.</div>
+</div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+function tokenize(s){ const t=[]; let i=0;
+  while(i<s.length){ const c=s[i];
+    if(c===' '){i++;continue;}
+    if('+-*/^()'.includes(c)){ t.push({k:c}); i++; continue; }
+    if(/[0-9.]/.test(c)){ let j=i; while(j<s.length&&/[0-9.]/.test(s[j]))j++; t.push({k:'num',v:parseFloat(s.slice(i,j))}); i=j; continue; }
+    if(/[a-zA-Z]/.test(c)){ let j=i; while(j<s.length&&/[a-zA-Z0-9]/.test(s[j]))j++; t.push({k:'id',v:s.slice(i,j).toLowerCase()}); i=j; continue; }
+    i++; }
+  // implizite Multiplikation: 2x, 3(...), )( , x(
+  const out=[]; for(let k=0;k<t.length;k++){ out.push(t[k]);
+    const a=t[k], b=t[k+1]; if(!b)continue;
+    const aEnd=(a.k==='num'||a.k==='id'||a.k===')'), bStart=(b.k==='num'||b.k==='id'||b.k==='(');
+    if(aEnd&&bStart && !(a.k==='num'&&b.k==='num')) out.push({k:'*'}); }
+  return out; }
+function evalAt(toks,x){ let p=0; const sc={x,pi:Math.PI,e:Math.E};
+  const peek=()=>toks[p], next=()=>toks[p++];
+  function E(){ let v=T(); while(peek()&&(peek().k==='+'||peek().k==='-')){ const o=next().k, r=T(); v=o==='+'?v+r:v-r; } return v; }
+  function T(){ let v=P(); while(peek()&&(peek().k==='*'||peek().k==='/')){ const o=next().k, r=P(); v=o==='*'?v*r:v/r; } return v; }
+  function P(){ let v=U(); if(peek()&&peek().k==='^'){ next(); v=Math.pow(v,P()); } return v; }
+  function U(){ if(peek()&&(peek().k==='+'||peek().k==='-')){ const o=next().k; return o==='-'?-U():U(); } return Pr(); }
+  function Pr(){ const tk=peek(); if(!tk)return NaN;
+    if(tk.k==='num'){ next(); return tk.v; }
+    if(tk.k==='('){ next(); const v=E(); if(peek()&&peek().k===')')next(); return v; }
+    if(tk.k==='id'){ next(); const n=tk.v; if(peek()&&peek().k==='('){ next(); const a=E(); if(peek()&&peek().k===')')next();
+        const f={sin:Math.sin,cos:Math.cos,tan:Math.tan,sqrt:Math.sqrt,abs:Math.abs,ln:Math.log,exp:Math.exp}; return (f[n]||(()=>NaN))(a); }
+      return (n in sc)?sc[n]:NaN; }
+    next(); return NaN; }
+  return E(); }
+function num(x){ const r=Math.round(x*1e6)/1e6; return String(r); }
+function solve(){ const raw=$('eq').value.trim(); $('steps').textContent='';
+  if(!raw){ $('sol').textContent='–'; return; }
+  if(!raw.includes('=')){ $('sol').textContent='Bitte eine Gleichung mit „=" eingeben.'; return; }
+  const [L,R]=raw.split('='); let lt,rt;
+  try{ lt=tokenize(L); rt=tokenize(R); }catch(e){ $('sol').textContent='Konnte die Gleichung nicht lesen.'; return; }
+  const g=x=>evalAt(lt,x)-evalAt(rt,x);   // g(x)=0
+  const g0=g(0), g1=g(1), gm1=g(-1), g2=g(2);
+  if(![g0,g1,gm1,g2].every(isFinite)){ $('sol').textContent='Nicht auswertbar.'; return; }
+  const cC=g0, a=(g1+gm1)/2-cC, b=(g1-gm1)/2;   // g(x) ≈ a x² + b x + c
+  if(Math.abs(a*4+b*2+cC-g2)>1e-6){ $('sol').textContent='Nur lineare oder quadratische Gleichungen lösbar.'; return; }
+  if(Math.abs(a)<1e-9){ // linear b x + c = 0
+    if(Math.abs(b)<1e-9){ $('sol').textContent = Math.abs(cC)<1e-9 ? 'Allgemeingültig (jede Zahl löst die Gleichung).' : 'Keine Lösung.'; return; }
+    const x=-cC/b; $('sol').textContent='x = '+num(x); $('steps').textContent='Lineare Gleichung:  '+num(b)+'·x + '+num(cC)+' = 0   ⇒   x = '+num(-cC)+' / '+num(b);
+    return; }
+  // quadratisch a x² + b x + c = 0
+  const disc=b*b-4*a*cC;
+  let s='Quadratische Gleichung:  '+num(a)+'·x² + '+num(b)+'·x + '+num(cC)+' = 0\nDiskriminante D = '+num(disc);
+  if(disc<-1e-9){ $('sol').textContent='Keine reelle Lösung (D < 0).'; $('steps').textContent=s; return; }
+  if(Math.abs(disc)<1e-9){ const x=-b/(2*a); $('sol').textContent='x = '+num(x)+'  (doppelt)'; $('steps').textContent=s; return; }
+  const sq=Math.sqrt(disc), x1=(-b+sq)/(2*a), x2=(-b-sq)/(2*a);
+  $('sol').textContent='x₁ = '+num(x1)+'   x₂ = '+num(x2); $('steps').textContent=s+'\nx = (−b ± √D) / (2a)';
+}
+$('eq').addEventListener('input',()=>{ solve(); sync(); });
+document.querySelectorAll('.ex').forEach(e=>e.onclick=()=>{ $('eq').value=e.dataset.e; solve(); sync(); });
+function sync(){ try{ parent.postMessage({type:'embed-data',data:{eq:$('eq').value}},'*'); }catch(e){} }
+addEventListener('message',e=>{ if(e.data&&e.data.type==='embed-data'&&e.data.data&&e.data.data.eq!==undefined){ $('eq').value=e.data.data.eq; solve(); } });
+window.addEventListener('load',()=>{ solve(); try{ parent.postMessage({type:'embed-ready'},'*'); }catch(e){} });
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Glücksrad</title>
+<style>
+  *{box-sizing:border-box;-webkit-user-select:none;user-select:none;}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#1f2430;overflow:hidden;}
+  #wrap{height:100%;display:flex;flex-direction:column;padding:8px;gap:6px;}
+  #cv{flex:1;min-height:0;width:100%;}
+  #res{text-align:center;font-size:18px;font-weight:800;min-height:24px;color:#2563eb;}
+  #spin{font-size:18px;font-weight:800;padding:11px;border:none;border-radius:14px;background:#3b82f6;color:#fff;cursor:pointer;}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="cv"></canvas>
+  <div id="res">–</div>
+  <button id="spin">🎡 Drehen</button>
+</div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const PAL=['#ef4444','#f59e0b','#eab308','#22c55e','#0ea5e9','#3b82f6','#8b5cf6','#ec4899','#14b8a6','#f97316','#84cc16','#6366f1'];
+let data={ sectors:[] };
+function defaults(){ return Array.from({length:6},(_,i)=>({label:String(i+1),color:PAL[i%PAL.length]})); }
+let rot=0, spinning=false;
+const cv=$('cv'); let ctx=cv.getContext('2d');
+function resize(){ const dpr=window.devicePixelRatio||1, w=cv.clientWidth||300, h=cv.clientHeight||300;
+  cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); draw(); }
+function draw(){ const w=cv.clientWidth, h=cv.clientHeight; ctx.clearRect(0,0,w,h);
+  const secs=data.sectors.length?data.sectors:defaults(); const N=secs.length;
+  const cx=w/2, cy=h/2, R=Math.min(w,h)/2-8; const seg=2*Math.PI/N;
+  for(let i=0;i<N;i++){ const a0=rot+i*seg, a1=a0+seg;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R,a0,a1); ctx.closePath();
+    ctx.fillStyle=secs[i].color||PAL[i%PAL.length]; ctx.fill(); ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+    // Beschriftung (links gespiegelt, damit nichts kopfüber steht)
+    const mid=a0+seg/2; ctx.save(); ctx.translate(cx,cy); ctx.textBaseline='middle';
+    ctx.fillStyle='#fff'; ctx.font='bold '+Math.max(12,Math.min(26,R*0.16))+'px -apple-system,sans-serif';
+    const t=String(secs[i].label==null?'':secs[i].label), tt=t.length>10?t.slice(0,9)+'…':t;
+    if(Math.cos(mid)<0){ ctx.rotate(mid+Math.PI); ctx.textAlign='left'; ctx.fillText(tt, -(R-10), 0); }
+    else { ctx.rotate(mid); ctx.textAlign='right'; ctx.fillText(tt, R-10, 0); }
+    ctx.restore();
+  }
+  ctx.beginPath(); ctx.arc(cx,cy,R*0.10,0,7); ctx.fillStyle='#1f2430'; ctx.fill();
+  // Zeiger oben
+  ctx.beginPath(); ctx.moveTo(cx-12,cy-R-2); ctx.lineTo(cx+12,cy-R-2); ctx.lineTo(cx,cy-R+16); ctx.closePath();
+  ctx.fillStyle='#1f2430'; ctx.fill(); ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+}
+function winner(){ const secs=data.sectors.length?data.sectors:defaults(); const N=secs.length, seg=2*Math.PI/N;
+  // Zeiger oben = Winkel -π/2; Sektor i belegt [rot+i*seg, ...] → Index unter Zeiger:
+  let a=(-Math.PI/2 - rot)%(2*Math.PI); if(a<0)a+=2*Math.PI; const i=Math.floor(a/seg)%N; return secs[i]; }
+function spin(){ if(spinning)return; const secs=data.sectors.length?data.sectors:defaults(); if(!secs.length)return;
+  spinning=true; $('res').textContent='…'; const start=rot, extra=2*Math.PI*(4+Math.random()*3)+Math.random()*2*Math.PI;
+  const dur=3200+Math.random()*800, t0=performance.now();
+  (function anim(t){ const p=Math.min(1,(t-t0)/dur); const e=1-Math.pow(1-p,3); rot=start+extra*e; draw();
+    if(p<1) requestAnimationFrame(anim); else { spinning=false; const w=winner(); $('res').textContent='➜ '+(w?w.label:''); } })(t0);
+}
+$('spin').onclick=spin; cv.onclick=spin;
+function sync(){ try{ parent.postMessage({type:'embed-data',data},'*'); }catch(e){} }
+addEventListener('message',e=>{ if(e.data&&e.data.type==='embed-data'&&e.data.data){ const d=e.data.data;
+  data={ sectors:(Array.isArray(d.sectors)&&d.sectors.length?d.sectors:defaults()) }; $('res').textContent='–'; draw(); } });
+window.addEventListener('resize',resize);
+window.addEventListener('load',()=>{ if(!data.sectors.length)data.sectors=defaults(); resize(); try{ parent.postMessage({type:'embed-ready'},'*'); }catch(e){} });
+</script>
+</body>
+</html>

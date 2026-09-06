@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Vierfeldertafel</title>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#1f2430;overflow:auto;}
+  #wrap{padding:10px;}
+  table{border-collapse:collapse;width:100%;table-layout:fixed;}
+  td,th{border:1px solid #cbd3df;padding:2px;text-align:center;height:15%;}
+  th{background:#f2f5f9;font-weight:var(--fwh,700);}
+  input{width:100%;border:0;text-align:center;font-size:var(--fs,16px);font-weight:var(--fw,400);font-style:var(--fi,normal);font-family:inherit;background:transparent;padding:8px 2px;}
+  input:focus{outline:2px solid #3b82f6;outline-offset:-2px;border-radius:4px;}
+  .lbl input{font-weight:var(--fwh,700);color:#1f2430;}
+  .sum{background:#eef4ff;font-weight:var(--fwh,700);}
+  .sum .cell{padding:8px 2px;font-variant-numeric:tabular-nums;font-size:var(--fs,16px);font-weight:var(--fw,400);font-style:var(--fi,normal);}
+  .hd{font-size:12px;color:#8a93a2;padding:6px 2px 2px;}
+  .ovl{text-decoration:overline;font-weight:var(--fwh,700);font-size:var(--fs,16px);font-style:var(--fi,normal);}
+  th.sum{font-size:var(--fs,16px);font-style:var(--fi,normal);}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div class="hd">Vierfeldertafel – Werte eintragen, Summen werden berechnet</div>
+  <table>
+    <tr><th></th><th class="lbl"><input id="Lb" value="B"></th><th class="lbl"><span class="ovl" id="Lb2">B</span></th><th class="sum">Σ</th></tr>
+    <tr><th class="lbl"><input id="La" value="A"></th><td><input class="d" id="d00"></td><td><input class="d" id="d01"></td><td class="sum"><span class="cell" id="r0"></span></td></tr>
+    <tr><th class="lbl"><span class="ovl" id="La2">A</span></th><td><input class="d" id="d10"></td><td><input class="d" id="d11"></td><td class="sum"><span class="cell" id="r1"></span></td></tr>
+    <tr><th class="sum">Σ</th><td class="sum"><span class="cell" id="c0"></span></td><td class="sum"><span class="cell" id="c1"></span></td><td class="sum"><span class="cell" id="tot"></span></td></tr>
+  </table>
+</div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const num=v=>{ v=(v||'').toString().trim().replace(',','.'); if(v==='')return null; if(v.includes('/')){const[a,b]=v.split('/');return (+a)/(+b);} const n=+v; return isNaN(n)?null:n; };
+function fmt(n){ if(n===null)return ''; const r=Math.round(n*1e6)/1e6; return String(r); }
+function recompute(){
+  const g=(r,c)=>num($('d'+r+''+c).value);
+  const a=g(0,0),b=g(0,1),cc=g(1,0),d=g(1,1);
+  const rowSum=(x,y)=>(x===null&&y===null)?null:((x||0)+(y||0));
+  const r0=rowSum(a,b), r1=rowSum(cc,d), c0=rowSum(a,cc), c1=rowSum(b,d);
+  const tot=(a===null&&b===null&&cc===null&&d===null)?null:((a||0)+(b||0)+(cc||0)+(d||0));
+  $('r0').textContent=fmt(r0); $('r1').textContent=fmt(r1); $('c0').textContent=fmt(c0); $('c1').textContent=fmt(c1); $('tot').textContent=fmt(tot);
+}
+function refreshLabels(){ $('La2').textContent=$('La').value||'A'; $('Lb2').textContent=$('Lb').value||'B'; }
+let fontSize=16, fontBold=false, fontItalic=false;
+function applyFont(){ const r=document.documentElement.style; r.setProperty('--fs',(fontSize||16)+'px'); r.setProperty('--fw',fontBold?'700':'400'); r.setProperty('--fwh',fontBold?'900':'700'); r.setProperty('--fwm',fontBold?'800':'600'); r.setProperty('--fi',fontItalic?'italic':'normal'); }
+function collect(){ return { La:$('La').value, Lb:$('Lb').value, v:[[ $('d00').value,$('d01').value ],[ $('d10').value,$('d11').value ]], fontSize, fontBold, fontItalic }; }
+function sync(){ try{ parent.postMessage({type:'embed-data',data:collect()},'*'); }catch(e){} }
+document.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>{ refreshLabels(); recompute(); sync(); }));
+addEventListener('message',e=>{ if(e.data&&e.data.type==='embed-data'&&e.data.data){ const d=e.data.data;
+  if(d.La!==undefined)$('La').value=d.La; if(d.Lb!==undefined)$('Lb').value=d.Lb;
+  if(d.v){ $('d00').value=d.v[0][0]||''; $('d01').value=d.v[0][1]||''; $('d10').value=d.v[1][0]||''; $('d11').value=d.v[1][1]||''; }
+  if(d.fontSize)fontSize=d.fontSize; fontBold=!!d.fontBold; fontItalic=!!d.fontItalic; applyFont(); refreshLabels(); recompute(); } });
+applyFont(); refreshLabels(); recompute();
+window.addEventListener('load',()=>{ try{ parent.postMessage({type:'embed-ready'},'*'); }catch(e){} });
+</script>
+</body>
+</html>
