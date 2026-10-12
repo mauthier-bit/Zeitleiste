@@ -309,6 +309,188 @@
     #panel.offen{transform:translateY(0)}
   }
 </style>
+<script>
+/* Scharfe Kante unter der iPadOS-Statusleiste (iPadOS 26/27).
+   WebKit legt in Web-Apps vom Homebildschirm am oberen Rand sonst einen
+   weichen Verlauf ueber den Inhalt. Er entfaellt, wenn dort eine deckende
+   Leiste liegt - ein bildschirmfuellender Kasten genuegt nicht (am
+   13.10.2026 auf iPadOS 27 geprueft). Das Skript legt deshalb einen 16 px
+   hohen, deckenden Streifen an den oberen Rand und rueckt alles, was in
+   diese 16 px hineinragt, um 16 px nach unten. Laeuft nur in der App vom
+   Homebildschirm, nicht in Safari und nicht in einem Rahmen; mit #kante in
+   der Adresse laesst es sich zum Pruefen erzwingen. */
+(function(){
+  if(window.top!==window) return;
+  var pruef=/kante/i.test(location.hash||'');
+  var alsApp=(navigator.standalone===true) ||
+             (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+  if(!alsApp && !pruef) return;
+
+  var HOCH=16;
+  function leer(f){ return !f || f==='transparent' || f.replace(/\s/g,'')==='rgba(0,0,0,0)'; }
+  function seite(){
+    var s=getComputedStyle(document.body), f=s.backgroundColor, b=s.backgroundImage;
+    if(leer(f) && (!b || b==='none')){
+      s=getComputedStyle(document.documentElement); f=s.backgroundColor; b=s.backgroundImage;
+    }
+    return { farbe: leer(f) ? '#ffffff' : f, bild: (b && b!=='none') ? b : '' };
+  }
+  /* Faerbt dieses Element am oberen Rand etwas sichtbar ein? */
+  function tinte(n){
+    var r=n.getBoundingClientRect();
+    if(r.top>=HOCH || r.bottom<=0 || r.width<=0) return false;
+    var s=getComputedStyle(n);
+    if(s.display==='none' || s.visibility==='hidden' || s.opacity==='0') return false;
+    if(n.id==='randKante') return false;
+    var t=n.tagName.toLowerCase();
+    if(t==='img'||t==='svg'||t==='canvas'||t==='video') return true;
+    if(!leer(s.backgroundColor) || s.backgroundImage!=='none') return true;
+    if(parseFloat(s.borderTopWidth)>0) return true;
+    var kn=n.childNodes;
+    for(var j=0;j<kn.length;j++)
+      if(kn[j].nodeType===3 && kn[j].nodeValue.replace(/\s/g,'')) return true;
+    for(var i=0;i<n.children.length;i++) if(tinte(n.children[i])) return true;
+    return false;
+  }
+  function ragtRein(z){
+    for(var i=0;i<z.children.length;i++) if(tinte(z.children[i])) return true;
+    return false;
+  }
+  function luft(z){
+    if(z.dataset.kanteLuft) return;
+    if(!ragtRein(z) && !tinte(z)) return;    /* noch nichts oben - spaeter nochmal */
+    z.dataset.kanteLuft='1';
+    var p=parseFloat(getComputedStyle(z).paddingTop)||0;
+    if(p>=HOCH) return;
+    z.style.paddingTop=(p+HOCH)+'px';
+  }
+  function sichtbar(n,s){
+    return s.display!=='none' && s.visibility!=='hidden' && n.id!=='randKante';
+  }
+  /* bildschirmfuellende fixierte Kaesten */
+  function kaesten(){
+    var alle=document.querySelectorAll('body > *, body > * > *'), raus=[];
+    for(var i=0;i<alle.length;i++){
+      var n=alle[i], s=getComputedStyle(n);
+      if(s.position!=='fixed' || !sichtbar(n,s)) continue;
+      var r=n.getBoundingClientRect();
+      if(r.top<=4 && r.width>=innerWidth*0.9 && r.height>=innerHeight*0.9) raus.push(n);
+    }
+    return raus;
+  }
+  /* Leisten am oberen Rand (fixiert oder klebend, aber kein Vollbildkasten) */
+  function leisten(){
+    var alle=document.querySelectorAll('body > *, body > * > *'), raus=[];
+    for(var i=0;i<alle.length;i++){
+      var n=alle[i], s=getComputedStyle(n);
+      if((s.position!=='fixed' && s.position!=='sticky') || !sichtbar(n,s)) continue;
+      var r=n.getBoundingClientRect();
+      if(r.top<=4 && r.width>=innerWidth*0.8 && r.height>=6 && r.height<=innerHeight*0.6) raus.push(n);
+    }
+    return raus;
+  }
+  /* Liegt oben schon eine deckende Leiste, ist nichts zu tun. */
+  function schonGut(){
+    var st=document.elementsFromPoint ? document.elementsFromPoint(Math.round(innerWidth/2),2) : [];
+    for(var i=0;i<st.length;i++){
+      var n=st[i];
+      if(n.id==='randKante') continue;
+      if(n===document.body || n===document.documentElement) return false;
+      var s=getComputedStyle(n), r=n.getBoundingClientRect();
+      return (s.position==='fixed'||s.position==='sticky') && r.top<=4 &&
+             r.width>=innerWidth*0.8 && r.height>=6 && r.height<=innerHeight*0.6 &&
+             !leer(s.backgroundColor);
+    }
+    return false;
+  }
+  var band=null;
+  function streifen(farbe){
+    if(!band){
+      band=document.createElement('div');
+      band.id='randKante'; band.setAttribute('aria-hidden','true');
+      band.style.cssText='position:fixed;left:0;top:0;width:100%;height:'+HOCH+'px;'+
+        'z-index:2147483646;pointer-events:none';
+      document.body.appendChild(band);
+    }
+    band.style.display='block';
+    if(farbe){
+      band.style.backgroundColor=farbe;
+      band.style.backgroundImage='none';
+      return;
+    }
+    var s=getComputedStyle(document.body), h=seite();
+    band.style.backgroundColor=h.farbe;
+    band.style.backgroundImage=h.bild||'none';
+    band.style.backgroundAttachment='fixed';
+    if(h.bild && s.backgroundAttachment!=='fixed')
+      band.style.backgroundSize='100% '+Math.max(innerHeight,document.body.scrollHeight)+'px';
+  }
+  var schild=null;
+  function zeigen(txt){
+    if(!pruef) return;
+    if(!schild){
+      schild=document.createElement('div');
+      schild.style.cssText='position:fixed;left:6px;bottom:52px;z-index:2147483647;max-width:92%;'+
+        'padding:6px 9px;border-radius:8px;background:#ffe600;color:#000;'+
+        'font:600 12px/1.35 -apple-system,sans-serif;white-space:pre-wrap;pointer-events:none';
+      document.body.appendChild(schild);
+    }
+    schild.textContent='Kante K6 · '+innerWidth+'x'+innerHeight+'\n'+txt;
+  }
+  function name(n){
+    if(n.id) return '#'+n.id;
+    var c=(typeof n.className==='string'&&n.className.trim())?'.'+n.className.trim().split(/\s+/)[0]:'';
+    return n.tagName.toLowerCase()+c;
+  }
+  function malen(){
+    var b=document.body; if(!b) return;
+    if(schonGut()){
+      if(band) band.style.display='none';
+      zeigen('oben liegt schon eine deckende Leiste');
+      return;
+    }
+    var k=kaesten(), l=leisten(), h=null, farbe=null, text=[];
+    for(var i=0;i<k.length;i++){
+      var z=k[i], s=getComputedStyle(z);
+      if(!z.dataset.kante){
+        if(leer(s.backgroundColor)){
+          if(!h) h=seite();
+          z.style.backgroundColor=h.farbe;
+          if(s.backgroundImage==='none' && h.bild) z.style.backgroundImage=h.bild;
+        }
+        z.dataset.kante='1';
+        s=getComputedStyle(z);
+      }
+      luft(z);
+      text.push(name(z)+' bg='+s.backgroundColor+(s.backgroundImage!=='none'?'+Verlauf':''));
+    }
+    for(var j=0;j<l.length;j++){
+      var le=l[j], sl=getComputedStyle(le);
+      if(!tinte(le) && !ragtRein(le)) continue;
+      if(!farbe && !leer(sl.backgroundColor)) farbe=sl.backgroundColor;
+      luft(le);
+      text.push('Leiste '+name(le)+' bg='+sl.backgroundColor);
+    }
+    if(!k.length && !l.length){ luft(b); text.push('kein Kasten, nur Streifen'); }
+    streifen(farbe);
+    zeigen(text.join('\n'));
+  }
+  var warte=null;
+  function spaeter(){
+    if(warte) return;
+    warte=setTimeout(function(){ warte=null; malen(); },200);
+  }
+  try{
+    new MutationObserver(spaeter).observe(document.documentElement,
+      {childList:true, subtree:true, attributes:true, attributeFilter:['class','style','hidden']});
+  }catch(e){}
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',malen);
+  else malen();
+  addEventListener('load',spaeter);
+  addEventListener('resize',spaeter);
+  addEventListener('orientationchange',spaeter);
+})();
+</script>
 </head>
 <body>
 <header>
